@@ -436,8 +436,8 @@
     "category": "Arcade",
     "desc": "The iconic tile-matching puzzle game. Arrange falling blocks to clear lines and rack up a high score.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQW-AK-RBkoEJ6rhyMkZi0cEJU93LNZdbUg&s",
-    "link": "https://www.edslap.com/amusements/Games/tetris/tetris.html",
-    "verified": false
+    "link": "https://sites.google.com/view/classroom6x/tetris?fromSearch=true",
+    "verified": true
   },
   {
     "title": "Crazy Games Unblocked",
@@ -460,8 +460,8 @@
     "category": "Games",
     "desc": "A trippy, physics-based reimagining of Super Mario Bros where everything is made of jelly.",
     "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
-    "link": "https://jellymar.io/",
-    "verified": false
+    "link": "https://sites.google.com/view/classroom6x/jelly-mario",
+    "verified": true
   },
 {
     "title": "Deer Adventure",
@@ -469,6 +469,22 @@
     "desc": "Become a deer? Sounds weird—but that’s exactly what Deer Adventure is all about. Jump in and take on the role of a deer roaming freely around the bustling, open-world city and do whatever you want, of course, as a deer.",
     "thumb": "https://deeradventure.io/data/image/options/deer-adventure-banner.jpg",
     "link": "https://zapgames.io/deer-adventure",
+    "verified": false
+  },
+{
+    "title": "BoredFlix",
+    "category": "Hub",
+    "desc": "Boredflix.com is a website offering free streaming of movies and TV shows without requiring sign-up. Launched in 2025 after two years of development, it quickly received significant user traffic, logging 6.1 million visits in October 2025.",
+    "thumb": "https://play-lh.googleusercontent.com/fZNXd1jZWAkZMx10JPYBNnHWVx1eccx66QyU99NWc07LBWR9B6lq1ISnbNxKsEXd030-I1Sh4Tag7TbbeySu=w240-h480-rw",
+    "link": "https://boredflix.com/",
+    "verified": true
+  },
+{
+    "title": "Fmovies",
+    "category": "Hub",
+    "desc": "Just a better place for watching online movies for free!",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw0Km-r9xoHAhu2fT0eY32d7h3Pb0fkQozfg&s",
+    "link": "https://ww4.fmovies.co/26/",
     "verified": false
   }
 ]
