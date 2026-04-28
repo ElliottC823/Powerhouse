@@ -466,8 +466,8 @@
 {
     "title": "Deer Adventure",
     "category": "Simulator",
-    "desc": "A trippy, physics-based reimagining of Super Mario Bros where everything is made of jelly.",
-    "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
+    "desc": "Become a deer? Sounds weird—but that’s exactly what Deer Adventure is all about. Jump in and take on the role of a deer roaming freely around the bustling, open-world city and do whatever you want, of course, as a deer.",
+    "thumb": "https://deeradventure.io/data/image/options/deer-adventure-banner.jpg",
     "link": "https://zapgames.io/deer-adventure",
     "verified": false
   }
