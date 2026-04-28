@@ -462,5 +462,13 @@
     "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
     "link": "https://jellymar.io/",
     "verified": false
+  },
+{
+    "title": "Deer Adventure",
+    "category": "Simulator",
+    "desc": "A trippy, physics-based reimagining of Super Mario Bros where everything is made of jelly.",
+    "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
+    "link": "https://zapgames.io/deer-adventure",
+    "verified": false
   }
 ]
