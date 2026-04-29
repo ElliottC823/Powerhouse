@@ -432,6 +432,30 @@
             flex-shrink: 0;
         }
 
+        .accent-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .reset-accent-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 900;
+            font-family: inherit;
+            min-height: 32px;
+            padding: 0 8px;
+            white-space: nowrap;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .reset-accent-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .reset-accent-btn:active { opacity: 0.7; }
+
         .divider { border-top: 1px solid var(--border); margin: 14px 0; padding-top: 14px; }
         h4 { margin: 0 0 8px 0; font-size: 0.85rem; text-transform: uppercase; color: var(--accent); }
         .small-text { font-size: 0.8rem; line-height: 1.5; opacity: 0.8; }
@@ -484,6 +508,11 @@
     <div class="shelf-scroll" id="historyGrid"></div>
 </div>
 
+<div class="shelf-container" id="recommendedShelf">
+    <div class="shelf-title">Recommended</div>
+    <div class="shelf-scroll" id="recommendedGrid"></div>
+</div>
+
 <nav class="filter-bar" id="filterBar"></nav>
 
 <main id="game-grid"></main>
@@ -493,7 +522,13 @@
     <span class="sheet-handle"></span>
     <div class="row"><span>DARK MODE</span><input type="checkbox" id="themeToggle" checked onclick="updateUI()"></div>
     <div class="row"><span>ROUNDED UI</span><input type="checkbox" id="cornerToggle" checked onclick="updateUI()"></div>
-    <div class="row"><span>ACCENT</span><input type="color" id="accentPicker" value="#0066FF" oninput="updateUI()"></div>
+    <div class="row">
+        <span>ACCENT</span>
+        <div class="accent-controls">
+            <button class="reset-accent-btn" onclick="resetAccent()" title="Reset to default">RESET</button>
+            <input type="color" id="accentPicker" value="#0066FF" oninput="updateUI()">
+        </div>
+    </div>
     <div class="row"><span>HISTORY</span><button class="reset-btn" onclick="clearHistory()">CLEAR</button></div>
 
     <div class="divider">
@@ -513,7 +548,7 @@
 
     <div class="divider">
         <h4>Mirrors</h4>
-        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link">Cloudflare (Main)</a>
+        <a href="https://powerhouse.elliottc1120.workers.dev/" class="mirror-link">Cloudflare (Main)</a>
         <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link">Google Sites</a>
     </div>
 
@@ -564,6 +599,14 @@
         renderGames();
     }
 
+    function shelfItemHTML(g) {
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+                    <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                    ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
+                    <div class="shelf-label">${g.title}</div>
+                </a>`;
+    }
+
     function renderGames() {
         const grid = document.getElementById('game-grid');
         const search = document.getElementById('searchInput').value.toLowerCase();
@@ -573,15 +616,44 @@
         const shelf = document.getElementById('historyShelf');
         if (history.length > 0) {
             shelf.style.display = 'block';
-            document.getElementById('historyGrid').innerHTML = history.map(g => `
-                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
-                    <img src="${g.thumb}" class="shelf-img" loading="lazy">
-                    ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
-                    <div class="shelf-label">${g.title}</div>
-                </a>
-            `).join('');
+            document.getElementById('historyGrid').innerHTML = history.map(g => shelfItemHTML(g)).join('');
         } else {
             shelf.style.display = 'none';
+        }
+
+        // Render Recommended Shelf — only when history exists
+        const recommendedShelf = document.getElementById('recommendedShelf');
+        if (history.length > 0 && games.length > 0) {
+            // Collect categories from played games, deduplicated
+            const playedTitles = new Set(history.map(g => g.title));
+            const playedCategories = [...new Set(history.map(g => g.category))];
+
+            // Find games in the same categories that haven't been played, shuffle lightly
+            let pool = games.filter(g =>
+                playedCategories.includes(g.category) && !playedTitles.has(g.title)
+            );
+
+            // If not enough category matches, pad with any unplayed games
+            if (pool.length < 4) {
+                const extras = games.filter(g => !playedTitles.has(g.title) && !pool.includes(g));
+                pool = [...pool, ...extras];
+            }
+
+            // Deterministic shuffle using title chars so it's stable per session
+            pool.sort((a, b) => {
+                const seed = (s) => s.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+                return (seed(a.title) % 7) - (seed(b.title) % 7);
+            });
+
+            const picks = pool.slice(0, 8);
+            if (picks.length > 0) {
+                recommendedShelf.style.display = 'block';
+                document.getElementById('recommendedGrid').innerHTML = picks.map(g => shelfItemHTML(g)).join('');
+            } else {
+                recommendedShelf.style.display = 'none';
+            }
+        } else {
+            recommendedShelf.style.display = 'none';
         }
 
         const filtered = games.filter(g => {
@@ -633,10 +705,21 @@
         document.getElementById('settingsBackdrop').classList.remove('show');
     }
 
+    function loadSettings() {
+        // Read all saved preferences from localStorage and apply to controls
+        const theme   = localStorage.getItem('power_theme') || 'dark';
+        const corners = localStorage.getItem('power_corners') || 'rounded';
+        const accent  = localStorage.getItem('power_accent') || '#0066FF';
+
+        document.getElementById('themeToggle').checked  = (theme === 'dark');
+        document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        document.getElementById('accentPicker').value   = accent;
+    }
+
     function updateUI() {
-        const isDark = document.getElementById('themeToggle').checked;
+        const isDark    = document.getElementById('themeToggle').checked;
         const isRounded = document.getElementById('cornerToggle').checked;
-        const accent = document.getElementById('accentPicker').value;
+        const accent    = document.getElementById('accentPicker').value;
 
         document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
         document.body.setAttribute('data-corners', isRounded ? 'rounded' : 'sharp');
@@ -647,7 +730,10 @@
             ? "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png"
             : "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png";
 
-        localStorage.setItem('power_theme', isDark ? 'dark' : 'light');
+        // Save all three preferences
+        localStorage.setItem('power_theme',   isDark ? 'dark' : 'light');
+        localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
+        localStorage.setItem('power_accent',  accent);
     }
 
     // Close settings on outside click (desktop only — backdrop handles mobile)
@@ -668,9 +754,16 @@
         if (e.key === 'Escape') closeSettings();
     });
 
-    window.onload = () => {
-        fetchData();
+    function resetAccent() {
+        const defaultAccent = '#0066FF';
+        document.getElementById('accentPicker').value = defaultAccent;
         updateUI();
+    }
+
+    window.onload = () => {
+        loadSettings(); // Restore saved prefs into controls first
+        updateUI();     // Apply them to the UI
+        fetchData();
     };
 </script>
 </body>
