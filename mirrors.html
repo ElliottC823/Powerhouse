@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse Mirrors</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,34 +19,49 @@
             --border: #2a2d35;
             --radius: 12px;
             --shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
         }
 
         * {
             box-sizing: border-box;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg);
             background-image: var(--bg-image);
-            background-attachment: fixed;
+            /* scroll instead of fixed — fixed is GPU-expensive on mobile */
+            background-attachment: scroll;
             background-size: cover;
-            background-position: center;
+            background-position: center top;
             color: var(--text);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            /* Respect notch/home bar on all sides */
+            padding: calc(20px + var(--safe-top))
+                     calc(20px + var(--safe-right))
+                     calc(20px + var(--safe-bottom))
+                     calc(20px + var(--safe-left));
+            -webkit-overflow-scrolling: touch;
         }
 
         .container {
             background-color: var(--surface);
             border: 3px solid var(--accent);
             border-radius: var(--radius);
-            padding: 40px;
+            /* Fluid padding: tighter on small phones, roomier on tablets */
+            padding: clamp(24px, 6vw, 40px);
             width: 100%;
             max-width: 440px;
             box-shadow: var(--shadow);
@@ -50,66 +69,92 @@
         }
 
         .logo-container {
-            margin-bottom: 25px;
+            margin-bottom: 22px;
             border-bottom: 2px solid var(--border);
-            padding-bottom: 20px;
+            padding-bottom: 18px;
         }
 
         .logo-img {
-            max-width: 280px;
+            /* Fluid width so it never overflows on narrow phones */
+            width: clamp(160px, 70%, 280px);
             height: auto;
             filter: drop-shadow(0 0 10px rgba(0, 102, 255, 0.3));
+            display: block;
+            margin: 0 auto;
         }
 
         h1 {
-            margin-top: 0;
+            margin: 0 0 20px 0;
             font-weight: 900;
             text-transform: uppercase;
-            font-size: 1.4rem;
+            /* Fluid font size: scales between small phones and Chromebooks */
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
             color: var(--text);
             letter-spacing: 1px;
-            margin-bottom: 20px;
         }
 
         .link-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .mirror-link {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background: var(--bg);
             border: 2px solid var(--border);
-            padding: 15px;
+            /* Fluid vertical padding; minimum 52px tall for 44px+ touch target */
+            padding: clamp(14px, 3vw, 15px) 16px;
+            min-height: 52px;
             border-radius: var(--radius);
             color: var(--text);
             text-decoration: none;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 1rem;
+            font-size: clamp(0.85rem, 3vw, 1rem);
             box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            /* Only transition non-layout properties for performance */
+            transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            /* Prevent text selection on long-press */
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .mirror-link:hover {
-            border-color: var(--accent);
-            transform: translate(-3px, -3px);
-            box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
-            color: var(--accent);
+        /* Hover lift only on pointer devices — no sticky hover on touch */
+        @media (hover: hover) {
+            .mirror-link:hover {
+                border-color: var(--accent);
+                transform: translate(-3px, -3px);
+                box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+                color: var(--accent);
+            }
         }
 
-        .broken {
-            color: #ff4444 !important;
+        /* Press feedback for touch */
+        .mirror-link:active {
+            transform: scale(0.97);
             opacity: 0.8;
         }
 
-        .broken:hover {
-            border-color: #ff4444;
-            color: #ff4444 !important;
+        .mirror-link-label {
+            display: block;
+        }
+
+        .disclaimer {
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            opacity: 0.6;
+            margin-top: 3px;
+            text-transform: none;
+            letter-spacing: 0;
         }
 
         .footer {
-            margin-top: 30px;
+            margin-top: 28px;
             font-size: 0.7rem;
             font-weight: 900;
             opacity: 0.5;
@@ -123,17 +168,21 @@
         <div class="logo-container">
             <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
         </div>
-        
+
         <h1>Mirror Links</h1>
-        
+
         <div class="link-list">
-            <a href="https://powerhouse.elliottc1120.workers.dev/" target="_blank" class="mirror-link">Cloudflare (Main)</a>
-            <a href="https://sites.google.com/view/powerhousehub/" target="_blank" class="mirror-link">Google Sites</a>
-            <a href="https://powerhousehub.netlify.app/" target="_blank" class="mirror-link broken">Netlify (Broken)</a>
+            <a href="https://powerhouse.elliottc1120.workers.dev/" target="_blank" rel="noopener" class="mirror-link">
+                <span class="mirror-link-label">Cloudflare (Main)</span>
+            </a>
+            <a href="https://sites.google.com/view/powerhousehub/" target="_blank" rel="noopener" class="mirror-link">
+                <span class="mirror-link-label">Google Sites</span>
+                <span class="disclaimer">⚠ May not work in some school districts</span>
+            </a>
         </div>
 
         <div class="footer">
-            Powerhouse V1.4.33
+            Powerhouse V1.4.36
         </div>
     </div>
 
