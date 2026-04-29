@@ -192,11 +192,11 @@
     "verified": false
   },
   {
-    "title": "Myinstants",
+    "title": "Soundboard",
     "category": "Utility",
     "desc": "Find the best funny sound buttons to play and download.",
     "thumb": "https://addons.mozilla.org/user-media/previews/full/315/315163.png?modified=1740817557",
-    "link": "https://www.myinstants.com/",
+    "link": "https://soundbuttonsworld.com/",
     "verified": false
   },
   {
