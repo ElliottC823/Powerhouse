@@ -548,8 +548,8 @@
 
     <div class="divider">
         <h4>Mirrors</h4>
-        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link">Cloudflare (Main)</a>
-        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link">Google Sites</a>
+        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link" onclick="openInBlank('https://powerhouse.c823.workers.dev/', event)">Cloudflare (Main)</a>
+        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link" onclick="openInBlank('https://sites.google.com/view/powerhousehub/', event)">Google Sites</a>
     </div>
 
     <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.4.36</div>
@@ -558,6 +558,20 @@
 <script>
     let games = [];
     let currentFilter = 'ALL';
+
+    function openInBlank(url, event) {
+        if (event) event.preventDefault();
+        const tab = window.open('about:blank', '_blank');
+        if (!tab) return; // popup blocked
+        tab.document.write(`<!DOCTYPE html>
+<html style="margin:0;padding:0;height:100%;width:100%;">
+<head><title>Powerhouse</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;}html,body,iframe{width:100%;height:100%;border:none;display:block;}</style>
+</head>
+<body><iframe src="${url}" allowfullscreen></iframe></body>
+</html>`);
+        tab.document.close();
+    }
 
     async function fetchData() {
         try {
@@ -600,7 +614,7 @@
     }
 
     function shelfItemHTML(g) {
-        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -675,7 +689,7 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event)">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
