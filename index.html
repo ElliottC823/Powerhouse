@@ -530,6 +530,7 @@
         </div>
     </div>
     <div class="row"><span>HISTORY</span><button class="reset-btn" onclick="clearHistory()">CLEAR</button></div>
+    <div class="row"><span>FORCE ABOUT:BLANK</span><input type="checkbox" id="forceBlankToggle" onclick="updateUI()"></div>
 
     <div class="divider">
         <h4>About Powerhouse</h4>
@@ -548,8 +549,8 @@
 
     <div class="divider">
         <h4>Mirrors</h4>
-        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link" onclick="openInBlank('https://powerhouse.c823.workers.dev/', event)">Cloudflare (Main)</a>
-        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link" onclick="openInBlank('https://sites.google.com/view/powerhousehub/', event)">Google Sites</a>
+        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link" onclick="loadInBlank('https://powerhouse.c823.workers.dev/'); return false;">Cloudflare (Main)</a>
+        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link" onclick="loadInBlank('https://sites.google.com/view/powerhousehub/'); return false;">Google Sites</a>
     </div>
 
     <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.4.36</div>
@@ -559,22 +560,83 @@
     let games = [];
     let currentFilter = 'ALL';
 
-    function openInBlank(url, event) {
-        if (event) event.preventDefault();
+    const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png';
+
+    function loadInBlank(url, title) {
         if (url.includes('youtube.com') || url.includes('youtu.be')) {
             window.open(url, '_blank');
             return;
         }
+        const displayTitle = title || 'Powerhouse';
         const tab = window.open('about:blank', '_blank');
         if (!tab) return; // popup blocked
+
         tab.document.write(`<!DOCTYPE html>
-<html style="margin:0;padding:0;height:100%;width:100%;">
-<head><title>Powerhouse</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;}html,body,iframe{width:100%;height:100%;border:none;display:block;}</style>
+<html style="margin:0;padding:0;height:100%;width:100%;background:#0d0e12;">
+<head>
+  <title>${displayTitle}</title>
+  <link rel="icon" type="image/png" href="${FAVICON_URL}">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; background:#0d0e12; font-family:sans-serif; }
+    iframe { width:100%; height:100%; border:none; display:block; }
+    #blocker {
+      display:none; position:fixed; inset:0;
+      background:#0d0e12; color:#f5f6fa;
+      flex-direction:column; align-items:center; justify-content:center;
+      gap:16px; text-align:center; padding:24px;
+    }
+    #blocker.show { display:flex; }
+    #blocker h2 { font-size:1.3rem; margin-bottom:4px; }
+    #blocker p { font-size:0.9rem; opacity:0.6; max-width:360px; line-height:1.5; }
+    #blocker a {
+      display:inline-block; margin-top:8px;
+      background:#0066FF; color:#fff; text-decoration:none;
+      padding:10px 24px; border-radius:12px; font-weight:700; font-size:0.9rem;
+    }
+    #blocker a:hover { opacity:0.85; }
+  </style>
 </head>
-<body><iframe src="${url}" allowfullscreen></iframe></body>
+<body>
+  <iframe id="gameFrame" src="${url}" allowfullscreen></iframe>
+  <div id="blocker">
+    <h2>⚠️ Can't embed this game</h2>
+    <p>This site blocks being loaded inside frames. You can open it directly in a new tab instead.</p>
+    <a href="${url}" target="_blank" rel="noopener">Open directly ↗</a>
+  </div>
+  <script>
+    const frame = document.getElementById('gameFrame');
+    const blocker = document.getElementById('blocker');
+    // Give the iframe 4 seconds to load; if it errors or stays blank, show the fallback
+    let loaded = false;
+    frame.addEventListener('load', () => { loaded = true; });
+    frame.addEventListener('error', () => {
+      blocker.classList.add('show');
+      frame.style.display = 'none';
+    });
+    setTimeout(() => {
+      if (!loaded) {
+        blocker.classList.add('show');
+        frame.style.display = 'none';
+      }
+    }, 4000);
+  <\/script>
+</body>
 </html>`);
         tab.document.close();
+    }
+
+    // Main entry point for opening a game.
+    // Verified games open directly by default; unverified always use about:blank.
+    // If the "Force about:blank" setting is on, everything uses about:blank.
+    function openGame(url, verified, title, event) {
+        if (event) event.preventDefault();
+        const forceBlank = localStorage.getItem('power_force_blank') === 'true';
+        if (forceBlank || !verified) {
+            loadInBlank(url, title);
+        } else {
+            window.open(url, '_blank');
+        }
     }
 
     async function fetchData() {
@@ -618,7 +680,8 @@
     }
 
     function shelfItemHTML(g) {
-        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event)">
+        const safeTitle = g.title.replace(/'/g, "\'");
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${safeTitle}', event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -693,7 +756,7 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event)">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${g.title.replace(/'/g, "\\'")}', event)">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
@@ -729,9 +792,12 @@
         const corners = localStorage.getItem('power_corners') || 'rounded';
         const accent  = localStorage.getItem('power_accent') || '#0066FF';
 
-        document.getElementById('themeToggle').checked  = (theme === 'dark');
-        document.getElementById('cornerToggle').checked = (corners === 'rounded');
-        document.getElementById('accentPicker').value   = accent;
+        const forceBlank = localStorage.getItem('power_force_blank') === 'true';
+
+        document.getElementById('themeToggle').checked    = (theme === 'dark');
+        document.getElementById('cornerToggle').checked   = (corners === 'rounded');
+        document.getElementById('accentPicker').value     = accent;
+        document.getElementById('forceBlankToggle').checked = forceBlank;
     }
 
     function updateUI() {
@@ -748,10 +814,12 @@
             ? "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png"
             : "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png";
 
-        // Save all three preferences
-        localStorage.setItem('power_theme',   isDark ? 'dark' : 'light');
-        localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
-        localStorage.setItem('power_accent',  accent);
+        // Save all preferences
+        const forceBlank = document.getElementById('forceBlankToggle').checked;
+        localStorage.setItem('power_theme',        isDark ? 'dark' : 'light');
+        localStorage.setItem('power_corners',       isRounded ? 'rounded' : 'sharp');
+        localStorage.setItem('power_accent',        accent);
+        localStorage.setItem('power_force_blank',   forceBlank ? 'true' : 'false');
     }
 
     // Close settings on outside click (desktop only — backdrop handles mobile)
