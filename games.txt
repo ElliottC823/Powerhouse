@@ -478,5 +478,13 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw0Km-r9xoHAhu2fT0eY32d7h3Pb0fkQozfg&s",
     "link": "https://ww4.fmovies.co/26/",
     "verified": false
+  },
+{
+    "title": "Happy Wheels",
+    "category": "Arcade",
+    "desc": "Happy Wheels is a side-scrolling ragdoll physics-based platform browser game developed and published by Fancy Force.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQteXQvpoI6DC-Er1kq_2yoF-RGPcWF-xRbA&s",
+    "link": "https://totaljerkface.com/happy_wheels.tjf",
+    "verified": false
   }
 ]
