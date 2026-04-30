@@ -561,6 +561,10 @@
 
     function openInBlank(url, event) {
         if (event) event.preventDefault();
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            window.open(url, '_blank');
+            return;
+        }
         const tab = window.open('about:blank', '_blank');
         if (!tab) return; // popup blocked
         tab.document.write(`<!DOCTYPE html>
