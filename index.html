@@ -13,12 +13,12 @@
         :root {
             --brand-default: #0066FF;
             --accent: #0066FF;
-            --bg: #0d0e12;
+            --bg: #13151b;
             --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/background-dark.svg');
             --header-bg: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/topbar-dark.svg');
-            --surface: #16181d;
-            --text: #f0f2f5;
-            --border: #2a2d35;
+            --surface: #1e2028;
+            --text: #f5f6fa;
+            --border: #35394a;
             --radius: 24px;
             --shadow: 0 4px 15px rgba(0,0,0,0.2);
             --header-height: 64px;
@@ -110,7 +110,7 @@
         #searchInput {
             width: 100%;
             padding: 9px 16px;
-            border-radius: 30px;
+            border-radius: var(--radius);
             border: 2px solid var(--border);
             background: var(--surface);
             color: var(--text);
@@ -129,7 +129,7 @@
             background: var(--surface);
             border: 2px solid var(--border);
             padding: 9px 12px;
-            border-radius: 20px;
+            border-radius: var(--radius);
             font-weight: 900;
             cursor: pointer;
             color: var(--text);
@@ -178,7 +178,7 @@
         .shelf-img {
             width: 72px;
             height: 72px;
-            border-radius: 18px;
+            border-radius: var(--radius);
             object-fit: cover;
             border: 2px solid var(--border);
             margin-bottom: 6px;
@@ -221,7 +221,7 @@
             background: var(--surface);
             border: 2px solid var(--border);
             padding: 8px 18px;
-            border-radius: 20px;
+            border-radius: var(--radius);
             font-weight: 900;
             font-family: inherit;
             cursor: pointer;
@@ -313,7 +313,7 @@
             background: var(--accent);
             color: white;
             padding: 5px 12px;
-            border-radius: 15px;
+            border-radius: var(--radius);
             font-weight: 900;
             font-size: 0.7rem;
             white-space: nowrap;
@@ -337,7 +337,7 @@
             background: var(--surface);
             padding: 20px clamp(16px, 5%, 24px);
             padding-bottom: calc(20px + var(--safe-bottom));
-            border-radius: 20px 20px 0 0;
+            border-radius: var(--radius) var(--radius) 0 0;
             border: 2px solid var(--accent);
             border-bottom: none;
             z-index: 2000;
@@ -357,7 +357,7 @@
                 left: auto;
                 top: calc(var(--header-height) + var(--safe-top) + 8px);
                 right: clamp(12px, 4%, 5%);
-                border-radius: 15px;
+                border-radius: var(--radius);
                 border-bottom: 2px solid var(--accent);
                 width: min(300px, 90vw);
                 max-height: 80vh;
@@ -548,7 +548,7 @@
 
     <div class="divider">
         <h4>Mirrors</h4>
-        <a href="https://powerhouse.elliottc1120.workers.dev/" class="mirror-link">Cloudflare (Main)</a>
+        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link">Cloudflare (Main)</a>
         <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link">Google Sites</a>
     </div>
 
