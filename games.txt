@@ -28,8 +28,8 @@
     "category": "Hub",
     "desc": "CrazyGames features the latest and best free online games. Just load up your favorite games instantly and enjoy.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnX447YDT0ztZ4GMlUiXKoaj3E68j3hnCxg&s",
-    "link": "https://www.crazygames.com/",
-    "verified": false
+    "link": "https://crazygamesunblocked.net/",
+    "verified": true
   },
   {
     "title": "Thorns & Balloons",
@@ -437,14 +437,6 @@
     "desc": "The iconic tile-matching puzzle game. Arrange falling blocks to clear lines and rack up a high score.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQW-AK-RBkoEJ6rhyMkZi0cEJU93LNZdbUg&s",
     "link": "https://sites.google.com/view/classroom6x/tetris?fromSearch=true",
-    "verified": true
-  },
-  {
-    "title": "Crazy Games Unblocked",
-    "category": "Hub",
-    "desc": "A massive collection of unblocked web games.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQce-fV2tLroJJHvFVCKSvKU4sV-Hc7kh9EIw&s",
-    "link": "https://crazygamesunblocked.net/",
     "verified": true
   },
   {
