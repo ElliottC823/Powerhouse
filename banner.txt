@@ -1,1 +1,1 @@
-DISABLED|Original Netlify website went down but we are back.|#0066FF
+ENABLED|loads more games are unblocked now!|#0066FF
