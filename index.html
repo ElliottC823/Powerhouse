@@ -166,11 +166,13 @@
 
         .shelf-item {
             flex: 0 0 90px;
+            min-width: 0;
             text-align: center;
             text-decoration: none;
             color: inherit;
             position: relative;
             scroll-snap-align: start;
+            overflow: hidden;
             /* Larger touch target */
             padding: 4px;
         }
@@ -193,6 +195,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            /* Constrained to parent shelf-item width so ellipsis fires */
+            display: block;
+            width: 0;
+            min-width: 100%;
         }
 
         .shelf-verified {
@@ -486,6 +492,121 @@
             font-weight: 700;
             font-size: 1rem;
         }
+
+        /* ── TUTORIAL OVERLAY ── */
+        .tutorial-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            pointer-events: none;
+        }
+        .tutorial-overlay.active { display: block; }
+
+        .tutorial-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            pointer-events: all;
+        }
+
+        /* The cutout highlight — a transparent hole punched over the target */
+        .tutorial-highlight {
+            position: absolute;
+            border-radius: var(--radius);
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.72), 0 0 0 3px var(--accent);
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9001;
+        }
+
+        .tutorial-card {
+            position: absolute;
+            background: var(--surface);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            width: min(300px, 88vw);
+            z-index: 9002;
+            pointer-events: all;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tutorial-step-label {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .tutorial-title {
+            font-size: 1rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .tutorial-body {
+            font-size: 0.82rem;
+            line-height: 1.55;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .tutorial-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tutorial-dots {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .tutorial-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .tutorial-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        .tutorial-btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tutorial-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 8px 16px;
+            font-weight: 900;
+            font-size: 0.8rem;
+            font-family: inherit;
+            cursor: pointer;
+            min-height: 36px;
+        }
+
+        .tutorial-btn.secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+            opacity: 0.7;
+        }
+
+        .tutorial-btn:active { opacity: 0.7; }
     </style>
 </head>
 <body data-theme="dark">
@@ -530,7 +651,7 @@
         </div>
     </div>
     <div class="row"><span>HISTORY</span><button class="reset-btn" onclick="clearHistory()">CLEAR</button></div>
-    <div class="row"><span>FORCE ABOUT:BLANK</span><input type="checkbox" id="forceBlankToggle" onclick="updateUI()"></div>
+    <div class="row"><span>TUTORIAL</span><button class="reset-btn" style="background:#0066FF;" onclick="closeSettings(); startTutorial()">REDO</button></div>
 
     <div class="divider">
         <h4>About Powerhouse</h4>
@@ -554,6 +675,24 @@
     </div>
 
     <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.4.36</div>
+</div>
+
+<!-- Tutorial Overlay -->
+<div class="tutorial-overlay" id="tutorialOverlay">
+    <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
+    <div class="tutorial-highlight" id="tutorialHighlight"></div>
+    <div class="tutorial-card" id="tutorialCard">
+        <div class="tutorial-step-label" id="tutorialStepLabel"></div>
+        <div class="tutorial-title" id="tutorialTitle"></div>
+        <div class="tutorial-body" id="tutorialBody"></div>
+        <div class="tutorial-actions">
+            <div class="tutorial-dots" id="tutorialDots"></div>
+            <div class="tutorial-btn-row">
+                <button class="tutorial-btn secondary" id="tutorialSkip" onclick="endTutorial()">Skip</button>
+                <button class="tutorial-btn" id="tutorialNext" onclick="tutorialNext()">Next</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -627,13 +766,20 @@
     }
 
     // Main entry point for opening a game.
-    // useBlank (from games.txt) is the primary signal — if true, always about:blank.
-    // Unverified games also use about:blank unless useBlank is explicitly false.
-    // The "Force about:blank" setting overrides everything to about:blank.
+    // Opening logic:
+    //   useBlank: true  → always about:blank regardless of verified
+    //   useBlank: false → always open directly regardless of verified (explicit opt-out)
+    //   useBlank: null/undefined → fall back to verified flag (!verified = about:blank)
     function openGame(url, verified, title, useBlank, event) {
         if (event) event.preventDefault();
-        const forceBlank = localStorage.getItem('power_force_blank') === 'true';
-        const shouldUseBlank = forceBlank || useBlank || !verified;
+        let shouldUseBlank;
+        if (useBlank === true) {
+            shouldUseBlank = true;
+        } else if (useBlank === false) {
+            shouldUseBlank = false; // explicit opt-out overrides verified check
+        } else {
+            shouldUseBlank = !verified; // default fallback
+        }
         if (shouldUseBlank) {
             loadInBlank(url, title);
         } else {
@@ -653,6 +799,7 @@
             renderGames();
         } catch (e) { console.error("Load failed", e); }
     }
+    // fetchData already returns a promise (async fn), so .then() works on it.
 
     function renderFilters() {
         const bar = document.getElementById('filterBar');
@@ -794,12 +941,10 @@
         const corners = localStorage.getItem('power_corners') || 'rounded';
         const accent  = localStorage.getItem('power_accent') || '#0066FF';
 
-        const forceBlank = localStorage.getItem('power_force_blank') === 'true';
 
         document.getElementById('themeToggle').checked    = (theme === 'dark');
         document.getElementById('cornerToggle').checked   = (corners === 'rounded');
         document.getElementById('accentPicker').value     = accent;
-        document.getElementById('forceBlankToggle').checked = forceBlank;
     }
 
     function updateUI() {
@@ -817,11 +962,9 @@
             : "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png";
 
         // Save all preferences
-        const forceBlank = document.getElementById('forceBlankToggle').checked;
         localStorage.setItem('power_theme',        isDark ? 'dark' : 'light');
         localStorage.setItem('power_corners',       isRounded ? 'rounded' : 'sharp');
         localStorage.setItem('power_accent',        accent);
-        localStorage.setItem('power_force_blank',   forceBlank ? 'true' : 'false');
     }
 
     // Close settings on outside click (desktop only — backdrop handles mobile)
@@ -848,10 +991,201 @@
         updateUI();
     }
 
+
+    // ── TUTORIAL ──
+    const TUTORIAL_STEPS = [
+        {
+            title: "Welcome to Powerhouse! 👋",
+            body: "This quick tour will walk you through everything. Tap Next to get started, or Skip to jump right in.",
+            target: null, // no highlight for welcome card
+            position: 'center'
+        },
+        {
+            title: "Search Games 🔍",
+            body: "Type any game name here to instantly filter the library. Results update as you type.",
+            target: '#searchInput',
+            position: 'below'
+        },
+        {
+            title: "Filter by Category 🗂️",
+            body: "Tap a category pill to browse by type — Arcade, Puzzle, Media, Hub, and more. The UNBLOCKED filter shows only verified games.",
+            target: '#filterBar',
+            position: 'below'
+        },
+        {
+            title: "Game Cards 🎮",
+            body: "Click any card to launch the game. Verified games (✔ badge) are confirmed unblocked. Non-verified games open via about:blank for extra privacy.",
+            target: '#game-grid',
+            position: 'above'
+        },
+        {
+            title: "Continue Playing ▶️",
+            body: "Once you've played a game it appears here for quick access. Your history is saved locally and never leaves your device.",
+            target: '#historyShelf',
+            position: 'below',
+            showOnlyIfVisible: true,
+            fallbackBody: "Once you've played a game, a Continue Playing shelf will appear here for quick access. Your history is saved locally."
+        },
+        {
+            title: "Recommended 🌟",
+            body: "Based on what you've played, Powerhouse suggests similar games here. The more you play, the better it gets.",
+            target: '#recommendedShelf',
+            position: 'below',
+            showOnlyIfVisible: true,
+            fallbackBody: "After playing a few games, a Recommended shelf will appear with suggestions based on your taste."
+        },
+        {
+            title: "Settings ⚙️",
+            body: "Tap this button to open settings — switch dark/light mode, toggle rounded corners, change the accent color, manage history, and more.",
+            target: '.settings-btn',
+            position: 'below-left'
+        },
+        {
+            title: "You're all set! 🚀",
+            body: "That's everything! If you ever want to see this tour again, tap REDO TUTORIAL in Settings. Enjoy Powerhouse!",
+            target: null,
+            position: 'center'
+        }
+    ];
+
+    let tutorialStep = 0;
+
+    function startTutorial() {
+        tutorialStep = 0;
+        document.getElementById('tutorialOverlay').classList.add('active');
+        renderTutorialStep();
+    }
+
+    function endTutorial() {
+        document.getElementById('tutorialOverlay').classList.remove('active');
+        clearHighlight();
+        localStorage.setItem('power_tutorial_done', 'true');
+    }
+
+    function tutorialNext() {
+        tutorialStep++;
+        if (tutorialStep >= TUTORIAL_STEPS.length) {
+            endTutorial();
+            return;
+        }
+        renderTutorialStep();
+    }
+
+    function clearHighlight() {
+        const hl = document.getElementById('tutorialHighlight');
+        hl.style.opacity = '0';
+        hl.style.width = '0';
+        hl.style.height = '0';
+    }
+
+    function renderTutorialStep() {
+        const step = TUTORIAL_STEPS[tutorialStep];
+        const isLast = tutorialStep === TUTORIAL_STEPS.length - 1;
+
+        // Dots
+        const dots = document.getElementById('tutorialDots');
+        dots.innerHTML = TUTORIAL_STEPS.map((_, i) =>
+            `<div class="tutorial-dot ${i === tutorialStep ? 'active' : ''}"></div>`
+        ).join('');
+
+        // Step label
+        document.getElementById('tutorialStepLabel').textContent =
+            `Step ${tutorialStep + 1} of ${TUTORIAL_STEPS.length}`;
+
+        // Content — handle fallback for hidden shelves
+        let body = step.body;
+        if (step.showOnlyIfVisible && step.target) {
+            const el = document.querySelector(step.target);
+            if (!el || el.style.display === 'none') {
+                body = step.fallbackBody || step.body;
+                // No highlight if element isn't visible
+                clearHighlight();
+                positionCard(null, step.position);
+                document.getElementById('tutorialTitle').textContent = step.title;
+                document.getElementById('tutorialBody').textContent = body;
+                document.getElementById('tutorialNext').textContent = isLast ? 'Finish 🎉' : 'Next';
+                return;
+            }
+        }
+
+        document.getElementById('tutorialTitle').textContent = step.title;
+        document.getElementById('tutorialBody').textContent = body;
+        document.getElementById('tutorialNext').textContent = isLast ? 'Finish 🎉' : 'Next';
+
+        // Highlight
+        const hl = document.getElementById('tutorialHighlight');
+        if (step.target) {
+            const el = document.querySelector(step.target);
+            if (el) {
+                const r = el.getBoundingClientRect();
+                const pad = 6;
+                hl.style.opacity = '1';
+                hl.style.left   = (r.left - pad) + 'px';
+                hl.style.top    = (r.top - pad) + 'px';
+                hl.style.width  = (r.width + pad * 2) + 'px';
+                hl.style.height = (r.height + pad * 2) + 'px';
+                positionCard(el, step.position);
+            } else {
+                clearHighlight();
+                positionCard(null, step.position);
+            }
+        } else {
+            clearHighlight();
+            positionCard(null, step.position);
+        }
+    }
+
+    function positionCard(targetEl, position) {
+        const card = document.getElementById('tutorialCard');
+        const cardW = 300;
+        const cardH = 200; // approx
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const margin = 16;
+
+        if (!targetEl || position === 'center') {
+            card.style.left = Math.max(margin, (vw - cardW) / 2) + 'px';
+            card.style.top  = Math.max(margin, (vh - cardH) / 2) + 'px';
+            card.style.bottom = 'auto';
+            return;
+        }
+
+        const r = targetEl.getBoundingClientRect();
+
+        if (position === 'below' || position === 'below-left') {
+            let top = r.bottom + 16;
+            // If it would overflow bottom, flip above
+            if (top + cardH > vh - margin) top = r.top - cardH - 16;
+            card.style.top    = Math.max(margin, top) + 'px';
+            card.style.bottom = 'auto';
+
+            if (position === 'below-left') {
+                // Align card right edge with target right edge
+                let left = r.right - cardW;
+                card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
+            } else {
+                let left = r.left;
+                card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
+            }
+        } else if (position === 'above') {
+            let top = r.top - cardH - 16;
+            if (top < margin) top = r.bottom + 16;
+            card.style.top    = Math.max(margin, top) + 'px';
+            card.style.bottom = 'auto';
+            let left = r.left;
+            card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
+        }
+    }
+
     window.onload = () => {
         loadSettings(); // Restore saved prefs into controls first
         updateUI();     // Apply them to the UI
-        fetchData();
+        fetchData().then(() => {
+            // Show tutorial automatically on first visit
+            if (!localStorage.getItem('power_tutorial_done')) {
+                setTimeout(startTutorial, 800);
+            }
+        });
     };
 </script>
 </body>
