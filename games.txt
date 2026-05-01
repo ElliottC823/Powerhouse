@@ -587,7 +587,7 @@
   {
     "title": "Geommetry Dash",
     "category": "Utility",
-    "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It’s famous for its simple "one-tap" mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
+    "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It’s famous for its simple mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCd8DHW4zOb9QqjJ59t9FpV8LnEeKwIttiaw&s",
     "link": "https://crazygamesunblocked.net/geometry-dash",
     "verified": true,
