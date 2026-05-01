@@ -48,7 +48,7 @@
     "title": "Neal.Fun",
     "category": "Hub",
     "desc": "Games and stuff by Neal.",
-    "thumb": "https://theabbie.github.io/blog/assets/Neal-Agarwal.jpg",
+    "thumb": "https://res.cloudinary.com/ybmedia/image/upload/c_crop,e_improve,h_649,w_1154,x_23,y_0/c_fill,f_auto,h_1215,q_auto,w_2160/v1/m/e/e/eeb8778cf3826ffb64f9e8d77fa84512062a437c/image-86-1-scaled-e1744380714382.jpg",
     "link": "https://neal.fun",
     "verified": true,
     "useBlank": false
@@ -490,9 +490,9 @@
     "category": "Arcade",
     "desc": "The iconic tile-matching puzzle game. Arrange falling blocks to clear lines and rack up a high score.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQW-AK-RBkoEJ6rhyMkZi0cEJU93LNZdbUg&s",
-    "link": "https://sites.google.com/view/classroom6x/tetris?fromSearch=true",
-    "verified": true,
-    "useBlank": false
+    "link": "https://www.freetetris.org/",
+    "verified": false,
+    "useBlank": true
   },
   {
     "title": "Coolmath Games",
@@ -508,9 +508,9 @@
     "category": "Games",
     "desc": "A trippy, physics-based reimagining of Super Mario Bros where everything is made of jelly.",
     "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
-    "link": "https://sites.google.com/view/classroom6x/jelly-mario",
-    "verified": true,
-    "useBlank": false
+    "link": "https://jellymar.io/",
+    "verified": false,
+    "useBlank": true
   },
   {
     "title": "Deer Adventure",
@@ -543,7 +543,7 @@
     "title": "Spotify",
     "category": "Media",
     "desc": "Listen to music, podcasts, and more on Spotify.",
-    "thumb": "https://play-lh.googleusercontent.com/kDXJ6XA2Cm47lzDCvvu6HNCu0PWmTwZKiY0ldCWrCgXGT3Ms-lbP_WN1v5vknspnLT15=w526-h296-rw",
+    "thumb": "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg",
     "link": "https://open.spotify.com/",
     "verified": true,
     "useBlank": false
@@ -552,7 +552,7 @@
     "title": "Apple Music",
     "category": "Media",
     "desc": "Stream over 100 million songs, ad-free on Apple Music.",
-    "thumb": "https://ipcdn-web.apple.com/assets/v2/web/7649dd1a-5f3c-48b0-bbf3-76294ff1e76d",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQSbl1bLb2mQjx4gAIasxURGuTvURgC4t5sw&s",
     "link": "https://music.apple.com/",
     "verified": true,
     "useBlank": false
@@ -561,7 +561,7 @@
     "title": "Pandora",
     "category": "Media",
     "desc": "Free music and podcasts, personalized for you.",
-    "thumb": "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2022/10/Pandora-hero.png?w=1200&h=628&fit=crop",
+    "thumb": "https://musicconsultant.com/site/uploads/2019/06/PandoraRebrand1-1260x840.png",
     "link": "https://www.pandora.com/",
     "verified": true,
     "useBlank": false
