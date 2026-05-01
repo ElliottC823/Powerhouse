@@ -75,7 +75,7 @@
     "title": "Watch Documentaries Games",
     "category": "Hub",
     "desc": "Real and good games on a educational website.",
-    "thumb": "https://watchdocumentaries.com/wp-content/uploads/Logo.png",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR9BysHlwclKDEoaCcJcLJ6rxjx-MxWQaQ8A&s",
     "link": "https://watchdocumentaries.com/games/",
     "verified": true,
     "useBlank": false
