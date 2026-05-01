@@ -18,7 +18,7 @@
     "useBlank": false
   },
   {
-    "title": "VEND",
+    "title": "VENDS",
     "category": "Arcade",
     "desc": "A game inspired by Roblox natural disaster survival games, but 2D and in scratch!",
     "thumb": "https://cdn2.scratch.mit.edu/get_image/project/1296814899_282x210.png",
@@ -194,8 +194,8 @@
     "desc": "The classic Zero-G Google search interface experiment by Mr.Doob.",
     "thumb": "https://lh6.ggpht.com/qMSDMY5_zyRjerhq4AIrSn5R4Ar5Rq4nV-zN5HrJP3bEgH5C228FlbkyViBTTPwSWQPFKRthxiWX8YCOtymNihualOObLBxI9n3N",
     "link": "https://mrdoob.com/projects/chromeexperiments/google-space/",
-    "verified": true,
-    "useBlank": true
+    "verified": false,
+    "useBlank": false
   },
   {
     "title": "MS Paint",
@@ -212,8 +212,8 @@
     "desc": "The ultimate idle game. Bake an astronomical number of cookies.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0MEhmA4C4wPGi_KTGQjMMF0cyqZ346K7xQ&s",
     "link": "https://orteil.dashnet.org/cookieclicker/",
-    "verified": true,
-    "useBlank": true
+    "verified": false,
+    "useBlank": false
   },
   {
     "title": "Soundboard",
