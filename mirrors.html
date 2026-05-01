@@ -6,185 +6,1025 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Powerhouse Mirrors</title>
+    <title>Powerhouse</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
+            --brand-default: #0066FF;
             --accent: #0066FF;
-            --bg: #0d0e12;
+            --bg: #13151b;
             --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/background-dark.svg');
-            --surface: #16181d;
-            --text: #f0f2f5;
-            --border: #2a2d35;
-            --radius: 12px;
-            --shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+            --header-bg: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/topbar-dark.svg');
+            --surface: #1e2028;
+            --text: #f5f6fa;
+            --border: #35394a;
+            --radius: 24px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.2);
+            --header-height: 64px;
+            /* Safe area insets for notched phones */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
             --safe-right: env(safe-area-inset-right, 0px);
         }
 
+        [data-theme="light"] {
+            --bg: #f0f2f5;
+            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/background-light.svg');
+            --header-bg: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/topbar-light.svg');
+            --surface: #ffffff;
+            --text: #0a0a0a;
+            --border: #d1d9e6;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        [data-corners="sharp"] { --radius: 0px !important; }
+
+        /* Reduce motion for users who prefer it or for performance */
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; animation: none !important; }
         }
 
+        /* Only animate non-layout properties for performance */
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* Remove tap flash on mobile */
+        }
+
+        /* Separate transform transitions from color transitions for compositing */
+        .game-card, .shelf-item, .filter-btn {
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg);
             background-image: var(--bg-image);
-            /* scroll instead of fixed — fixed is GPU-expensive on mobile */
+            /* Use scroll instead of fixed — fixed backgrounds are GPU-expensive on mobile */
             background-attachment: scroll;
             background-size: cover;
             background-position: center top;
             color: var(--text);
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            /* Respect notch/home bar on all sides */
-            padding: calc(20px + var(--safe-top))
-                     calc(20px + var(--safe-right))
-                     calc(20px + var(--safe-bottom))
-                     calc(20px + var(--safe-left));
+            overflow-x: hidden;
+            /* Smooth scrolling on iOS */
             -webkit-overflow-scrolling: touch;
+            /* Account for notch/home bar */
+            padding-left: var(--safe-left);
+            padding-right: var(--safe-right);
+            padding-bottom: var(--safe-bottom);
         }
 
-        .container {
-            background-color: var(--surface);
-            border: 3px solid var(--accent);
-            border-radius: var(--radius);
-            /* Fluid padding: tighter on small phones, roomier on tablets */
-            padding: clamp(24px, 6vw, 40px);
-            width: 100%;
-            max-width: 440px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-
-        .logo-container {
-            margin-bottom: 22px;
+        /* ── HEADER ── */
+        header {
+            background-image: var(--header-bg);
+            background-size: cover;
+            padding: 0 clamp(12px, 4%, 5%);
+            padding-top: var(--safe-top);
+            height: calc(var(--header-height) + var(--safe-top));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             border-bottom: 2px solid var(--border);
-            padding-bottom: 18px;
         }
 
         .logo-img {
-            /* Fluid width so it never overflows on narrow phones */
-            width: clamp(160px, 70%, 280px);
-            height: auto;
-            filter: drop-shadow(0 0 10px rgba(0, 102, 255, 0.3));
-            display: block;
-            margin: 0 auto;
+            height: 32px;
+            flex-shrink: 0;
+            /* Prevent logo from being too large on small screens */
+            max-width: 120px;
+            object-fit: contain;
         }
 
-        h1 {
-            margin: 0 0 20px 0;
-            font-weight: 900;
-            text-transform: uppercase;
-            /* Fluid font size: scales between small phones and Chromebooks */
-            font-size: clamp(1.1rem, 4vw, 1.4rem);
+        .search-container {
+            flex-grow: 1;
+            min-width: 0; /* Allow it to shrink below intrinsic size */
+            max-width: 400px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 9px 16px;
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            background: var(--surface);
             color: var(--text);
-            letter-spacing: 1px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 16px; /* 16px prevents iOS auto-zoom on focus */
+            outline: none;
+            transition: border-color 0.2s;
         }
 
-        .link-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        #searchInput:focus { border-color: var(--accent); }
 
-        .mirror-link {
+        .controls { flex-shrink: 0; }
+
+        .settings-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            padding: 9px 12px;
+            border-radius: var(--radius);
+            font-weight: 900;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 1rem;
+            line-height: 1;
+            /* Minimum 44×44 touch target */
+            min-width: 44px;
+            min-height: 44px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            /* Fluid vertical padding; minimum 52px tall for 44px+ touch target */
-            padding: clamp(14px, 3vw, 15px) 16px;
-            min-height: 52px;
-            border-radius: var(--radius);
-            color: var(--text);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .settings-btn:active { opacity: 0.7; }
+
+        /* ── CONTINUE PLAYING SHELF ── */
+        .shelf-container { padding: 16px clamp(12px, 4%, 5%); display: none; }
+        .shelf-title { font-weight: 900; font-size: 1.1rem; margin-bottom: 12px; }
+
+        .shelf-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            /* Hide scrollbar cross-browser */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            /* Momentum scrolling on iOS */
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
+        }
+        .shelf-scroll::-webkit-scrollbar { display: none; }
+
+        .shelf-item {
+            flex: 0 0 90px;
+            text-align: center;
             text-decoration: none;
+            color: inherit;
+            position: relative;
+            scroll-snap-align: start;
+            /* Larger touch target */
+            padding: 4px;
+        }
+
+        .shelf-img {
+            width: 72px;
+            height: 72px;
+            border-radius: var(--radius);
+            object-fit: cover;
+            border: 2px solid var(--border);
+            margin-bottom: 6px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .shelf-label {
+            font-size: 0.72rem;
             font-weight: 700;
-            text-transform: uppercase;
-            font-size: clamp(0.85rem, 3vw, 1rem);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-            /* Only transition non-layout properties for performance */
-            transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .shelf-verified {
+            position: absolute;
+            top: 0;
+            right: 8px;
+            width: 18px;
+            height: 18px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            padding: 8px clamp(12px, 4%, 5%);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            font-weight: 900;
+            font-family: inherit;
+            cursor: pointer;
+            color: var(--text);
+            white-space: nowrap;
+            font-size: 0.85rem;
+            /* 44px minimum touch target height */
+            min-height: 44px;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+        }
+        .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .filter-btn:active { opacity: 0.7; }
+
+        /* ── GAME GRID ── */
+        #game-grid {
+            display: grid;
+            /* 
+              Mobile: 2 columns
+              Tablet/Chromebook: 3 columns
+              Desktop: auto-fill ~280px
+            */
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(10px, 2.5vw, 25px);
+            padding: clamp(10px, 3%, 20px) clamp(12px, 4%, 5%);
+        }
+
+        /* Tablet / Chromebook landscape */
+        @media (min-width: 600px) {
+            #game-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* Desktop */
+        @media (min-width: 900px) {
+            #game-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+        }
+
+        .game-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            display: block;
+            transition: border-color 0.2s ease, transform 0.15s ease;
             /* Prevent text selection on long-press */
             -webkit-user-select: none;
             user-select: none;
         }
 
-        /* Hover lift only on pointer devices — no sticky hover on touch */
+        /* Hover only on pointer devices (not touch) */
         @media (hover: hover) {
-            .mirror-link:hover {
-                border-color: var(--accent);
-                transform: translate(-3px, -3px);
-                box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
-                color: var(--accent);
+            .game-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        }
+
+        .game-card:active { transform: scale(0.97); }
+
+        .thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+        .thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Lazy-load images for performance */
+            loading: lazy;
+            display: block;
+        }
+
+        .game-info {
+            padding: clamp(8px, 2%, 15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .game-title-container { display: flex; align-items: center; gap: 5px; min-width: 0; }
+
+        .game-title {
+            font-weight: 900;
+            font-size: clamp(0.75rem, 2.5vw, 1rem);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .play-btn {
+            background: var(--accent);
+            color: white;
+            padding: 5px 12px;
+            border-radius: var(--radius);
+            font-weight: 900;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+            /* Min touch target */
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .verified-badge { width: 14px; height: 14px; cursor: help; flex-shrink: 0; }
+
+        /* ── SETTINGS MENU ── */
+        .settings-menu {
+            display: none;
+            position: fixed;
+            /* On mobile, pin to bottom like a sheet */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            padding: 20px clamp(16px, 5%, 24px);
+            padding-bottom: calc(20px + var(--safe-bottom));
+            border-radius: var(--radius) var(--radius) 0 0;
+            border: 2px solid var(--accent);
+            border-bottom: none;
+            z-index: 2000;
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+            /* Smooth slide-up animation */
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        /* On tablets/desktop, show as a popover */
+        @media (min-width: 600px) {
+            .settings-menu {
+                bottom: auto;
+                left: auto;
+                top: calc(var(--header-height) + var(--safe-top) + 8px);
+                right: clamp(12px, 4%, 5%);
+                border-radius: var(--radius);
+                border-bottom: 2px solid var(--accent);
+                width: min(300px, 90vw);
+                max-height: 80vh;
+                transform: translateY(-10px);
+                opacity: 0;
+                transition: transform 0.2s ease, opacity 0.2s ease;
+            }
+            .settings-menu.show {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
-        /* Press feedback for touch */
-        .mirror-link:active {
-            transform: scale(0.97);
-            opacity: 0.8;
+        .settings-menu.show {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
         }
 
-        .mirror-link-label {
+        /* Drag handle for bottom sheet on mobile */
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 0 auto 16px;
             display: block;
         }
 
-        .disclaimer {
-            display: block;
-            font-size: 0.68rem;
+        @media (min-width: 600px) {
+            .sheet-handle { display: none; }
+        }
+
+        /* Backdrop for mobile settings sheet */
+        .settings-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .settings-backdrop.show { display: block; opacity: 1; }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
             font-weight: 700;
-            opacity: 0.6;
-            margin-top: 3px;
-            text-transform: none;
-            letter-spacing: 0;
+            font-size: 0.9rem;
+            gap: 10px;
         }
 
-        .footer {
-            margin-top: 28px;
-            font-size: 0.7rem;
+        /* Larger touch targets for toggles */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        input[type="color"] {
+            width: 44px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 2px;
+            background: transparent;
+            flex-shrink: 0;
+        }
+
+        .accent-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .reset-accent-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.65rem;
             font-weight: 900;
+            font-family: inherit;
+            min-height: 32px;
+            padding: 0 8px;
+            white-space: nowrap;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .reset-accent-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .reset-accent-btn:active { opacity: 0.7; }
+
+        .divider { border-top: 1px solid var(--border); margin: 14px 0; padding-top: 14px; }
+        h4 { margin: 0 0 8px 0; font-size: 0.85rem; text-transform: uppercase; color: var(--accent); }
+        .small-text { font-size: 0.8rem; line-height: 1.5; opacity: 0.8; }
+        .contributor-list { display: flex; flex-direction: column; gap: 5px; font-size: 0.8rem; font-weight: 700; }
+        .mirror-link { color: var(--accent); text-decoration: none; font-weight: 700; display: block; margin-bottom: 5px; padding: 4px 0; }
+
+        .reset-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 900;
+            font-family: inherit;
+            /* Minimum touch target */
+            min-height: 36px;
+        }
+        .reset-btn:active { opacity: 0.7; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
             opacity: 0.5;
-            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 1rem;
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="container">
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
+<!-- Settings backdrop (mobile only) -->
+<div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
+
+<header>
+    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search games..." oninput="renderGames()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="controls">
+        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings">⚙</button>
+    </div>
+</header>
+
+<div class="shelf-container" id="historyShelf">
+    <div class="shelf-title">Continue playing</div>
+    <div class="shelf-scroll" id="historyGrid"></div>
+</div>
+
+<div class="shelf-container" id="recommendedShelf">
+    <div class="shelf-title">Recommended</div>
+    <div class="shelf-scroll" id="recommendedGrid"></div>
+</div>
+
+<nav class="filter-bar" id="filterBar"></nav>
+
+<main id="game-grid"></main>
+
+<!-- Settings Panel -->
+<div id="settingsMenu" class="settings-menu" role="dialog" aria-label="Settings">
+    <span class="sheet-handle"></span>
+    <div class="row"><span>DARK MODE</span><input type="checkbox" id="themeToggle" checked onclick="updateUI()"></div>
+    <div class="row"><span>ROUNDED UI</span><input type="checkbox" id="cornerToggle" checked onclick="updateUI()"></div>
+    <div class="row">
+        <span>ACCENT</span>
+        <div class="accent-controls">
+            <button class="reset-accent-btn" onclick="resetAccent()" title="Reset to default">RESET</button>
+            <input type="color" id="accentPicker" value="#0066FF" oninput="updateUI()">
         </div>
+    </div>
+    <div class="row"><span>HISTORY</span><button class="reset-btn" onclick="clearHistory()">CLEAR</button></div>
 
-        <h1>Mirror Links</h1>
+    <div class="divider">
+        <h4>About Powerhouse</h4>
+        <p id="aboutText" class="small-text">Loading hub information...</p>
+    </div>
 
-        <div class="link-list">
-            <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-link">
-                <span class="mirror-link-label">Cloudflare (Main)</span>
-            </a>
-            <a href="https://sites.google.com/view/powerhousehub/" target="_blank" rel="noopener" class="mirror-link">
-                <span class="mirror-link-label">Google Sites</span>
-                <span class="disclaimer">⚠ May not work in some school districts</span>
-            </a>
-        </div>
-
-        <div class="footer">
-            Powerhouse V1.4.36
+    <div class="divider">
+        <h4>Contributors</h4>
+        <div class="contributor-list">
+            <span>C823 (Lead Dev)</span>
+            <span>Grandpa Joey</span>
+            <span>Stein</span>
+            <span>KC</span>
         </div>
     </div>
 
+    <div class="divider">
+        <h4>Mirrors</h4>
+        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link" onclick="openInBlank('https://powerhouse.c823.workers.dev/', event)">Cloudflare (Main)</a>
+        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link" onclick="openInBlank('https://sites.google.com/view/powerhousehub/', event)">Google Sites</a>
+    </div>
+
+    <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.4.36</div>
+</div>
+
+<script>
+    let games = [];
+    let currentFilter = 'ALL';
+
+    const PROXY_BASE = 'https://powerhouse.c823.workers.dev/go?url=';
+
+    function openInBlank(url, event, gameTitle, gameThumb) {
+        if (event) event.preventDefault();
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            window.open(url, '_blank');
+            return;
+        }
+        // Route through Cloudflare proxy to strip X-Frame-Options/CSP headers
+        const proxiedUrl = PROXY_BASE + encodeURIComponent(url);
+        const tab = window.open('about:blank', '_blank');
+        if (!tab) return;
+
+        const title = gameTitle || 'Game';
+        const thumb = gameThumb || '';
+        const logoUrl = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png';
+
+        tab.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title} — Powerhouse</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #13151b;
+    --surface: #1e2028;
+    --border: #35394a;
+    --accent: #0066FF;
+    --text: #f5f6fa;
+    --radius: 16px;
+    --bar: 52px;
+  }
+  html, body { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow: hidden; }
+
+  /* ── TOP BAR ── */
+  #bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--bar);
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 14px;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+  #bar.hidden { transform: translateY(-100%); }
+
+  #bar img.logo { height: 22px; object-fit: contain; flex-shrink: 0; }
+
+  .bar-divider { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
+
+  #game-thumb {
+    width: 30px; height: 30px; border-radius: 8px;
+    object-fit: cover; border: 1px solid var(--border);
+    flex-shrink: 0;
+    display: ${thumb ? 'block' : 'none'};
+  }
+  #game-name {
+    font-weight: 900; font-size: 0.9rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    flex: 1; min-width: 0;
+  }
+
+  .bar-btn {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 5px 12px;
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: 34px;
+  }
+  .bar-btn:hover { border-color: var(--accent); background: #1a2a4a; }
+  .bar-btn:active { opacity: 0.7; }
+  .bar-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .bar-btn.accent:hover { background: #0055dd; border-color: #0055dd; }
+
+  /* hide-bar toggle */
+  #toggle-bar {
+    position: fixed; top: calc(var(--bar) + 6px); right: 10px;
+    z-index: 99;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text);
+    border-radius: 0 0 10px 10px;
+    padding: 3px 10px;
+    font-family: inherit; font-weight: 900; font-size: 0.65rem;
+    cursor: pointer;
+    transition: top 0.3s ease, border-color 0.15s;
+    letter-spacing: 0.05em;
+  }
+  #toggle-bar.bar-hidden { top: 6px; border-radius: 10px; }
+  #toggle-bar:hover { border-color: var(--accent); }
+
+  /* ── IFRAME ── */
+  #frame-wrap {
+    position: fixed;
+    top: var(--bar); left: 0; right: 0; bottom: 0;
+    transition: top 0.3s ease;
+  }
+  #frame-wrap.bar-hidden { top: 0; }
+
+  iframe {
+    width: 100%; height: 100%; border: none; display: block;
+  }
+
+  /* ── LOADING SCREEN ── */
+  #loading {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { font-weight: 700; font-size: 0.9rem; opacity: 0.5; }
+
+  /* ── BLOCKED SCREEN ── */
+  #blocked {
+    display: none;
+    position: absolute; inset: 0;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; text-align: center; padding: 30px;
+    background: var(--bg);
+    z-index: 10;
+  }
+  #blocked .icon { font-size: 3rem; line-height: 1; }
+  #blocked h2 { font-size: 1.3rem; font-weight: 900; }
+  #blocked p { font-size: 0.9rem; opacity: 0.6; max-width: 340px; line-height: 1.6; }
+  #blocked .blocked-url { font-size: 0.7rem; opacity: 0.35; word-break: break-all; max-width: 400px; }
+  .open-btn {
+    margin-top: 6px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius);
+    padding: 13px 32px;
+    font-family: inherit; font-weight: 900; font-size: 1rem;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: background 0.15s;
+  }
+  .open-btn:hover { background: #0055dd; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div id="bar">
+  <img class="logo" src="${logoUrl}" alt="Powerhouse">
+  <div class="bar-divider"></div>
+  <img id="game-thumb" src="${thumb}" alt="">
+  <div id="game-name">${title}</div>
+  <button class="bar-btn" onclick="window.location.href='${url}'" title="Open in this tab">⬡ OPEN DIRECT</button>
+  <button class="bar-btn accent" onclick="window.close()">✕ CLOSE</button>
+</div>
+
+<!-- Hide/show bar pill -->
+<button id="toggle-bar" onclick="toggleBar()">▲ HIDE</button>
+
+<!-- Game frame -->
+<div id="frame-wrap">
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Loading ${title}…</p>
+  </div>
+  <div id="blocked">
+    <div class="icon">⚠️</div>
+    <h2>Site Blocked Embedding</h2>
+    <p>This site won't load inside Powerhouse. Open it directly to play.</p>
+    <a class="open-btn" href="${url}" target="_self">Open ${title} →</a>
+    <div class="blocked-url">${url}</div>
+  </div>
+  <iframe id="frame" src="${proxiedUrl}" allowfullscreen></iframe>
+</div>
+
+<script>
+  const frame   = document.getElementById('frame');
+  const loading = document.getElementById('loading');
+  const blocked = document.getElementById('blocked');
+  let   settled = false;
+
+  function showBlocked() {
+    if (settled) return;
+    settled = true;
+    loading.style.display = 'none';
+    blocked.style.display = 'flex';
+    frame.style.display   = 'none';
+  }
+  function showFrame() {
+    if (settled) return;
+    settled = true;
+    loading.style.display = 'none';
+  }
+
+  frame.onload = function() {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc || doc.URL === 'about:blank' || (doc.body && doc.body.innerHTML.trim() === '')) {
+        showBlocked();
+      } else {
+        showFrame();
+      }
+    } catch(e) {
+      // cross-origin — loaded fine
+      showFrame();
+    }
+  };
+  frame.onerror = () => showBlocked();
+
+  setTimeout(() => {
+    if (settled) return;
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc || doc.URL === 'about:blank' || !doc.body || doc.body.innerHTML.trim() === '') showBlocked();
+      else showFrame();
+    } catch(e) { showFrame(); }
+  }, 2000);
+
+  setTimeout(() => { if (!settled) showBlocked(); }, 5000);
+
+  // Hide/show bar
+  let barVisible = true;
+  function toggleBar() {
+    barVisible = !barVisible;
+    const bar   = document.getElementById('bar');
+    const wrap  = document.getElementById('frame-wrap');
+    const pill  = document.getElementById('toggle-bar');
+    if (barVisible) {
+      bar.classList.remove('hidden');
+      wrap.classList.remove('bar-hidden');
+      pill.classList.remove('bar-hidden');
+      pill.textContent = '▲ HIDE';
+    } else {
+      bar.classList.add('hidden');
+      wrap.classList.add('bar-hidden');
+      pill.classList.add('bar-hidden');
+      pill.textContent = '▼ SHOW';
+    }
+  }
+<\/script>
+</body>
+</html>`);
+        tab.document.close();
+    }
+
+    async function fetchData() {
+        try {
+            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
+            games = await res.json();
+
+            const aboutRes = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/about.txt');
+            if (aboutRes.ok) document.getElementById('aboutText').innerText = await aboutRes.text();
+
+            renderFilters();
+            renderGames();
+        } catch (e) { console.error("Load failed", e); }
+    }
+
+    function renderFilters() {
+        const bar = document.getElementById('filterBar');
+        const cats = ['ALL', 'UNBLOCKED', ...new Set(games.map(g => g.category.toUpperCase()))];
+        bar.innerHTML = cats.map(c => `
+            <button class="filter-btn ${currentFilter === c ? 'active' : ''}" 
+                    onclick="setFilter('${c}')">${c}</button>
+        `).join('');
+    }
+
+    function setFilter(cat) {
+        currentFilter = cat;
+        renderFilters();
+        renderGames();
+    }
+
+    function trackPlay(game) {
+        let history = JSON.parse(localStorage.getItem('power_history') || '[]');
+        history = history.filter(g => g.title !== game.title);
+        history.unshift(game);
+        localStorage.setItem('power_history', JSON.stringify(history.slice(0, 8)));
+    }
+
+    function clearHistory() {
+        localStorage.removeItem('power_history');
+        renderGames();
+    }
+
+    function shelfItemHTML(g) {
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event, '${g.title.replace(/'/g, "\\'")}', '${g.thumb}')">
+                    <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                    ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
+                    <div class="shelf-label">${g.title}</div>
+                </a>`;
+    }
+
+    function renderGames() {
+        const grid = document.getElementById('game-grid');
+        const search = document.getElementById('searchInput').value.toLowerCase();
+
+        // Render History Shelf
+        const history = JSON.parse(localStorage.getItem('power_history') || '[]');
+        const shelf = document.getElementById('historyShelf');
+        if (history.length > 0) {
+            shelf.style.display = 'block';
+            document.getElementById('historyGrid').innerHTML = history.map(g => shelfItemHTML(g)).join('');
+        } else {
+            shelf.style.display = 'none';
+        }
+
+        // Render Recommended Shelf — only when history exists
+        const recommendedShelf = document.getElementById('recommendedShelf');
+        if (history.length > 0 && games.length > 0) {
+            // Collect categories from played games, deduplicated
+            const playedTitles = new Set(history.map(g => g.title));
+            const playedCategories = [...new Set(history.map(g => g.category))];
+
+            // Find games in the same categories that haven't been played, shuffle lightly
+            let pool = games.filter(g =>
+                playedCategories.includes(g.category) && !playedTitles.has(g.title)
+            );
+
+            // If not enough category matches, pad with any unplayed games
+            if (pool.length < 4) {
+                const extras = games.filter(g => !playedTitles.has(g.title) && !pool.includes(g));
+                pool = [...pool, ...extras];
+            }
+
+            // Deterministic shuffle using title chars so it's stable per session
+            pool.sort((a, b) => {
+                const seed = (s) => s.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+                return (seed(a.title) % 7) - (seed(b.title) % 7);
+            });
+
+            const picks = pool.slice(0, 8);
+            if (picks.length > 0) {
+                recommendedShelf.style.display = 'block';
+                document.getElementById('recommendedGrid').innerHTML = picks.map(g => shelfItemHTML(g)).join('');
+            } else {
+                recommendedShelf.style.display = 'none';
+            }
+        } else {
+            recommendedShelf.style.display = 'none';
+        }
+
+        const filtered = games.filter(g => {
+            const matchesSearch = g.title.toLowerCase().includes(search);
+            let matchesFilter = false;
+            if (currentFilter === 'ALL') {
+                matchesFilter = true;
+            } else if (currentFilter === 'UNBLOCKED') {
+                matchesFilter = g.verified === true;
+            } else {
+                matchesFilter = g.category.toUpperCase() === currentFilter;
+            }
+            return matchesSearch && matchesFilter;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="empty-state">No games found 🎮</div>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(g => `
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event, '${g.title.replace(/'/g, "\\'")}', '${g.thumb}')">
+                <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
+                <div class="game-info">
+                    <div class="game-title-container">
+                        <div class="game-title">${g.title}</div>
+                        ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="verified-badge" title="Verified Unblocked">` : ''}
+                    </div>
+                    <div class="play-btn">PLAY</div>
+                </div>
+            </a>
+        `).join('');
+    }
+
+    function toggleSettings() {
+        const menu = document.getElementById('settingsMenu');
+        const backdrop = document.getElementById('settingsBackdrop');
+        const isOpen = menu.classList.contains('show');
+        if (isOpen) {
+            closeSettings();
+        } else {
+            menu.classList.add('show');
+            backdrop.classList.add('show');
+        }
+    }
+
+    function closeSettings() {
+        document.getElementById('settingsMenu').classList.remove('show');
+        document.getElementById('settingsBackdrop').classList.remove('show');
+    }
+
+    function loadSettings() {
+        // Read all saved preferences from localStorage and apply to controls
+        const theme   = localStorage.getItem('power_theme') || 'dark';
+        const corners = localStorage.getItem('power_corners') || 'rounded';
+        const accent  = localStorage.getItem('power_accent') || '#0066FF';
+
+        document.getElementById('themeToggle').checked  = (theme === 'dark');
+        document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        document.getElementById('accentPicker').value   = accent;
+    }
+
+    function updateUI() {
+        const isDark    = document.getElementById('themeToggle').checked;
+        const isRounded = document.getElementById('cornerToggle').checked;
+        const accent    = document.getElementById('accentPicker').value;
+
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        document.body.setAttribute('data-corners', isRounded ? 'rounded' : 'sharp');
+        document.documentElement.style.setProperty('--accent', accent);
+
+        const logo = document.getElementById('mainLogo');
+        logo.src = isDark
+            ? "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png"
+            : "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png";
+
+        // Save all three preferences
+        localStorage.setItem('power_theme',   isDark ? 'dark' : 'light');
+        localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
+        localStorage.setItem('power_accent',  accent);
+    }
+
+    // Close settings on outside click (desktop only — backdrop handles mobile)
+    window.onclick = (e) => {
+        const menu = document.getElementById('settingsMenu');
+        if (
+            menu.classList.contains('show') &&
+            !e.target.closest('.settings-menu') &&
+            !e.target.closest('.settings-btn') &&
+            window.innerWidth >= 600
+        ) {
+            closeSettings();
+        }
+    };
+
+    // Keyboard: close settings on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSettings();
+    });
+
+    function resetAccent() {
+        const defaultAccent = '#0066FF';
+        document.getElementById('accentPicker').value = defaultAccent;
+        updateUI();
+    }
+
+    window.onload = () => {
+        loadSettings(); // Restore saved prefs into controls first
+        updateUI();     // Apply them to the UI
+        fetchData();
+    };
+</script>
 </body>
 </html>
