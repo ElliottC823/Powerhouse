@@ -58,7 +58,7 @@
     "category": "Arcade",
     "desc": "Ride the rhythmic waves in space. Simple controls, difficult mastery.",
     "thumb": "https://i.ytimg.com/vi/0L885f9nUI8/maxresdefault.jpg",
-    "link": "https://spacewaves.io",
+    "link": "https://spacewavesunblocked.com/r",
     "verified": true,
     "useBlank": true
   },
@@ -102,7 +102,7 @@
     "title": "Teqiyokid",
     "category": "Media",
     "desc": "Entertaining and creative video content from Teqiyokid.",
-    "thumb": "https://i.ytimg.com/vi/Hi_4qNFuf3w/hqdefault.jpg?sqp=-oaymwEmCOADEOgC8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLCEGAyFQ8XMxujOxK-mjhxboEx78g",
+    "thumb": "https://i.ytimg.com/vi/2gZMphnKLf4/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAH2eQm9MDSKtPELOxQCb_5wrtmRA",
     "link": "https://www.youtube.com/@Teqiyokid",
     "verified": false,
     "useBlank": false
