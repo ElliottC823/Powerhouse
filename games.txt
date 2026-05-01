@@ -32,7 +32,7 @@
     "desc": "CrazyGames features the latest and best free online games. Just load up your favorite games instantly and enjoy.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnX447YDT0ztZ4GMlUiXKoaj3E68j3hnCxg&s",
     "link": "https://crazygamesunblocked.net/",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
@@ -86,7 +86,7 @@
     "desc": "Tiny Fishing is a relaxing and fun fishing game. Cast your line and reel in fish!",
     "thumb": "https://www.coolmathgames.com/sites/default/files/TinyFishing_OG-logo.jpg",
     "link": "https://tinyfishingame.com/",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
@@ -212,7 +212,7 @@
     "desc": "The ultimate idle game. Bake an astronomical number of cookies.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0MEhmA4C4wPGi_KTGQjMMF0cyqZ346K7xQ&s",
     "link": "https://orteil.dashnet.org/cookieclicker/",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
@@ -221,7 +221,7 @@
     "desc": "Find the best funny sound buttons to play and download.",
     "thumb": "https://addons.mozilla.org/user-media/previews/full/315/315163.png?modified=1740817557",
     "link": "https://soundbuttonsworld.com/",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
