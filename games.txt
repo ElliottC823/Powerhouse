@@ -570,7 +570,7 @@
     "title": "Claude",
     "category": "Utility",
     "desc": "Claude is an AI assistant made by Anthropic. Ask anything, brainstorm ideas, get help with writing, coding, and more.",
-    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Claude_AI_logo.svg/232px-Claude_AI_logo.svg.png",
+    "thumb": "https://cdn.sanity.io/images/9u514z6s/production/d1ab6e8aba08df9961ad9b46eddd00b9b48663b4-2624x1440.png",
     "link": "https://claude.ai/",
     "verified": false,
     "useBlank": false
@@ -579,7 +579,7 @@
     "title": "DeepSeek",
     "category": "Utility",
     "desc": "DeepSeek is a powerful AI assistant for coding, reasoning, and general questions.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFAMEBMVqhJgdm9XaJKAI0mQkETqEQxB8FdQ&s",
+    "thumb": "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/25848982/STKB320_DEEPSEEK_AI_CVIRGINIA_A.jpg?quality=90&strip=all&crop=0,0,100,100",
     "link": "https://chat.deepseek.com/",
     "verified": false,
     "useBlank": false
