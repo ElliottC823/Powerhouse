@@ -492,7 +492,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQW-AK-RBkoEJ6rhyMkZi0cEJU93LNZdbUg&s",
     "link": "https://www.freetetris.org/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Coolmath Games",
@@ -510,7 +510,7 @@
     "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
     "link": "https://jellymar.io/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Deer Adventure",
@@ -581,7 +581,7 @@
     "desc": "DeepSeek is a powerful AI assistant for coding, reasoning, and general questions.",
     "thumb": "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/25848982/STKB320_DEEPSEEK_AI_CVIRGINIA_A.jpg?quality=90&strip=all&crop=0,0,100,100",
     "link": "https://chat.deepseek.com/",
-    "verified": false,
+    "verified": true,
     "useBlank": false
   }
 ]
