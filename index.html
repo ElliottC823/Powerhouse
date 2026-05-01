@@ -701,52 +701,254 @@
 
     const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png';
 
-    function loadInBlank(url, title) {
+    function loadInBlank(url, title, thumb) {
         if (url.includes('youtube.com') || url.includes('youtu.be')) {
             window.open(url, '_blank');
             return;
         }
         const displayTitle = title || 'Powerhouse';
+        const gameLogo     = thumb || '';
         const tab = window.open('about:blank', '_blank');
-        if (!tab) return; // popup blocked
+        if (!tab) return;
 
         tab.document.write(`<!DOCTYPE html>
-<html style="margin:0;padding:0;height:100%;width:100%;background:#0d0e12;">
+<html style="margin:0;padding:0;height:100%;width:100%;background:#13151b;">
 <head>
   <title>${displayTitle}</title>
   <link rel="icon" type="image/png" href="${FAVICON_URL}">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; background:#0d0e12; font-family:sans-serif; }
-    iframe { width:100%; height:100%; border:none; display:block; }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html, body { width:100%; height:100%; background:#13151b; font-family:'Outfit',sans-serif; overflow:hidden; }
+
+    /* ── TOPBAR ── */
+    #ph-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      background: #1e2028;
+      border-bottom: 2px solid #35394a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      z-index: 9999;
+      gap: 12px;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      will-change: transform;
+    }
+    #ph-bar.hidden { transform: translateY(-100%); }
+
+    /* Left side: PH logo + divider + game thumb + title */
+    .ph-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .ph-logo-link { display:flex; align-items:center; flex-shrink:0; }
+    .ph-logo {
+      height: 26px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .ph-divider {
+      width: 1px;
+      height: 28px;
+      background: #35394a;
+      flex-shrink: 0;
+    }
+
+    .ph-game-thumb {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid #35394a;
+      flex-shrink: 0;
+      display: ${gameLogo ? 'block' : 'none'};
+    }
+
+    .ph-game-title {
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: #f5f6fa;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    /* Right side: open direct button */
+    .ph-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .ph-btn {
+      background: #0066FF;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      min-height: 34px;
+      white-space: nowrap;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: opacity 0.15s;
+    }
+    .ph-btn:hover { opacity: 0.85; }
+    .ph-btn:active { opacity: 0.65; }
+
+    /* Minimize button */
+    .ph-minimize {
+      background: transparent;
+      border: 2px solid #35394a;
+      color: #f5f6fa;
+      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: border-color 0.15s, opacity 0.15s;
+    }
+    .ph-minimize:hover { border-color: #0066FF; }
+    .ph-minimize:active { opacity: 0.65; }
+
+    /* ── RESTORE PILL — shown when bar is hidden ── */
+    #ph-restore {
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: #1e2028;
+      border: 2px solid #35394a;
+      border-radius: 20px;
+      padding: 5px 14px 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    #ph-restore.show { transform: translateX(-50%) translateY(0); }
+    #ph-restore svg { width:14px; height:14px; fill:#f5f6fa; }
+    #ph-restore span { font-size:0.72rem; font-weight:900; color:#f5f6fa; }
+
+    /* ── IFRAME ── */
+    #ph-wrap {
+      position: absolute;
+      top: 52px; left: 0; right: 0; bottom: 0;
+      transition: top 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    #ph-wrap.expanded { top: 0; }
+
+    #gameFrame {
+      width: 100%; height: 100%;
+      border: none; display: block;
+    }
+
+    /* ── BLOCKER ── */
     #blocker {
-      display:none; position:fixed; inset:0;
-      background:#0d0e12; color:#f5f6fa;
-      flex-direction:column; align-items:center; justify-content:center;
-      gap:16px; text-align:center; padding:24px;
+      display: none;
+      position: fixed; inset: 0;
+      background: #13151b; color: #f5f6fa;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; text-align: center; padding: 24px;
+      z-index: 100;
     }
-    #blocker.show { display:flex; }
-    #blocker h2 { font-size:1.3rem; margin-bottom:4px; }
-    #blocker p { font-size:0.9rem; opacity:0.6; max-width:360px; line-height:1.5; }
-    #blocker a {
-      display:inline-block; margin-top:8px;
-      background:#0066FF; color:#fff; text-decoration:none;
-      padding:10px 24px; border-radius:12px; font-weight:700; font-size:0.9rem;
+    #blocker.show { display: flex; }
+    #blocker h2 { font-size: 1.3rem; }
+    #blocker p  { font-size: 0.9rem; opacity: 0.6; max-width: 360px; line-height: 1.5; }
+    #blocker a  {
+      display: inline-block; margin-top: 8px;
+      background: #0066FF; color: #fff; text-decoration: none;
+      padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
     }
-    #blocker a:hover { opacity:0.85; }
+    #blocker a:hover { opacity: 0.85; }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <iframe id="gameFrame" src="${url}" allowfullscreen></iframe>
+
+  <!-- Topbar -->
+  <div id="ph-bar">
+    <div class="ph-left">
+      <a href="https://powerhousemirrors.c823.workers.dev" target="_blank" rel="noopener" class="ph-logo-link">
+        <img class="ph-logo" src="${FAVICON_URL}" alt="Powerhouse">
+      </a>
+      <div class="ph-divider"></div>
+      <img class="ph-game-thumb" src="${gameLogo}" alt="" onerror="this.style.display='none'">
+      <span class="ph-game-title">${displayTitle}</span>
+    </div>
+
+    <div class="ph-right">
+      <a class="ph-btn" href="${url}" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 11L11 1M11 1H4M11 1V8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Open directly
+      </a>
+      <button class="ph-minimize" id="minimizeBtn" title="Minimize" onclick="toggleBar()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 9L7 4L12 9" stroke="#f5f6fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Restore pill (visible when bar is hidden) -->
+  <div id="ph-restore" onclick="toggleBar()">
+    <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 5L7 10L12 5" stroke="#f5f6fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <span>Powerhouse</span>
+  </div>
+
+  <!-- Game iframe -->
+  <div id="ph-wrap">
+    <iframe id="gameFrame" src="${url}" allowfullscreen></iframe>
+  </div>
+
+  <!-- Blocker fallback -->
   <div id="blocker">
     <h2>⚠️ Can't embed this game</h2>
-    <p>This site blocks being loaded inside frames. You can open it directly in a new tab instead.</p>
+    <p>This site blocks being loaded inside frames. You can open it directly instead.</p>
     <a href="${url}" target="_blank" rel="noopener">Open directly ↗</a>
   </div>
+
   <script>
-    const frame = document.getElementById('gameFrame');
+    const bar     = document.getElementById('ph-bar');
+    const wrap    = document.getElementById('ph-wrap');
+    const restore = document.getElementById('ph-restore');
+    const frame   = document.getElementById('gameFrame');
     const blocker = document.getElementById('blocker');
-    // Give the iframe 4 seconds to load; if it errors or stays blank, show the fallback
+    let barVisible = true;
+
+    function toggleBar() {
+      barVisible = !barVisible;
+      bar.classList.toggle('hidden', !barVisible);
+      wrap.classList.toggle('expanded', !barVisible);
+      restore.classList.toggle('show', !barVisible);
+    }
+
+    // Blocker / iframe load detection
     let loaded = false;
     frame.addEventListener('load', () => { loaded = true; });
     frame.addEventListener('error', () => {
@@ -770,18 +972,18 @@
     //   useBlank: true  → always about:blank regardless of verified
     //   useBlank: false → always open directly regardless of verified (explicit opt-out)
     //   useBlank: null/undefined → fall back to verified flag (!verified = about:blank)
-    function openGame(url, verified, title, useBlank, event) {
+    function openGame(url, verified, title, useBlank, thumb, event) {
         if (event) event.preventDefault();
         let shouldUseBlank;
         if (useBlank === true) {
             shouldUseBlank = true;
         } else if (useBlank === false) {
-            shouldUseBlank = false; // explicit opt-out overrides verified check
+            shouldUseBlank = false;
         } else {
-            shouldUseBlank = !verified; // default fallback
+            shouldUseBlank = !verified;
         }
         if (shouldUseBlank) {
-            loadInBlank(url, title);
+            loadInBlank(url, title, thumb);
         } else {
             window.open(url, '_blank');
         }
@@ -830,7 +1032,8 @@
 
     function shelfItemHTML(g) {
         const safeTitle = g.title.replace(/'/g, "\'");
-        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${safeTitle}', ${!!g.useBlank}, event)">
+        const safeThumb = (g.thumb || '').replace(/'/g, "\'");
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${safeTitle}', ${!!g.useBlank}, '${safeThumb}', event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -905,7 +1108,7 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${g.title.replace(/'/g, "\\'")}', ${!!g.useBlank}, event)">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${g.title.replace(/'/g, "\\'")}', ${!!g.useBlank}, '${(g.thumb||'').replace(/'/g,"\\'")}', event)">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
