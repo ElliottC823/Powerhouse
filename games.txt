@@ -6,7 +6,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQetoevXJFXRoM1Z2hAes9LxTtJNqbp_b8RvQ&s",
     "link": "https://scratch.mit.edu/projects/1290209730/fullscreen/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Brgr Duty",
@@ -15,7 +15,7 @@
     "thumb": "https://cdn2.scratch.mit.edu/get_image/project/1215838682_282x210.png",
     "link": "https://scratch.mit.edu/projects/1215838682/fullscreen/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "VEND",
@@ -24,14 +24,14 @@
     "thumb": "https://cdn2.scratch.mit.edu/get_image/project/1296814899_282x210.png",
     "link": "https://scratch.mit.edu/projects/1296814899/fullscreen/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "CrazyGames",
     "category": "Hub",
     "desc": "CrazyGames features the latest and best free online games. Just load up your favorite games instantly and enjoy.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnX447YDT0ztZ4GMlUiXKoaj3E68j3hnCxg&s",
-    "link": "https://www.crazygames.com/",
+    "link": "https://crazygamesunblocked.net/",
     "verified": false,
     "useBlank": true
   },
@@ -42,7 +42,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSir1FUeE9ing_c6KHg3n7SMIj3OdTdfbAjQ&s",
     "link": "https://learn-duck.firebaseapp.com/class/thorns-and-ballons",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Neal.Fun",
@@ -51,7 +51,7 @@
     "thumb": "https://theabbie.github.io/blog/assets/Neal-Agarwal.jpg",
     "link": "https://neal.fun",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Space Waves",
@@ -78,7 +78,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/Logo.png",
     "link": "https://watchdocumentaries.com/games/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Tiny Fishing",
@@ -96,7 +96,7 @@
     "thumb": "https://yt3.googleusercontent.com/jBm6Zb6THFWnfdM2Ih0GfzivYF9mJBj4gJHeE-LsnOoJl3rvVwoZc1asIxIusHRbPl8-ihWPbw=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
     "link": "https://www.youtube.com/@TheSurvival",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Teqiyokid",
@@ -105,7 +105,7 @@
     "thumb": "https://i.ytimg.com/vi/Hi_4qNFuf3w/hqdefault.jpg?sqp=-oaymwEmCOADEOgC8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLCEGAyFQ8XMxujOxK-mjhxboEx78g",
     "link": "https://www.youtube.com/@Teqiyokid",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "ChatGPT",
@@ -114,7 +114,7 @@
     "thumb": "https://www.internetmatters.org/wp-content/uploads/2025/06/Chat-GPT-logo.webp",
     "link": "https://chatgpt.com/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Gemini",
@@ -123,7 +123,7 @@
     "thumb": "https://cdn.mos.cms.futurecdn.net/v2/t:0,l:260,cw:1576,ch:1182,q:80,w:1576/gHfBJ6FBHKnLbW36hEDvgV.png",
     "link": "https://gemini.google.com/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Fake Skyward",
@@ -141,7 +141,7 @@
     "thumb": "https://www.coolmathgames.com/sites/default/files/super-lemon-basket.png",
     "link": "https://www.coolmathgames.com/0-super-lemon-basket",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Eaglercraft 1.8.8",
@@ -150,7 +150,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUJrDtymSXQF87It_b6EzIm1njr9MYmJPxmQ&s",
     "link": "https://eaglercraft.com/play/?version=1.8.8-wasm",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Ai or Not?",
@@ -159,7 +159,7 @@
     "thumb": "https://equivant-court.com/wp-content/uploads/2024/10/what-ai-is-or-isnt-blog-image.png",
     "link": "https://sightengine.com/ai-or-not?version=2024Q3",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "What Beats Rock",
@@ -168,7 +168,7 @@
     "thumb": "https://whatbeatsrock.io/data/image/options/what-beats-rock-banner.jpg",
     "link": "https://www.whatbeatsrock.com/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Bringus Studios",
@@ -177,7 +177,7 @@
     "thumb": "https://yt3.googleusercontent.com/-7Piy98dHWRxfq_L7HGbHjwtztsEk-Jea4CQjbuKupyQnHBwIv8W-AbkNBNgM_l1rfYGXf4p=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
     "link": "https://www.youtube.com/@BringusStudios/featured",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "M&Jmetal",
@@ -186,7 +186,7 @@
     "thumb": "https://yt3.googleusercontent.com/HbSiwNm1OwCPTcsMHegI1eVM_PYFmqmWiOSDOohtgbQ6LpxW8GS4J8dhZD6keyfKKI29jSpKCas=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
     "link": "https://www.youtube.com/@martyandjamie",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Google Space",
@@ -194,7 +194,7 @@
     "desc": "The classic Zero-G Google search interface experiment by Mr.Doob.",
     "thumb": "https://lh6.ggpht.com/qMSDMY5_zyRjerhq4AIrSn5R4Ar5Rq4nV-zN5HrJP3bEgH5C228FlbkyViBTTPwSWQPFKRthxiWX8YCOtymNihualOObLBxI9n3N",
     "link": "https://mrdoob.com/projects/chromeexperiments/google-space/",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
@@ -231,7 +231,7 @@
     "thumb": "https://images.netcomlearning.com/cms/images/google-baseball-doodle.jpg",
     "link": "https://www.google.com/search?q=google+doodle+games",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Sandboxels",
@@ -240,7 +240,7 @@
     "thumb": "https://neal.fun/link-images/sandboxels.svg",
     "link": "https://neal.fun/sandboxels/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "I'm Not a Robot",
@@ -249,7 +249,7 @@
     "thumb": "https://neal.fun/link-images/not-a-robot.svg",
     "link": "https://neal.fun/not-a-robot/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Stimulation Clicker",
@@ -258,7 +258,7 @@
     "thumb": "https://neal.fun/link-images/stimulation-clicker.svg",
     "link": "https://neal.fun/stimulation-clicker/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Infinite Craft",
@@ -267,7 +267,7 @@
     "thumb": "https://neal.fun/link-images/infinite-craft.svg",
     "link": "https://neal.fun/infinite-craft/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "The Password Game",
@@ -276,7 +276,7 @@
     "thumb": "https://neal.fun/link-images/password-game.svg",
     "link": "https://neal.fun/password-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Draw a Perfect Circle",
@@ -285,7 +285,7 @@
     "thumb": "https://neal.fun/link-images/perfect-circle.svg",
     "link": "https://neal.fun/perfect-circle/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Absurd Trolley Problems",
@@ -294,7 +294,7 @@
     "thumb": "https://neal.fun/link-images/absurd-trolley-problems.svg",
     "link": "https://neal.fun/absurd-trolley-problems/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Design the Next iPhone",
@@ -303,7 +303,7 @@
     "thumb": "https://neal.fun/link-images/design-the-next-iphone.svg",
     "link": "https://neal.fun/design-the-next-iphone/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Let's Settle This",
@@ -312,7 +312,7 @@
     "thumb": "https://neal.fun/link-images/lets-settle-this.svg",
     "link": "https://neal.fun/lets-settle-this/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "The Auction Game",
@@ -321,7 +321,7 @@
     "thumb": "https://neal.fun/link-images/auction-game.svg",
     "link": "https://neal.fun/auction-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Draw Logos from Memory",
@@ -330,7 +330,7 @@
     "thumb": "https://neal.fun/link-images/logos-from-memory.svg",
     "link": "https://neal.fun/logos-from-memory/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Asteroid Launcher",
@@ -339,7 +339,7 @@
     "thumb": "https://neal.fun/link-images/asteroid-launcher.svg",
     "link": "https://neal.fun/asteroid-launcher/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Survival Race",
@@ -348,7 +348,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/survival-race-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/survival-race-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Snow Rider 3D",
@@ -357,7 +357,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/snow-rider-3d-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/snow-rider-3d-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "PolyTrack",
@@ -366,7 +366,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/polytrack-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/polytrack-game/?p=0",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "DriveMad",
@@ -375,7 +375,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/drive-mad-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/drive-mad-game/?p=0",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Slope",
@@ -384,7 +384,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/slope-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/slope-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Slope 2",
@@ -393,7 +393,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/slope-2-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/slope-2-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Slope 3",
@@ -402,7 +402,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/slope-3-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/slope-3-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Moto X3M",
@@ -411,7 +411,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/moto-x3m-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/moto-x3m-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Highway Traffic",
@@ -420,7 +420,7 @@
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/highway-traffic-game-360x203.jpg",
     "link": "https://watchdocumentaries.com/highway-traffic-game/",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "GeoFS",
@@ -429,7 +429,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2rCMHiXjK2vD4e6XL-uDV2bpWaYSfZLZiw&s",
     "link": "https://www.geo-fs.com/geofs.php",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Dune",
@@ -446,7 +446,7 @@
     "desc": "A fast-paced neon driving game where you dodge traffic and race against the clock.",
     "thumb": "https://store-images.s-microsoft.com/image/apps.52831.13894313373290055.755c0d8b-3d2e-4002-92cb-11aff86c00d1.0df3019c-4752-4778-88ba-d1d7470765df?q=90&w=480&h=270",
     "link": "https://azgames.io/retro-rush",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
@@ -456,7 +456,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXIlEts_keifKOIFYwrVtS8_6SmvBNfMgdrQ&s",
     "link": "https://www.youtube.com/watch?v=JC2dQaqRuBY",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "The Little Panda Fighter",
@@ -465,7 +465,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnrXzKvin0l5zRzzKASbnMjnDEHHnRVVNeg&s",
     "link": "https://www.youtube.com/watch?v=mlSV-EeQy9M",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Life\u2019s a Jungle: Africa\u2019s Most Wanted",
@@ -474,7 +474,7 @@
     "thumb": "https://m.media-amazon.com/images/M/MV5BNGNmZjJmNGEtOTliNS00ZGY5LThlYTItYzE0NjcyYWI5MWNhXkEyXkFqcGc@._V1_.jpg",
     "link": "https://www.youtube.com/watch?v=Zeo5JwLv6Js",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Finding Jesus",
@@ -483,7 +483,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWsIN8P9_JXAFtvBiVjkf8Ge5RnQ3OOQUJYA&s",
     "link": "https://www.youtube.com/watch?v=P2zZEbiDnxQ",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Tetris",
@@ -492,16 +492,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQW-AK-RBkoEJ6rhyMkZi0cEJU93LNZdbUg&s",
     "link": "https://sites.google.com/view/classroom6x/tetris?fromSearch=true",
     "verified": true,
-    "useBlank": true
-  },
-  {
-    "title": "Crazy Games Unblocked",
-    "category": "Hub",
-    "desc": "A massive collection of unblocked web games.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQce-fV2tLroJJHvFVCKSvKU4sV-Hc7kh9EIw&s",
-    "link": "https://crazygamesunblocked.net/",
-    "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Coolmath Games",
@@ -519,7 +510,7 @@
     "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
     "link": "https://sites.google.com/view/classroom6x/jelly-mario",
     "verified": true,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Deer Adventure",
@@ -546,7 +537,7 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw0Km-r9xoHAhu2fT0eY32d7h3Pb0fkQozfg&s",
     "link": "https://ww4.fmovies.co/26/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Spotify",
@@ -555,7 +546,7 @@
     "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/232px-Spotify_icon.svg.png",
     "link": "https://open.spotify.com/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Apple Music",
@@ -564,7 +555,7 @@
     "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Music_icon.svg/232px-Apple_Music_icon.svg.png",
     "link": "https://music.apple.com/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   },
   {
     "title": "Pandora",
@@ -573,6 +564,6 @@
     "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Pandora_logo_rectangle.png/320px-Pandora_logo_rectangle.png",
     "link": "https://www.pandora.com/",
     "verified": false,
-    "useBlank": true
+    "useBlank": false
   }
 ]
