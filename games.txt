@@ -554,7 +554,7 @@
     "desc": "Stream over 100 million songs, ad-free on Apple Music.",
     "thumb": "https://ipcdn-web.apple.com/assets/v2/web/7649dd1a-5f3c-48b0-bbf3-76294ff1e76d",
     "link": "https://music.apple.com/",
-    "verified": false,
+    "verified": true,
     "useBlank": false
   },
   {
@@ -563,7 +563,7 @@
     "desc": "Free music and podcasts, personalized for you.",
     "thumb": "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2022/10/Pandora-hero.png?w=1200&h=628&fit=crop",
     "link": "https://www.pandora.com/",
-    "verified": false,
+    "verified": true,
     "useBlank": false
   },
   {
