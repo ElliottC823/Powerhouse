@@ -543,16 +543,16 @@
     "title": "Spotify",
     "category": "Media",
     "desc": "Listen to music, podcasts, and more on Spotify.",
-    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/232px-Spotify_icon.svg.png",
+    "thumb": "https://play-lh.googleusercontent.com/kDXJ6XA2Cm47lzDCvvu6HNCu0PWmTwZKiY0ldCWrCgXGT3Ms-lbP_WN1v5vknspnLT15=w526-h296-rw",
     "link": "https://open.spotify.com/",
-    "verified": false,
+    "verified": true,
     "useBlank": false
   },
   {
     "title": "Apple Music",
     "category": "Media",
     "desc": "Stream over 100 million songs, ad-free on Apple Music.",
-    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Music_icon.svg/232px-Apple_Music_icon.svg.png",
+    "thumb": "https://ipcdn-web.apple.com/assets/v2/web/7649dd1a-5f3c-48b0-bbf3-76294ff1e76d",
     "link": "https://music.apple.com/",
     "verified": false,
     "useBlank": false
@@ -561,8 +561,26 @@
     "title": "Pandora",
     "category": "Media",
     "desc": "Free music and podcasts, personalized for you.",
-    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Pandora_logo_rectangle.png/320px-Pandora_logo_rectangle.png",
+    "thumb": "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2022/10/Pandora-hero.png?w=1200&h=628&fit=crop",
     "link": "https://www.pandora.com/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Claude",
+    "category": "Utility",
+    "desc": "Claude is an AI assistant made by Anthropic. Ask anything, brainstorm ideas, get help with writing, coding, and more.",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Claude_AI_logo.svg/232px-Claude_AI_logo.svg.png",
+    "link": "https://claude.ai/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "DeepSeek",
+    "category": "Utility",
+    "desc": "DeepSeek is a powerful AI assistant for coding, reasoning, and general questions.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFAMEBMVqhJgdm9XaJKAI0mQkETqEQxB8FdQ&s",
+    "link": "https://chat.deepseek.com/",
     "verified": false,
     "useBlank": false
   }
