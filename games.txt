@@ -50,7 +50,7 @@
     "desc": "Games and stuff by Neal.",
     "thumb": "https://theabbie.github.io/blog/assets/Neal-Agarwal.jpg",
     "link": "https://neal.fun",
-    "verified": false,
+    "verified": true,
     "useBlank": false
   },
   {
