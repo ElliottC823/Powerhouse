@@ -166,13 +166,11 @@
 
         .shelf-item {
             flex: 0 0 90px;
-            min-width: 0;
             text-align: center;
             text-decoration: none;
             color: inherit;
             position: relative;
             scroll-snap-align: start;
-            overflow: hidden;
             /* Larger touch target */
             padding: 4px;
         }
@@ -195,10 +193,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            /* Constrained to parent shelf-item width so ellipsis fires */
-            display: block;
-            width: 0;
-            min-width: 100%;
         }
 
         .shelf-verified {
@@ -492,121 +486,6 @@
             font-weight: 700;
             font-size: 1rem;
         }
-
-        /* ── TUTORIAL OVERLAY ── */
-        .tutorial-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9000;
-            pointer-events: none;
-        }
-        .tutorial-overlay.active { display: block; }
-
-        .tutorial-backdrop {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.72);
-            pointer-events: all;
-        }
-
-        /* The cutout highlight — a transparent hole punched over the target */
-        .tutorial-highlight {
-            position: absolute;
-            border-radius: var(--radius);
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.72), 0 0 0 3px var(--accent);
-            pointer-events: none;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9001;
-        }
-
-        .tutorial-card {
-            position: absolute;
-            background: var(--surface);
-            border: 2px solid var(--accent);
-            border-radius: var(--radius);
-            padding: 18px 20px;
-            width: min(300px, 88vw);
-            z-index: 9002;
-            pointer-events: all;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tutorial-step-label {
-            font-size: 0.65rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-        }
-
-        .tutorial-title {
-            font-size: 1rem;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-
-        .tutorial-body {
-            font-size: 0.82rem;
-            line-height: 1.55;
-            opacity: 0.8;
-            margin-bottom: 16px;
-        }
-
-        .tutorial-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .tutorial-dots {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .tutorial-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--border);
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .tutorial-dot.active {
-            background: var(--accent);
-            transform: scale(1.3);
-        }
-
-        .tutorial-btn-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .tutorial-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            padding: 8px 16px;
-            font-weight: 900;
-            font-size: 0.8rem;
-            font-family: inherit;
-            cursor: pointer;
-            min-height: 36px;
-        }
-
-        .tutorial-btn.secondary {
-            background: transparent;
-            color: var(--text);
-            border: 2px solid var(--border);
-            opacity: 0.7;
-        }
-
-        .tutorial-btn:active { opacity: 0.7; }
     </style>
 </head>
 <body data-theme="dark">
@@ -651,7 +530,6 @@
         </div>
     </div>
     <div class="row"><span>HISTORY</span><button class="reset-btn" onclick="clearHistory()">CLEAR</button></div>
-    <div class="row"><span>TUTORIAL</span><button class="reset-btn" style="background:#0066FF;" onclick="closeSettings(); startTutorial()">REDO</button></div>
 
     <div class="divider">
         <h4>About Powerhouse</h4>
@@ -670,323 +548,275 @@
 
     <div class="divider">
         <h4>Mirrors</h4>
-        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link" onclick="loadInBlank('https://powerhouse.c823.workers.dev/'); return false;">Cloudflare (Main)</a>
-        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link" onclick="loadInBlank('https://sites.google.com/view/powerhousehub/'); return false;">Google Sites</a>
+        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link" onclick="openInBlank('https://powerhouse.c823.workers.dev/', event)">Cloudflare (Main)</a>
+        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link" onclick="openInBlank('https://sites.google.com/view/powerhousehub/', event)">Google Sites</a>
     </div>
 
-    <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.5.06</div>
-</div>
-
-<!-- Tutorial Overlay -->
-<div class="tutorial-overlay" id="tutorialOverlay">
-    <div class="tutorial-backdrop" id="tutorialBackdrop"></div>
-    <div class="tutorial-highlight" id="tutorialHighlight"></div>
-    <div class="tutorial-card" id="tutorialCard">
-        <div class="tutorial-step-label" id="tutorialStepLabel"></div>
-        <div class="tutorial-title" id="tutorialTitle"></div>
-        <div class="tutorial-body" id="tutorialBody"></div>
-        <div class="tutorial-actions">
-            <div class="tutorial-dots" id="tutorialDots"></div>
-            <div class="tutorial-btn-row">
-                <button class="tutorial-btn secondary" id="tutorialSkip" onclick="endTutorial()">Skip</button>
-                <button class="tutorial-btn" id="tutorialNext" onclick="tutorialNext()">Next</button>
-            </div>
-        </div>
-    </div>
+    <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.4.36</div>
 </div>
 
 <script>
     let games = [];
     let currentFilter = 'ALL';
 
-    const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png';
+    const PROXY_BASE = 'https://powerhouse.c823.workers.dev/go?url=';
 
-    function loadInBlank(url, title, thumb) {
+    function openInBlank(url, event, gameTitle, gameThumb) {
+        if (event) event.preventDefault();
         if (url.includes('youtube.com') || url.includes('youtu.be')) {
             window.open(url, '_blank');
             return;
         }
-        const displayTitle = title || 'Powerhouse';
-        const gameLogo     = thumb || '';
+        // Route through Cloudflare proxy to strip X-Frame-Options/CSP headers
+        const proxiedUrl = PROXY_BASE + encodeURIComponent(url);
         const tab = window.open('about:blank', '_blank');
         if (!tab) return;
 
+        const title = gameTitle || 'Game';
+        const thumb = gameThumb || '';
+        const logoUrl = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png';
+
         tab.document.write(`<!DOCTYPE html>
-<html style="margin:0;padding:0;height:100%;width:100%;background:#13151b;">
+<html lang="en">
 <head>
-  <title>${displayTitle}</title>
-  <link rel="icon" type="image/png" href="${FAVICON_URL}">
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    html, body { width:100%; height:100%; background:#13151b; font-family:'Outfit',sans-serif; overflow:hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title} — Powerhouse</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #13151b;
+    --surface: #1e2028;
+    --border: #35394a;
+    --accent: #0066FF;
+    --text: #f5f6fa;
+    --radius: 16px;
+    --bar: 52px;
+  }
+  html, body { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow: hidden; }
 
-    /* ── TOPBAR ── */
-    #ph-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 52px;
-      background: #1e2028;
-      border-bottom: 2px solid #35394a;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 14px;
-      z-index: 9999;
-      gap: 12px;
-      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-      will-change: transform;
-    }
-    #ph-bar.hidden { transform: translateY(-100%); }
+  /* ── TOP BAR ── */
+  #bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--bar);
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 14px;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+  #bar.hidden { transform: translateY(-100%); }
 
-    /* Left side: PH logo + divider + game thumb + title */
-    .ph-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-    }
+  #bar img.logo { height: 22px; object-fit: contain; flex-shrink: 0; }
 
-    .ph-logo-link { display:flex; align-items:center; flex-shrink:0; }
-    .ph-logo {
-      height: 26px;
-      object-fit: contain;
-      display: block;
-    }
+  .bar-divider { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
 
-    .ph-divider {
-      width: 1px;
-      height: 28px;
-      background: #35394a;
-      flex-shrink: 0;
-    }
+  #game-thumb {
+    width: 30px; height: 30px; border-radius: 8px;
+    object-fit: cover; border: 1px solid var(--border);
+    flex-shrink: 0;
+    display: ${thumb ? 'block' : 'none'};
+  }
+  #game-name {
+    font-weight: 900; font-size: 0.9rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    flex: 1; min-width: 0;
+  }
 
-    .ph-game-thumb {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid #35394a;
-      flex-shrink: 0;
-      display: ${gameLogo ? 'block' : 'none'};
-    }
+  .bar-btn {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 5px 12px;
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: 34px;
+  }
+  .bar-btn:hover { border-color: var(--accent); background: #1a2a4a; }
+  .bar-btn:active { opacity: 0.7; }
+  .bar-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .bar-btn.accent:hover { background: #0055dd; border-color: #0055dd; }
 
-    .ph-game-title {
-      font-size: 0.88rem;
-      font-weight: 900;
-      color: #f5f6fa;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      min-width: 0;
-    }
+  /* hide-bar toggle */
+  #toggle-bar {
+    position: fixed; top: calc(var(--bar) + 6px); right: 10px;
+    z-index: 99;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text);
+    border-radius: 0 0 10px 10px;
+    padding: 3px 10px;
+    font-family: inherit; font-weight: 900; font-size: 0.65rem;
+    cursor: pointer;
+    transition: top 0.3s ease, border-color 0.15s;
+    letter-spacing: 0.05em;
+  }
+  #toggle-bar.bar-hidden { top: 6px; border-radius: 10px; }
+  #toggle-bar:hover { border-color: var(--accent); }
 
-    /* Right side: open direct button */
-    .ph-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
+  /* ── IFRAME ── */
+  #frame-wrap {
+    position: fixed;
+    top: var(--bar); left: 0; right: 0; bottom: 0;
+    transition: top 0.3s ease;
+  }
+  #frame-wrap.bar-hidden { top: 0; }
 
-    .ph-btn {
-      background: #0066FF;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      font-weight: 900;
-      font-family: inherit;
-      cursor: pointer;
-      min-height: 34px;
-      white-space: nowrap;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: opacity 0.15s;
-    }
-    .ph-btn:hover { opacity: 0.85; }
-    .ph-btn:active { opacity: 0.65; }
+  iframe {
+    width: 100%; height: 100%; border: none; display: block;
+  }
 
-    /* Minimize button */
-    .ph-minimize {
-      background: transparent;
-      border: 2px solid #35394a;
-      color: #f5f6fa;
-      border-radius: 10px;
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1rem;
-      flex-shrink: 0;
-      transition: border-color 0.15s, opacity 0.15s;
-    }
-    .ph-minimize:hover { border-color: #0066FF; }
-    .ph-minimize:active { opacity: 0.65; }
+  /* ── LOADING SCREEN ── */
+  #loading {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { font-weight: 700; font-size: 0.9rem; opacity: 0.5; }
 
-    /* ── RESTORE PILL — shown when bar is hidden ── */
-    #ph-restore {
-      position: fixed;
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-80px);
-      background: #1e2028;
-      border: 2px solid #35394a;
-      border-radius: 20px;
-      padding: 5px 14px 5px 10px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      z-index: 9999;
-      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    }
-    #ph-restore.show { transform: translateX(-50%) translateY(0); }
-    #ph-restore svg { width:14px; height:14px; fill:#f5f6fa; }
-    #ph-restore span { font-size:0.72rem; font-weight:900; color:#f5f6fa; }
-
-    /* ── IFRAME ── */
-    #ph-wrap {
-      position: absolute;
-      top: 52px; left: 0; right: 0; bottom: 0;
-      transition: top 0.3s cubic-bezier(0.4,0,0.2,1);
-    }
-    #ph-wrap.expanded { top: 0; }
-
-    #gameFrame {
-      width: 100%; height: 100%;
-      border: none; display: block;
-    }
-
-    /* ── BLOCKER ── */
-    #blocker {
-      display: none;
-      position: fixed; inset: 0;
-      background: #13151b; color: #f5f6fa;
-      flex-direction: column; align-items: center; justify-content: center;
-      gap: 16px; text-align: center; padding: 24px;
-      z-index: 100;
-    }
-    #blocker.show { display: flex; }
-    #blocker h2 { font-size: 1.3rem; }
-    #blocker p  { font-size: 0.9rem; opacity: 0.6; max-width: 360px; line-height: 1.5; }
-    #blocker a  {
-      display: inline-block; margin-top: 8px;
-      background: #0066FF; color: #fff; text-decoration: none;
-      padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
-    }
-    #blocker a:hover { opacity: 0.85; }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+  /* ── BLOCKED SCREEN ── */
+  #blocked {
+    display: none;
+    position: absolute; inset: 0;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; text-align: center; padding: 30px;
+    background: var(--bg);
+    z-index: 10;
+  }
+  #blocked .icon { font-size: 3rem; line-height: 1; }
+  #blocked h2 { font-size: 1.3rem; font-weight: 900; }
+  #blocked p { font-size: 0.9rem; opacity: 0.6; max-width: 340px; line-height: 1.6; }
+  #blocked .blocked-url { font-size: 0.7rem; opacity: 0.35; word-break: break-all; max-width: 400px; }
+  .open-btn {
+    margin-top: 6px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius);
+    padding: 13px 32px;
+    font-family: inherit; font-weight: 900; font-size: 1rem;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: background 0.15s;
+  }
+  .open-btn:hover { background: #0055dd; }
+</style>
 </head>
 <body>
 
-  <!-- Topbar -->
-  <div id="ph-bar">
-    <div class="ph-left">
-      <a href="https://powerhousemirrors.c823.workers.dev" target="_blank" rel="noopener" class="ph-logo-link">
-        <img class="ph-logo" src="${FAVICON_URL}" alt="Powerhouse">
-      </a>
-      <div class="ph-divider"></div>
-      <img class="ph-game-thumb" src="${gameLogo}" alt="" onerror="this.style.display='none'">
-      <span class="ph-game-title">${displayTitle}</span>
-    </div>
+<!-- Top bar -->
+<div id="bar">
+  <img class="logo" src="${logoUrl}" alt="Powerhouse">
+  <div class="bar-divider"></div>
+  <img id="game-thumb" src="${thumb}" alt="">
+  <div id="game-name">${title}</div>
+  <button class="bar-btn" onclick="window.location.href='${url}'" title="Open in this tab">⬡ OPEN DIRECT</button>
+  <button class="bar-btn accent" onclick="window.close()">✕ CLOSE</button>
+</div>
 
-    <div class="ph-right">
-      <a class="ph-btn" href="${url}" target="_blank" rel="noopener">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 11L11 1M11 1H4M11 1V8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Open directly
-      </a>
-      <button class="ph-minimize" id="minimizeBtn" title="Minimize" onclick="toggleBar()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 9L7 4L12 9" stroke="#f5f6fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
+<!-- Hide/show bar pill -->
+<button id="toggle-bar" onclick="toggleBar()">▲ HIDE</button>
+
+<!-- Game frame -->
+<div id="frame-wrap">
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Loading ${title}…</p>
   </div>
-
-  <!-- Restore pill (visible when bar is hidden) -->
-  <div id="ph-restore" onclick="toggleBar()">
-    <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 5L7 10L12 5" stroke="#f5f6fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    </svg>
-    <span>Powerhouse</span>
+  <div id="blocked">
+    <div class="icon">⚠️</div>
+    <h2>Site Blocked Embedding</h2>
+    <p>This site won't load inside Powerhouse. Open it directly to play.</p>
+    <a class="open-btn" href="${url}" target="_self">Open ${title} →</a>
+    <div class="blocked-url">${url}</div>
   </div>
+  <iframe id="frame" src="${proxiedUrl}" allowfullscreen></iframe>
+</div>
 
-  <!-- Game iframe -->
-  <div id="ph-wrap">
-    <iframe id="gameFrame" src="${url}" allowfullscreen></iframe>
-  </div>
+<script>
+  const frame   = document.getElementById('frame');
+  const loading = document.getElementById('loading');
+  const blocked = document.getElementById('blocked');
+  let   settled = false;
 
-  <!-- Blocker fallback -->
-  <div id="blocker">
-    <h2>⚠️ Can't embed this game</h2>
-    <p>This site blocks being loaded inside frames. You can open it directly instead.</p>
-    <a href="${url}" target="_blank" rel="noopener">Open directly ↗</a>
-  </div>
+  function showBlocked() {
+    if (settled) return;
+    settled = true;
+    loading.style.display = 'none';
+    blocked.style.display = 'flex';
+    frame.style.display   = 'none';
+  }
+  function showFrame() {
+    if (settled) return;
+    settled = true;
+    loading.style.display = 'none';
+  }
 
-  <script>
-    const bar     = document.getElementById('ph-bar');
-    const wrap    = document.getElementById('ph-wrap');
-    const restore = document.getElementById('ph-restore');
-    const frame   = document.getElementById('gameFrame');
-    const blocker = document.getElementById('blocker');
-    let barVisible = true;
-
-    function toggleBar() {
-      barVisible = !barVisible;
-      bar.classList.toggle('hidden', !barVisible);
-      wrap.classList.toggle('expanded', !barVisible);
-      restore.classList.toggle('show', !barVisible);
-    }
-
-    // Blocker / iframe load detection
-    let loaded = false;
-    frame.addEventListener('load', () => { loaded = true; });
-    frame.addEventListener('error', () => {
-      blocker.classList.add('show');
-      frame.style.display = 'none';
-    });
-    setTimeout(() => {
-      if (!loaded) {
-        blocker.classList.add('show');
-        frame.style.display = 'none';
+  frame.onload = function() {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc || doc.URL === 'about:blank' || (doc.body && doc.body.innerHTML.trim() === '')) {
+        showBlocked();
+      } else {
+        showFrame();
       }
-    }, 4000);
-  <\/script>
+    } catch(e) {
+      // cross-origin — loaded fine
+      showFrame();
+    }
+  };
+  frame.onerror = () => showBlocked();
+
+  setTimeout(() => {
+    if (settled) return;
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc || doc.URL === 'about:blank' || !doc.body || doc.body.innerHTML.trim() === '') showBlocked();
+      else showFrame();
+    } catch(e) { showFrame(); }
+  }, 2000);
+
+  setTimeout(() => { if (!settled) showBlocked(); }, 5000);
+
+  // Hide/show bar
+  let barVisible = true;
+  function toggleBar() {
+    barVisible = !barVisible;
+    const bar   = document.getElementById('bar');
+    const wrap  = document.getElementById('frame-wrap');
+    const pill  = document.getElementById('toggle-bar');
+    if (barVisible) {
+      bar.classList.remove('hidden');
+      wrap.classList.remove('bar-hidden');
+      pill.classList.remove('bar-hidden');
+      pill.textContent = '▲ HIDE';
+    } else {
+      bar.classList.add('hidden');
+      wrap.classList.add('bar-hidden');
+      pill.classList.add('bar-hidden');
+      pill.textContent = '▼ SHOW';
+    }
+  }
+<\/script>
 </body>
 </html>`);
         tab.document.close();
-    }
-
-    // Main entry point for opening a game.
-    // Opening logic:
-    //   useBlank: true  → always about:blank regardless of verified
-    //   useBlank: false → always open directly regardless of verified (explicit opt-out)
-    //   useBlank: null/undefined → fall back to verified flag (!verified = about:blank)
-    function openGame(url, verified, title, useBlank, thumb, event) {
-        if (event) event.preventDefault();
-        let shouldUseBlank;
-        if (useBlank === true) {
-            shouldUseBlank = true;
-        } else if (useBlank === false) {
-            shouldUseBlank = false;
-        } else {
-            shouldUseBlank = !verified;
-        }
-        if (shouldUseBlank) {
-            loadInBlank(url, title, thumb);
-        } else {
-            window.open(url, '_blank');
-        }
     }
 
     async function fetchData() {
@@ -1001,7 +831,6 @@
             renderGames();
         } catch (e) { console.error("Load failed", e); }
     }
-    // fetchData already returns a promise (async fn), so .then() works on it.
 
     function renderFilters() {
         const bar = document.getElementById('filterBar');
@@ -1031,9 +860,7 @@
     }
 
     function shelfItemHTML(g) {
-        const safeTitle = g.title.replace(/'/g, "\'");
-        const safeThumb = (g.thumb || '').replace(/'/g, "\'");
-        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${safeTitle}', ${!!g.useBlank}, '${safeThumb}', event)">
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event, '${g.title.replace(/'/g, "\\'")}', '${g.thumb}')">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -1108,7 +935,7 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${g.title.replace(/'/g, "\\'")}', ${!!g.useBlank}, '${(g.thumb||'').replace(/'/g,"\\'")}', event)">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openInBlank('${g.link}', event, '${g.title.replace(/'/g, "\\'")}', '${g.thumb}')">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
@@ -1144,10 +971,9 @@
         const corners = localStorage.getItem('power_corners') || 'rounded';
         const accent  = localStorage.getItem('power_accent') || '#0066FF';
 
-
-        document.getElementById('themeToggle').checked    = (theme === 'dark');
-        document.getElementById('cornerToggle').checked   = (corners === 'rounded');
-        document.getElementById('accentPicker').value     = accent;
+        document.getElementById('themeToggle').checked  = (theme === 'dark');
+        document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        document.getElementById('accentPicker').value   = accent;
     }
 
     function updateUI() {
@@ -1164,10 +990,10 @@
             ? "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png"
             : "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png";
 
-        // Save all preferences
-        localStorage.setItem('power_theme',        isDark ? 'dark' : 'light');
-        localStorage.setItem('power_corners',       isRounded ? 'rounded' : 'sharp');
-        localStorage.setItem('power_accent',        accent);
+        // Save all three preferences
+        localStorage.setItem('power_theme',   isDark ? 'dark' : 'light');
+        localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
+        localStorage.setItem('power_accent',  accent);
     }
 
     // Close settings on outside click (desktop only — backdrop handles mobile)
@@ -1194,201 +1020,10 @@
         updateUI();
     }
 
-
-    // ── TUTORIAL ──
-    const TUTORIAL_STEPS = [
-        {
-            title: "Welcome to Powerhouse! 👋",
-            body: "This quick tour will walk you through everything. Tap Next to get started, or Skip to jump right in.",
-            target: null, // no highlight for welcome card
-            position: 'center'
-        },
-        {
-            title: "Search Games 🔍",
-            body: "Type any game name here to instantly filter the library. Results update as you type.",
-            target: '#searchInput',
-            position: 'below'
-        },
-        {
-            title: "Filter by Category 🗂️",
-            body: "Tap a category pill to browse by type — Arcade, Puzzle, Media, Hub, and more. The UNBLOCKED filter shows only verified games.",
-            target: '#filterBar',
-            position: 'below'
-        },
-        {
-            title: "Game Cards 🎮",
-            body: "Click any card to launch the game. Verified games (✔ badge) are confirmed unblocked. Non-verified games open via about:blank for extra privacy.",
-            target: '#game-grid',
-            position: 'above'
-        },
-        {
-            title: "Continue Playing ▶️",
-            body: "Once you've played a game it appears here for quick access. Your history is saved locally and never leaves your device.",
-            target: '#historyShelf',
-            position: 'below',
-            showOnlyIfVisible: true,
-            fallbackBody: "Once you've played a game, a Continue Playing shelf will appear here for quick access. Your history is saved locally."
-        },
-        {
-            title: "Recommended 🌟",
-            body: "Based on what you've played, Powerhouse suggests similar games here. The more you play, the better it gets.",
-            target: '#recommendedShelf',
-            position: 'below',
-            showOnlyIfVisible: true,
-            fallbackBody: "After playing a few games, a Recommended shelf will appear with suggestions based on your taste."
-        },
-        {
-            title: "Settings ⚙️",
-            body: "Tap this button to open settings — switch dark/light mode, toggle rounded corners, change the accent color, manage history, and more.",
-            target: '.settings-btn',
-            position: 'below-left'
-        },
-        {
-            title: "You're all set! 🚀",
-            body: "That's everything! If you ever want to see this tour again, tap REDO TUTORIAL in Settings. Enjoy Powerhouse!",
-            target: null,
-            position: 'center'
-        }
-    ];
-
-    let tutorialStep = 0;
-
-    function startTutorial() {
-        tutorialStep = 0;
-        document.getElementById('tutorialOverlay').classList.add('active');
-        renderTutorialStep();
-    }
-
-    function endTutorial() {
-        document.getElementById('tutorialOverlay').classList.remove('active');
-        clearHighlight();
-        localStorage.setItem('power_tutorial_done', 'true');
-    }
-
-    function tutorialNext() {
-        tutorialStep++;
-        if (tutorialStep >= TUTORIAL_STEPS.length) {
-            endTutorial();
-            return;
-        }
-        renderTutorialStep();
-    }
-
-    function clearHighlight() {
-        const hl = document.getElementById('tutorialHighlight');
-        hl.style.opacity = '0';
-        hl.style.width = '0';
-        hl.style.height = '0';
-    }
-
-    function renderTutorialStep() {
-        const step = TUTORIAL_STEPS[tutorialStep];
-        const isLast = tutorialStep === TUTORIAL_STEPS.length - 1;
-
-        // Dots
-        const dots = document.getElementById('tutorialDots');
-        dots.innerHTML = TUTORIAL_STEPS.map((_, i) =>
-            `<div class="tutorial-dot ${i === tutorialStep ? 'active' : ''}"></div>`
-        ).join('');
-
-        // Step label
-        document.getElementById('tutorialStepLabel').textContent =
-            `Step ${tutorialStep + 1} of ${TUTORIAL_STEPS.length}`;
-
-        // Content — handle fallback for hidden shelves
-        let body = step.body;
-        if (step.showOnlyIfVisible && step.target) {
-            const el = document.querySelector(step.target);
-            if (!el || el.style.display === 'none') {
-                body = step.fallbackBody || step.body;
-                // No highlight if element isn't visible
-                clearHighlight();
-                positionCard(null, step.position);
-                document.getElementById('tutorialTitle').textContent = step.title;
-                document.getElementById('tutorialBody').textContent = body;
-                document.getElementById('tutorialNext').textContent = isLast ? 'Finish 🎉' : 'Next';
-                return;
-            }
-        }
-
-        document.getElementById('tutorialTitle').textContent = step.title;
-        document.getElementById('tutorialBody').textContent = body;
-        document.getElementById('tutorialNext').textContent = isLast ? 'Finish 🎉' : 'Next';
-
-        // Highlight
-        const hl = document.getElementById('tutorialHighlight');
-        if (step.target) {
-            const el = document.querySelector(step.target);
-            if (el) {
-                const r = el.getBoundingClientRect();
-                const pad = 6;
-                hl.style.opacity = '1';
-                hl.style.left   = (r.left - pad) + 'px';
-                hl.style.top    = (r.top - pad) + 'px';
-                hl.style.width  = (r.width + pad * 2) + 'px';
-                hl.style.height = (r.height + pad * 2) + 'px';
-                positionCard(el, step.position);
-            } else {
-                clearHighlight();
-                positionCard(null, step.position);
-            }
-        } else {
-            clearHighlight();
-            positionCard(null, step.position);
-        }
-    }
-
-    function positionCard(targetEl, position) {
-        const card = document.getElementById('tutorialCard');
-        const cardW = 300;
-        const cardH = 200; // approx
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const margin = 16;
-
-        if (!targetEl || position === 'center') {
-            card.style.left = Math.max(margin, (vw - cardW) / 2) + 'px';
-            card.style.top  = Math.max(margin, (vh - cardH) / 2) + 'px';
-            card.style.bottom = 'auto';
-            return;
-        }
-
-        const r = targetEl.getBoundingClientRect();
-
-        if (position === 'below' || position === 'below-left') {
-            let top = r.bottom + 16;
-            // If it would overflow bottom, flip above
-            if (top + cardH > vh - margin) top = r.top - cardH - 16;
-            card.style.top    = Math.max(margin, top) + 'px';
-            card.style.bottom = 'auto';
-
-            if (position === 'below-left') {
-                // Align card right edge with target right edge
-                let left = r.right - cardW;
-                card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
-            } else {
-                let left = r.left;
-                card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
-            }
-        } else if (position === 'above') {
-            let top = r.top - cardH - 16;
-            if (top < margin) top = r.bottom + 16;
-            card.style.top    = Math.max(margin, top) + 'px';
-            card.style.bottom = 'auto';
-            let left = r.left;
-            card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
-        }
-    }
-
     window.onload = () => {
         loadSettings(); // Restore saved prefs into controls first
         updateUI();     // Apply them to the UI
-        fetchData().then(() => {
-            // Show tutorial automatically on first visit
-            if (!localStorage.getItem('power_tutorial_done')) {
-                setTimeout(startTutorial, 800);
-            }
-        });
+        fetchData();
     };
 </script>
 </body>
