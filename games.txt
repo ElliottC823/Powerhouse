@@ -518,7 +518,7 @@
     "desc": "Become a deer? Sounds weird\u2014but that\u2019s exactly what Deer Adventure is all about. Jump in and take on the role of a deer roaming freely around the bustling, open-world city and do whatever you want, of course, as a deer.",
     "thumb": "https://deeradventure.io/data/image/options/deer-adventure-banner.jpg",
     "link": "https://zapgames.io/deer-adventure",
-    "verified": false,
+    "verified": true,
     "useBlank": true
   },
   {
