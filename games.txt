@@ -58,7 +58,7 @@
     "category": "Arcade",
     "desc": "Ride the rhythmic waves in space. Simple controls, difficult mastery.",
     "thumb": "https://i.ytimg.com/vi/0L885f9nUI8/maxresdefault.jpg",
-    "link": "https://spacewavesunblocked.com/r",
+    "link": "https://space-waves.co/",
     "verified": true,
     "useBlank": true
   },
@@ -583,5 +583,23 @@
     "link": "https://chat.deepseek.com/",
     "verified": true,
     "useBlank": false
+  },
+  {
+    "title": "Geommetry Dash",
+    "category": "Utility",
+    "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It’s famous for its simple "one-tap" mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCd8DHW4zOb9QqjJ59t9FpV8LnEeKwIttiaw&s",
+    "link": "https://crazygamesunblocked.net/geometry-dash",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Retro Bowl",
+    "category": "Utility",
+    "desc": "Retro Bowl is a hyper-addictive, stylized American football game that blends deep front-office management with simple, arcade-style gameplay. Designed with a charming 8-bit aesthetic, it pays homage to classic titles like Tecmo Bowl while offering modern depth.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtsZZ_dJjUPe7Id2lKsCRqFT_AlAOvb3DZag&s",
+    "link": "https://retrobowl76.io/",
+    "verified": false,
+    "useBlank": true
   }
 ]
