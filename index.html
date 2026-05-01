@@ -542,7 +542,7 @@
         <div class="contributor-list">
             <span>C823 (Lead Dev)</span>
             <span>Grandpa Joey</span>
-            <span>GS</span>
+            <span>Stein</span>
             <span>KC</span>
         </div>
     </div>
@@ -627,12 +627,14 @@
     }
 
     // Main entry point for opening a game.
-    // Verified games open directly by default; unverified always use about:blank.
-    // If the "Force about:blank" setting is on, everything uses about:blank.
-    function openGame(url, verified, title, event) {
+    // useBlank (from games.txt) is the primary signal — if true, always about:blank.
+    // Unverified games also use about:blank unless useBlank is explicitly false.
+    // The "Force about:blank" setting overrides everything to about:blank.
+    function openGame(url, verified, title, useBlank, event) {
         if (event) event.preventDefault();
         const forceBlank = localStorage.getItem('power_force_blank') === 'true';
-        if (forceBlank || !verified) {
+        const shouldUseBlank = forceBlank || useBlank || !verified;
+        if (shouldUseBlank) {
             loadInBlank(url, title);
         } else {
             window.open(url, '_blank');
@@ -681,7 +683,7 @@
 
     function shelfItemHTML(g) {
         const safeTitle = g.title.replace(/'/g, "\'");
-        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${safeTitle}', event)">
+        return `<a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${safeTitle}', ${!!g.useBlank}, event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -756,7 +758,7 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${g.title.replace(/'/g, "\\'")}', event)">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')}); openGame('${g.link}', ${!!g.verified}, '${g.title.replace(/'/g, "\\'")}', ${!!g.useBlank}, event)">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
