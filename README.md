@@ -1,4 +1,4 @@
-![Powerhouse Banner](.github/banner.png)
+![Powerhouse Banner](banner.png)
 # Powerhouse
 
 
