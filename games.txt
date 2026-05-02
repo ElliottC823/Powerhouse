@@ -586,7 +586,7 @@
   },
   {
     "title": "Geommetry Dash",
-    "category": "Utility",
+    "category": "Arcade",
     "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It’s famous for its simple mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCd8DHW4zOb9QqjJ59t9FpV8LnEeKwIttiaw&s",
     "link": "https://crazygamesunblocked.net/geometry-dash",
@@ -595,7 +595,7 @@
   },
   {
     "title": "Retro Bowl",
-    "category": "Utility",
+    "category": "Arcade",
     "desc": "Retro Bowl is a hyper-addictive, stylized American football game that blends deep front-office management with simple, arcade-style gameplay. Designed with a charming 8-bit aesthetic, it pays homage to classic titles like Tecmo Bowl while offering modern depth.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtsZZ_dJjUPe7Id2lKsCRqFT_AlAOvb3DZag&s",
     "link": "https://retrobowl76.io/",
@@ -604,7 +604,7 @@
   },
   {
     "title": "FunVideoTV",
-    "category": "Utility",
+    "category": "Media",
     "desc": "Addicted to the Angry Birds, thats what I am !!!",
     "thumb": "https://yt3.googleusercontent.com/qru8manzk9XSf_AHPAxEEsF5ky94GoMj17KkLgWQTSJUfAi5zTYr44W8zI1XSpnFUfXDtTLyXaU=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
     "link": "https://www.youtube.com/user/FunVideoTV",
