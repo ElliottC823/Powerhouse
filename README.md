@@ -8,7 +8,7 @@ This project is a single-file HTML games hub built for computers and mobile.
 ### Local
 If you're looking to run Powerhouse locally, download the [Loader here](https://github.com/ElliottC823/powerhouse/releases/tag/local)
 
-## Integrating Powerhouse
+## Integration
 If you are looking to integrate Powerhouse into a website, download the [Loader here](https://github.com/ElliottC823/powerhouse/releases/tag/local) and integrate it into the website.
 
 ## Platform Support
