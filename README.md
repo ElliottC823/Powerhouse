@@ -1,5 +1,23 @@
-Powerhouse is an open-source, single-file HTML games hub built for Chromebooks and mobile. It features a curated library of browser games with verified unblocked status, a Continue Playing shelf, personalized recommendations, category filters, and a customizable UI with dark/light mode, accent color, and corner style. Games can open directly or through an about:blank proxy to bypass network filters.
+![Powerhouse Banner](.github/banner.png)
+# Powerhouse
 
------------------------------------------------------------------------------------------------------------------------------------------
 
-If you would like to run Powerhouse locally, download the [mainloader.html](https://github.com/ElliottC823/powerhouse/blob/main/mainloader.html) file if you always want the latest version which it grabs from the repository when you run it.
+This project is a single-file HTML games hub built for computers and mobile. 
+
+## Download 
+### Local
+If you're looking to run Powerhouse locally, download the [Loader here](https://github.com/ElliottC823/powerhouse/releases/tag/local)
+
+## Platform Support
+
+Any platform with a web browser that can run HTML 5 can run Powerhouse locally or online, though some games might not work.
+
+## Features
+
+- Games can open directly or through an about:blank proxy to bypass network filters.
+- Large amounts of customization.
+- Expanding library of games.
+- Sort by game type.
+
+## Integrating Powerhouse
+If you are looking to integrate Powerhouse into a website, download the [Loader here](https://github.com/ElliottC823/powerhouse/releases/tag/local) and integrate it into the website.
