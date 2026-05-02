@@ -574,7 +574,7 @@
         if (history.length > 0) {
             shelf.style.display = 'block';
             document.getElementById('historyGrid').innerHTML = history.map(g => `
-                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+                <a href="https://unclejoesgameshack.base44.app/" target="_blank" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -603,7 +603,7 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+            <a href="https://unclejoesgameshack.base44.app/" target="_blank" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
