@@ -10,12 +10,11 @@
         #loader { 
             display: flex; justify-content: center; align-items: center; 
             height: 100vh; color: #0066FF; font-family: sans-serif; font-weight: bold; 
-            text-align: center; padding: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="loader">PowerHouse Is Unavailable at this time!</div>
+    <div id="loader">LOADING POWERHOUSE...</div>
     <div id="content"></div>
 
     <script>
@@ -34,15 +33,7 @@
                 console.error(error);
             }
         }
-
-        // Set the delay for 9,999,999 seconds (converted to milliseconds)
-        const delay = 9999999 * 1000;
-
-        // Start the timer
-        setTimeout(() => {
-            document.getElementById('loader').innerText = "LOADING UNCLES POWERHOUSE...";
-            loadPowerhouse();
-        }, delay);
+        loadPowerhouse();
     </script>
 </body>
 </html>
