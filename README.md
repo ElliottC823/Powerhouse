@@ -2,4 +2,4 @@ Powerhouse is an open-source, single-file HTML games hub built for Chromebooks a
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-If you would like to run Powerhouse locally, download the <ins>loader.html</ins> file if you always want the latest version which it grabs from the repository when you run it.
+If you would like to run Powerhouse locally, download the <ins>mainloader.html</ins> file if you always want the latest version which it grabs from the repository when you run it.
