@@ -144,13 +144,13 @@
     "useBlank": false
   },
   {
-    "title": "Eaglercraft 1.8.8",
+    "title": "Eaglercraft",
     "category": "Arcade",
     "desc": "Play Minecraft 1.8.8 directly in your browser with full multiplayer support.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUJrDtymSXQF87It_b6EzIm1njr9MYmJPxmQ&s",
-    "link": "https://eaglercraft.com/play/?version=1.8.8-wasm",
-    "verified": false,
-    "useBlank": false
+    "link": "https://duckmath.freetls.fastly.net/class/eagle-craft",
+    "verified": true,
+    "useBlank": true
   },
   {
     "title": "Ai or Not?",
