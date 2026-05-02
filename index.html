@@ -8,465 +8,424 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-default: #0066FF;
             --accent: #0066FF;
-            --bg: #0d0e12;
-            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/background-dark.svg');
-            --header-bg: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/topbar-dark.svg');
-            --surface: #16181d;
-            --text: #f0f2f5;
-            --border: #2a2d35;
-            --radius: 24px;
-            --shadow: 0 4px 15px rgba(0,0,0,0.2);
-            --header-height: 64px;
-            /* Safe area insets for notched phones */
+            --radius: 16px;
+            --header-height: 60px;
+            --font: 'Outfit', sans-serif;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
             --safe-right: env(safe-area-inset-right, 0px);
         }
 
-        [data-theme="light"] {
-            --bg: #f0f2f5;
-            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/background-light.svg');
-            --header-bg: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/topbar-light.svg');
-            --surface: #ffffff;
-            --text: #0a0a0a;
-            --border: #d1d9e6;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        /* ── THEMES ── */
+        [data-theme="midnight"] {
+            --bg: #1a1d2e; --bg-gradient: linear-gradient(160deg,#1a1d2e 0%,#141620 100%);
+            --header-gradient: linear-gradient(90deg,#1e2235 0%,#252840 100%);
+            --surface: #22263a; --surface2: #2a2f47; --text: #e8eaf6;
+            --text-muted: rgba(232,234,246,0.5); --border: #363a55;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4); --logo: dark;
         }
-
+        [data-theme="dark"] {
+            --bg: #0d0e12; --bg-gradient: linear-gradient(160deg,#0d0e12 0%,#13151b 100%);
+            --header-gradient: linear-gradient(90deg,#13151b 0%,#1a1c24 100%);
+            --surface: #1e2028; --surface2: #252830; --text: #f5f6fa;
+            --text-muted: rgba(245,246,250,0.5); --border: #35394a;
+            --shadow: 0 4px 24px rgba(0,0,0,0.5); --logo: dark;
+        }
+        [data-theme="amoled"] {
+            --bg: #000; --bg-gradient: #000;
+            --header-gradient: linear-gradient(90deg,#0a0a0a,#111);
+            --surface: #111; --surface2: #1a1a1a; --text: #fff;
+            --text-muted: rgba(255,255,255,0.45); --border: #222;
+            --shadow: 0 4px 24px rgba(0,0,0,0.7); --logo: dark;
+        }
+        [data-theme="slate"] {
+            --bg: #2a2d38; --bg-gradient: linear-gradient(160deg,#2a2d38 0%,#252830 100%);
+            --header-gradient: linear-gradient(90deg,#303340 0%,#3a3e50 100%);
+            --surface: #33374a; --surface2: #3c4058; --text: #e4e6f0;
+            --text-muted: rgba(228,230,240,0.5); --border: #44485e;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3); --logo: dark;
+        }
+        [data-theme="light"] {
+            --bg: #f2f3f8; --bg-gradient: linear-gradient(160deg,#f2f3f8 0%,#e8eaf4 100%);
+            --header-gradient: linear-gradient(90deg,#fff 0%,#f2f3f8 100%);
+            --surface: #fff; --surface2: #f0f1f7; --text: #060712;
+            --text-muted: rgba(6,7,18,0.45); --border: #d4d7ea;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08); --logo: light;
+        }
+        [data-theme="system"] {
+            --bg: #1a1d2e; --bg-gradient: linear-gradient(160deg,#1a1d2e 0%,#141620 100%);
+            --header-gradient: linear-gradient(90deg,#1e2235 0%,#252840 100%);
+            --surface: #22263a; --surface2: #2a2f47; --text: #e8eaf6;
+            --text-muted: rgba(232,234,246,0.5); --border: #363a55;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4); --logo: dark;
+        }
+        @media (prefers-color-scheme: light) {
+            [data-theme="system"] {
+                --bg: #f2f3f8; --bg-gradient: linear-gradient(160deg,#f2f3f8 0%,#e8eaf4 100%);
+                --header-gradient: linear-gradient(90deg,#fff 0%,#f2f3f8 100%);
+                --surface: #fff; --surface2: #f0f1f7; --text: #060712;
+                --text-muted: rgba(6,7,18,0.45); --border: #d4d7ea;
+                --shadow: 0 4px 24px rgba(0,0,0,0.08); --logo: light;
+            }
+        }
         [data-corners="sharp"] { --radius: 0px !important; }
 
-        /* Reduce motion for users who prefer it or for performance */
-        @media (prefers-reduced-motion: reduce) {
-            * { transition: none !important; animation: none !important; }
-        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-        /* Only animate non-layout properties for performance */
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* Remove tap flash on mobile */
-        }
-
-        /* Separate transform transitions from color transitions for compositing */
-        .game-card, .shelf-item, .filter-btn {
-            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
+        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: var(--font);
+            background: var(--bg-gradient);
             background-color: var(--bg);
-            background-image: var(--bg-image);
-            /* Use scroll instead of fixed — fixed backgrounds are GPU-expensive on mobile */
-            background-attachment: scroll;
-            background-size: cover;
-            background-position: center top;
             color: var(--text);
-            margin: 0;
-            overflow-x: hidden;
-            /* Smooth scrolling on iOS */
+            margin: 0; min-height: 100vh; overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-            /* Account for notch/home bar */
             padding-left: var(--safe-left);
             padding-right: var(--safe-right);
             padding-bottom: var(--safe-bottom);
+            transition: background 0.25s, color 0.25s;
         }
 
         /* ── HEADER ── */
         header {
-            background-image: var(--header-bg);
-            background-size: cover;
-            padding: 0 clamp(12px, 4%, 5%);
+            background: var(--header-gradient);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            padding: 0 clamp(14px,4%,24px);
             padding-top: var(--safe-top);
             height: calc(var(--header-height) + var(--safe-top));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.25s, border-color 0.25s;
         }
-
-        .logo-img {
-            height: 32px;
-            flex-shrink: 0;
-            /* Prevent logo from being too large on small screens */
-            max-width: 120px;
-            object-fit: contain;
-        }
-
-        .search-container {
-            flex-grow: 1;
-            min-width: 0; /* Allow it to shrink below intrinsic size */
-            max-width: 400px;
-        }
-
+        .logo-img { height: 30px; flex-shrink: 0; max-width: 120px; object-fit: contain; }
+        .search-container { flex-grow: 1; min-width: 0; max-width: 420px; }
         #searchInput {
-            width: 100%;
-            padding: 9px 16px;
-            border-radius: 30px;
-            border: 2px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            font-family: inherit;
-            font-weight: 700;
-            font-size: 16px; /* 16px prevents iOS auto-zoom on focus */
-            outline: none;
-            transition: border-color 0.2s;
+            width: 100%; padding: 8px 16px;
+            border-radius: var(--radius); border: 1.5px solid var(--border);
+            background: var(--surface2); color: var(--text);
+            font-family: inherit; font-weight: 600; font-size: 16px; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
-        #searchInput:focus { border-color: var(--accent); }
-
+        #searchInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+        #searchInput::placeholder { color: var(--text-muted); }
         .controls { flex-shrink: 0; }
-
         .settings-btn {
-            background: var(--surface);
-            border: 2px solid var(--border);
-            padding: 9px 12px;
-            border-radius: 20px;
-            font-weight: 900;
-            cursor: pointer;
-            color: var(--text);
-            font-size: 1rem;
-            line-height: 1;
-            /* Minimum 44×44 touch target */
-            min-width: 44px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: var(--surface); border: 1.5px solid var(--border);
+            padding: 8px 12px; border-radius: var(--radius); font-weight: 900;
+            cursor: pointer; color: var(--text); font-size: 1rem; line-height: 1;
+            min-width: 44px; min-height: 44px;
+            display: flex; align-items: center; justify-content: center;
             transition: background 0.2s, border-color 0.2s;
         }
-
+        .settings-btn:hover { border-color: var(--accent); }
         .settings-btn:active { opacity: 0.7; }
 
-        /* ── CONTINUE PLAYING SHELF ── */
-        .shelf-container { padding: 16px clamp(12px, 4%, 5%); display: none; }
-        .shelf-title { font-weight: 900; font-size: 1.1rem; margin-bottom: 12px; }
-
+        /* ── SHELVES ── */
+        .shelf-container { padding: 14px clamp(14px,4%,24px); display: none; }
+        .shelf-title { font-weight: 800; font-size: 0.95rem; margin-bottom: 10px; letter-spacing: 0.02em; opacity: 0.9; }
         .shelf-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            /* Hide scrollbar cross-browser */
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            /* Momentum scrolling on iOS */
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x proximity;
+            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px;
+            scrollbar-width: none; -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity;
         }
         .shelf-scroll::-webkit-scrollbar { display: none; }
-
         .shelf-item {
-            flex: 0 0 90px;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            scroll-snap-align: start;
-            /* Larger touch target */
-            padding: 4px;
+            flex: 0 0 84px; min-width: 0; text-align: center; text-decoration: none;
+            color: inherit; position: relative; scroll-snap-align: start;
+            padding: 4px; overflow: hidden;
         }
-
         .shelf-img {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
-            object-fit: cover;
-            border: 2px solid var(--border);
-            margin-bottom: 6px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            width: 68px; height: 68px; border-radius: calc(var(--radius) * 0.7);
+            object-fit: cover; border: 1.5px solid var(--border);
+            margin: 0 auto 6px; display: block;
+            transition: transform 0.15s;
         }
-
-        .shelf-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .shelf-verified {
-            position: absolute;
-            top: 0;
-            right: 8px;
-            width: 18px;
-            height: 18px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
+        .shelf-item:hover .shelf-img { transform: scale(1.05); }
+        .shelf-label { font-size: 0.7rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; width: 0; min-width: 100%; }
+        .shelf-verified { position: absolute; top: 0; right: 8px; width: 16px; height: 16px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4)); }
 
         /* ── FILTER BAR ── */
         .filter-bar {
-            display: flex;
-            gap: 8px;
-            padding: 8px clamp(12px, 4%, 5%);
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            display: flex; gap: 6px; padding: 6px clamp(14px,4%,24px);
+            overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x proximity;
         }
         .filter-bar::-webkit-scrollbar { display: none; }
-
         .filter-btn {
-            background: var(--surface);
-            border: 2px solid var(--border);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 900;
-            font-family: inherit;
-            cursor: pointer;
-            color: var(--text);
-            white-space: nowrap;
-            font-size: 0.85rem;
-            /* 44px minimum touch target height */
-            min-height: 44px;
-            scroll-snap-align: start;
-            flex-shrink: 0;
+            background: var(--surface); border: 1.5px solid var(--border);
+            padding: 7px 16px; border-radius: 20px; font-weight: 700; font-family: inherit;
+            cursor: pointer; color: var(--text); white-space: nowrap;
+            font-size: 0.82rem; min-height: 38px; flex-shrink: 0;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
-        .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
         .filter-btn:active { opacity: 0.7; }
 
         /* ── GAME GRID ── */
         #game-grid {
             display: grid;
-            /* 
-              Mobile: 2 columns
-              Tablet/Chromebook: 3 columns
-              Desktop: auto-fill ~280px
-            */
             grid-template-columns: repeat(2, 1fr);
-            gap: clamp(10px, 2.5vw, 25px);
-            padding: clamp(10px, 3%, 20px) clamp(12px, 4%, 5%);
+            gap: clamp(10px,2.5vw,20px);
+            padding: clamp(10px,3%,18px) clamp(14px,4%,24px);
         }
-
-        /* Tablet / Chromebook landscape */
-        @media (min-width: 600px) {
-            #game-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        /* Desktop */
-        @media (min-width: 900px) {
-            #game-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-        }
+        @media (min-width: 600px)  { #game-grid { grid-template-columns: repeat(3,1fr); } }
+        @media (min-width: 900px)  { #game-grid { grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); } }
 
         .game-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            overflow: hidden;
-            text-decoration: none;
-            color: inherit;
-            box-shadow: var(--shadow);
-            border: 2px solid var(--border);
-            display: block;
-            transition: border-color 0.2s ease, transform 0.15s ease;
-            /* Prevent text selection on long-press */
-            -webkit-user-select: none;
-            user-select: none;
+            background: var(--surface); border-radius: var(--radius); overflow: hidden;
+            text-decoration: none; color: inherit; box-shadow: var(--shadow);
+            border: 1.5px solid var(--border); display: block;
+            transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+            -webkit-user-select: none; user-select: none;
         }
-
-        /* Hover only on pointer devices (not touch) */
-        @media (hover: hover) {
-            .game-card:hover { transform: translateY(-4px); border-color: var(--accent); }
-        }
-
+        @media (hover: hover) { .game-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 32px rgba(0,0,0,0.3); } }
         .game-card:active { transform: scale(0.97); }
-
         .thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
-        .thumb {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Lazy-load images for performance */
-            loading: lazy;
-            display: block;
-        }
-
-        .game-info {
-            padding: clamp(8px, 2%, 15px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px;
-        }
-
+        .thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .game-info { padding: clamp(8px,2%,12px); display: flex; justify-content: space-between; align-items: center; gap: 6px; }
         .game-title-container { display: flex; align-items: center; gap: 5px; min-width: 0; }
-
-        .game-title {
-            font-weight: 900;
-            font-size: clamp(0.75rem, 2.5vw, 1rem);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
+        .game-title { font-weight: 800; font-size: clamp(0.72rem,2.5vw,0.92rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .play-btn {
-            background: var(--accent);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-weight: 900;
-            font-size: 0.7rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-            /* Min touch target */
-            min-height: 32px;
-            display: flex;
-            align-items: center;
+            background: var(--accent); color: #fff; padding: 5px 11px;
+            border-radius: calc(var(--radius) * 0.6); font-weight: 800; font-size: 0.68rem;
+            white-space: nowrap; flex-shrink: 0; min-height: 30px;
+            display: flex; align-items: center; letter-spacing: 0.04em;
         }
+        .verified-badge { width: 13px; height: 13px; cursor: help; flex-shrink: 0; }
 
-        .verified-badge { width: 14px; height: 14px; cursor: help; flex-shrink: 0; }
+        /* ── EMPTY STATE ── */
+        .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; opacity:0.45; font-weight:700; }
 
-        /* ── SETTINGS MENU ── */
+        /* ── SETTINGS PANEL — Discord-style sidebar feel ── */
+        .settings-backdrop {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6); z-index: 1999;
+            opacity: 0; transition: opacity 0.25s;
+            backdrop-filter: blur(4px);
+        }
+        .settings-backdrop.show { display: block; opacity: 1; }
+
         .settings-menu {
-            display: none;
-            position: fixed;
-            /* On mobile, pin to bottom like a sheet */
-            bottom: 0;
-            left: 0;
-            right: 0;
+            display: none; position: fixed;
+            bottom: 0; left: 0; right: 0;
             background: var(--surface);
-            padding: 20px clamp(16px, 5%, 24px);
-            padding-bottom: calc(20px + var(--safe-bottom));
             border-radius: 20px 20px 0 0;
-            border: 2px solid var(--accent);
+            border: 1.5px solid var(--border);
             border-bottom: none;
-            z-index: 2000;
-            max-height: 80vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
-            /* Smooth slide-up animation */
+            z-index: 2000; max-height: 88vh;
+            overflow: hidden;
+            box-shadow: 0 -16px 48px rgba(0,0,0,0.5);
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+            display: flex; flex-direction: column;
         }
-
-        /* On tablets/desktop, show as a popover */
         @media (min-width: 600px) {
             .settings-menu {
-                bottom: auto;
-                left: auto;
-                top: calc(var(--header-height) + var(--safe-top) + 8px);
-                right: clamp(12px, 4%, 5%);
-                border-radius: 15px;
-                border-bottom: 2px solid var(--accent);
-                width: min(300px, 90vw);
-                max-height: 80vh;
-                transform: translateY(-10px);
+                bottom: auto; left: auto;
+                top: calc(var(--header-height) + var(--safe-top) + 10px);
+                right: clamp(12px,4%,24px);
+                border-radius: 14px; border-bottom: 1.5px solid var(--border);
+                width: min(380px, 92vw); max-height: 82vh;
+                transform: translateY(-8px) scale(0.97);
                 opacity: 0;
                 transition: transform 0.2s ease, opacity 0.2s ease;
+                display: flex; flex-direction: column;
             }
-            .settings-menu.show {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            .settings-menu.show { transform: translateY(0) scale(1); opacity: 1; }
         }
-
         .settings-menu.show {
-            display: block;
+            display: flex;
             transform: translateY(0);
             opacity: 1;
         }
 
-        /* Drag handle for bottom sheet on mobile */
         .sheet-handle {
-            width: 40px;
-            height: 4px;
-            background: var(--border);
-            border-radius: 4px;
-            margin: 0 auto 16px;
-            display: block;
+            width: 36px; height: 4px; background: var(--border);
+            border-radius: 4px; margin: 12px auto 0; flex-shrink: 0;
         }
+        @media (min-width: 600px) { .sheet-handle { display: none; } }
 
-        @media (min-width: 600px) {
-            .sheet-handle { display: none; }
-        }
-
-        /* Backdrop for mobile settings sheet */
-        .settings-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1999;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .settings-backdrop.show { display: block; opacity: 1; }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            gap: 10px;
-        }
-
-        /* Larger touch targets for toggles */
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
+        /* Settings header row with nav tabs */
+        .settings-header {
+            padding: 14px 16px 0;
             flex-shrink: 0;
         }
-
-        input[type="color"] {
-            width: 44px;
-            height: 32px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            padding: 2px;
-            background: transparent;
-            flex-shrink: 0;
+        .settings-title {
+            font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.1em; opacity: 0.45; margin-bottom: 10px;
+        }
+        .settings-tabs {
+            display: flex; gap: 4px;
+            border-bottom: 1.5px solid var(--border);
+            padding-bottom: 0;
+        }
+        .settings-tab {
+            background: none; border: none; color: var(--text-muted);
+            font-family: inherit; font-weight: 700; font-size: 0.82rem;
+            padding: 8px 12px 9px; cursor: pointer; border-radius: 8px 8px 0 0;
+            transition: color 0.15s, background 0.15s;
+            position: relative; bottom: -1.5px;
+            white-space: nowrap;
+        }
+        .settings-tab:hover { color: var(--text); background: var(--surface2); }
+        .settings-tab.active {
+            color: var(--accent); border: 1.5px solid var(--border);
+            border-bottom: 1.5px solid var(--surface);
+            background: var(--surface);
         }
 
-        .divider { border-top: 1px solid var(--border); margin: 14px 0; padding-top: 14px; }
-        h4 { margin: 0 0 8px 0; font-size: 0.85rem; text-transform: uppercase; color: var(--accent); }
-        .small-text { font-size: 0.8rem; line-height: 1.5; opacity: 0.8; }
-        .contributor-list { display: flex; flex-direction: column; gap: 5px; font-size: 0.8rem; font-weight: 700; }
-        .mirror-link { color: var(--accent); text-decoration: none; font-weight: 700; display: block; margin-bottom: 5px; padding: 4px 0; }
-
-        .reset-btn {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 900;
-            font-family: inherit;
-            /* Minimum touch target */
-            min-height: 36px;
+        /* Settings body — scrollable */
+        .settings-body {
+            flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: 16px 16px calc(16px + var(--safe-bottom));
         }
-        .reset-btn:active { opacity: 0.7; }
+        .settings-body::-webkit-scrollbar { width: 4px; }
+        .settings-body::-webkit-scrollbar-track { background: transparent; }
+        .settings-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            opacity: 0.5;
-            font-weight: 700;
-            font-size: 1rem;
+        /* Settings pane */
+        .settings-pane { display: none; }
+        .settings-pane.active { display: block; }
+
+        /* Settings rows */
+        .s-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 9px 0; gap: 12px;
+            border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
         }
+        .s-row:last-child { border-bottom: none; }
+        .s-label { font-size: 0.85rem; font-weight: 700; }
+        .s-sublabel { font-size: 0.7rem; opacity: 0.5; font-weight: 500; margin-top: 1px; }
+
+        /* Section headings inside panes */
+        .s-section-title {
+            font-size: 0.68rem; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--accent);
+            margin: 16px 0 8px; opacity: 0.8;
+        }
+        .s-section-title:first-child { margin-top: 0; }
+
+        /* Inputs */
+        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; accent-color: var(--accent); }
+        input[type="color"] { width: 40px; height: 30px; border: none; border-radius: 8px; cursor: pointer; padding: 2px; background: transparent; flex-shrink: 0; }
+
+        /* Buttons */
+        .s-btn {
+            background: var(--surface2); color: var(--text); border: 1.5px solid var(--border);
+            padding: 6px 14px; border-radius: 8px; cursor: pointer;
+            font-size: 0.75rem; font-weight: 800; font-family: inherit;
+            min-height: 34px; white-space: nowrap;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .s-btn:hover { border-color: var(--accent); }
+        .s-btn:active { opacity: 0.7; }
+        .s-btn.danger { background: rgba(255,68,68,0.12); border-color: rgba(255,68,68,0.3); color: #ff6b6b; }
+        .s-btn.danger:hover { border-color: #ff4444; background: rgba(255,68,68,0.2); }
+        .s-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .s-btn.primary:hover { opacity: 0.88; }
+
+        /* Accent row */
+        .accent-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+        /* Theme swatches */
+        .theme-picker { display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 0 2px; }
+        .theme-swatch {
+            width: 36px; height: 36px; border-radius: 10px;
+            border: 2px solid transparent; cursor: pointer; position: relative;
+            flex-shrink: 0; transition: border-color 0.15s, transform 0.15s; outline: none;
+        }
+        .theme-swatch:hover  { transform: scale(1.1); }
+        .theme-swatch:active { transform: scale(0.95); }
+        .theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+        .swatch-midnight { background: linear-gradient(135deg,#1a1d2e 50%,#252840 100%); }
+        .swatch-dark     { background: linear-gradient(135deg,#0d0e12 50%,#1e2028 100%); }
+        .swatch-amoled   { background: #000; }
+        .swatch-slate    { background: linear-gradient(135deg,#2a2d38 50%,#33374a 100%); }
+        .swatch-light    { background: linear-gradient(135deg,#f0f2f8 50%,#fff 100%); border-color: var(--border); }
+        .swatch-system   { background: linear-gradient(135deg,#1a1d2e 0%,#1a1d2e 50%,#f0f2f8 50%,#f0f2f8 100%); }
+        .swatch-system::after {
+            content: "⟳"; position: absolute; inset: 0;
+            display: grid; place-items: center; font-size: 1rem; color: var(--accent);
+        }
+
+        /* Font picker */
+        .font-list { display: flex; flex-direction: column; gap: 4px; }
+        .font-option {
+            background: var(--surface2); border: 1.5px solid var(--border);
+            border-radius: 10px; padding: 10px 14px;
+            cursor: pointer; transition: border-color 0.15s;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .font-option:hover { border-color: var(--accent); }
+        .font-option.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface2)); }
+        .font-option-name { font-size: 0.9rem; font-weight: 700; }
+        .font-option-preview { font-size: 0.72rem; opacity: 0.5; }
+
+        /* About panel */
+        .about-hero {
+            text-align: center; padding: 8px 0 16px;
+            border-bottom: 1px solid var(--border); margin-bottom: 14px;
+        }
+        .about-hero img { height: 36px; object-fit: contain; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+        .about-version { font-size: 0.65rem; opacity: 0.4; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+        .about-text { font-size: 0.82rem; line-height: 1.6; opacity: 0.8; margin-bottom: 14px; }
+        .contributor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+        .contributor-chip {
+            background: var(--surface2); border: 1.5px solid var(--border);
+            border-radius: 10px; padding: 8px 12px;
+            font-size: 0.78rem; font-weight: 700;
+        }
+        .contributor-chip .role { font-size: 0.65rem; opacity: 0.5; font-weight: 600; display: block; margin-top: 1px; }
+        .mirror-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--surface2); border: 1.5px solid var(--border);
+            border-radius: 10px; padding: 10px 14px; text-decoration: none;
+            color: var(--text); font-weight: 700; font-size: 0.82rem;
+            margin-bottom: 6px; transition: border-color 0.15s;
+        }
+        .mirror-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .mirror-btn .arrow { opacity: 0.4; font-size: 0.8rem; }
+        .mirror-disclaimer { font-size: 0.65rem; opacity: 0.45; margin-top: 3px; }
+
+        /* Tutorial theme picker */
+        .tutorial-theme-picker { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 12px 0 4px; }
+        .tutorial-theme-swatch {
+            width: 40px; height: 40px; border-radius: 10px;
+            border: 2px solid transparent; cursor: pointer;
+            transition: border-color 0.15s, transform 0.15s; position: relative;
+        }
+        .tutorial-theme-swatch:hover { transform: scale(1.1); }
+        .tutorial-theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+
+        /* Tutorial overlay */
+        .tutorial-overlay { display:none; position:fixed; inset:0; z-index:9000; pointer-events:none; }
+        .tutorial-overlay.active { display:block; }
+        .tutorial-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.75); pointer-events:all; }
+        .tutorial-highlight { position:absolute; border-radius:var(--radius); box-shadow:0 0 0 9999px rgba(0,0,0,0.75), 0 0 0 3px var(--accent); pointer-events:none; transition:all 0.35s cubic-bezier(0.4,0,0.2,1); z-index:9001; opacity:0; }
+        .tutorial-card { position:absolute; background:var(--surface); border:1.5px solid var(--accent); border-radius:var(--radius); padding:18px 20px; width:min(300px,88vw); z-index:9002; pointer-events:all; box-shadow:0 8px 40px rgba(0,0,0,0.5); }
+        .tutorial-step-label { font-size:0.62rem; font-weight:900; text-transform:uppercase; color:var(--accent); margin-bottom:5px; letter-spacing:1px; }
+        .tutorial-title { font-size:1rem; font-weight:900; margin-bottom:7px; }
+        .tutorial-body { font-size:0.82rem; line-height:1.55; opacity:0.8; margin-bottom:14px; }
+        .tutorial-actions { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+        .tutorial-dots { display:flex; gap:5px; align-items:center; }
+        .tutorial-dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:background 0.2s,transform 0.2s; }
+        .tutorial-dot.active { background:var(--accent); transform:scale(1.3); }
+        .tutorial-btn-row { display:flex; gap:8px; }
+        .tutorial-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 16px; font-weight:800; font-size:0.8rem; font-family:inherit; cursor:pointer; min-height:34px; }
+        .tutorial-btn.secondary { background:transparent; color:var(--text); border:1.5px solid var(--border); opacity:0.7; }
+        .tutorial-btn:active { opacity:0.7; }
     </style>
 </head>
-<body data-theme="dark">
+<body data-theme="midnight">
 
-<!-- Settings backdrop (mobile only) -->
+<!-- Settings backdrop -->
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
 
 <header>
@@ -484,40 +443,127 @@
     <div class="shelf-scroll" id="historyGrid"></div>
 </div>
 
-<nav class="filter-bar" id="filterBar"></nav>
+<div class="shelf-container" id="recommendedShelf">
+    <div class="shelf-title">Recommended</div>
+    <div class="shelf-scroll" id="recommendedGrid"></div>
+</div>
 
+<nav class="filter-bar" id="filterBar"></nav>
 <main id="game-grid"></main>
 
-<!-- Settings Panel -->
+<!-- ── SETTINGS PANEL ── -->
 <div id="settingsMenu" class="settings-menu" role="dialog" aria-label="Settings">
     <span class="sheet-handle"></span>
-    <div class="row"><span>DARK MODE</span><input type="checkbox" id="themeToggle" checked onclick="updateUI()"></div>
-    <div class="row"><span>ROUNDED UI</span><input type="checkbox" id="cornerToggle" checked onclick="updateUI()"></div>
-    <div class="row"><span>ACCENT</span><input type="color" id="accentPicker" value="#0066FF" oninput="updateUI()"></div>
-    <div class="row"><span>HISTORY</span><button class="reset-btn" onclick="clearHistory()">CLEAR</button></div>
 
-    <div class="divider">
-        <h4>About Powerhouse</h4>
-        <p id="aboutText" class="small-text">Loading hub information...</p>
-    </div>
-
-    <div class="divider">
-        <h4>Contributors</h4>
-        <div class="contributor-list">
-            <span>C823 (Lead Dev)</span>
-            <span>Grandpa Joey</span>
-            <span>Stein</span>
-            <span>KC</span>
+    <div class="settings-header">
+        <div class="settings-title">Settings</div>
+        <div class="settings-tabs" role="tablist">
+            <button class="settings-tab active" id="tab-appearance" onclick="switchTab('appearance')" role="tab">Appearance</button>
+            <button class="settings-tab"        id="tab-data"       onclick="switchTab('data')"       role="tab">Data</button>
+            <button class="settings-tab"        id="tab-about"      onclick="switchTab('about')"      role="tab">About</button>
         </div>
     </div>
 
-    <div class="divider">
-        <h4>Mirrors</h4>
-        <a href="https://powerhouse.c823.workers.dev/" class="mirror-link">Cloudflare (Main)</a>
-        <a href="https://sites.google.com/view/powerhousehub/" class="mirror-link">Google Sites</a>
-    </div>
+    <div class="settings-body">
 
-    <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 15px; text-align: right;">V1.5.09</div>
+        <!-- ── APPEARANCE TAB ── -->
+        <div class="settings-pane active" id="pane-appearance">
+
+            <div class="s-section-title">Theme</div>
+            <div class="theme-picker">
+                <button class="theme-swatch swatch-midnight" onclick="setTheme('midnight')" title="Midnight" id="swatch-midnight"></button>
+                <button class="theme-swatch swatch-dark"     onclick="setTheme('dark')"     title="Dark"     id="swatch-dark"></button>
+                <button class="theme-swatch swatch-amoled"   onclick="setTheme('amoled')"   title="AMOLED"   id="swatch-amoled"></button>
+                <button class="theme-swatch swatch-slate"    onclick="setTheme('slate')"    title="Slate"    id="swatch-slate"></button>
+                <button class="theme-swatch swatch-light"    onclick="setTheme('light')"    title="Light"    id="swatch-light"></button>
+                <button class="theme-swatch swatch-system"   onclick="setTheme('system')"   title="System"   id="swatch-system"></button>
+            </div>
+
+            <div class="s-section-title" style="margin-top:18px;">Interface</div>
+            <div class="s-row">
+                <div><div class="s-label">Rounded UI</div><div class="s-sublabel">Smooth card corners</div></div>
+                <input type="checkbox" id="cornerToggle" checked onchange="updateUI()">
+            </div>
+            <div class="s-row">
+                <div><div class="s-label">Accent Color</div><div class="s-sublabel">Highlight color</div></div>
+                <div class="accent-controls">
+                    <button class="s-btn" onclick="resetAccent()">Reset</button>
+                    <input type="color" id="accentPicker" value="#0066FF" oninput="updateUI()">
+                </div>
+            </div>
+
+            <div class="s-section-title" style="margin-top:18px;">Font</div>
+            <div class="font-list" id="fontList"></div>
+        </div>
+
+        <!-- ── DATA TAB ── -->
+        <div class="settings-pane" id="pane-data">
+            <div class="s-section-title">History</div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">Play History</div>
+                    <div class="s-sublabel">Continue Playing &amp; Recommended shelves</div>
+                </div>
+                <button class="s-btn danger" onclick="clearHistory()">Clear</button>
+            </div>
+
+            <div class="s-section-title" style="margin-top:18px;">Tutorial</div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">Redo Tutorial</div>
+                    <div class="s-sublabel">Walk through the onboarding again</div>
+                </div>
+                <button class="s-btn primary" onclick="closeSettings();startTutorial()">Redo</button>
+            </div>
+        </div>
+
+        <!-- ── ABOUT TAB ── -->
+        <div class="settings-pane" id="pane-about">
+            <div class="about-hero">
+                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse">
+                <div class="about-version">V1.5.09</div>
+            </div>
+
+            <div class="s-section-title">About</div>
+            <p id="aboutText" class="about-text">Loading...</p>
+
+            <div class="s-section-title">Contributors</div>
+            <div class="contributor-grid">
+                <div class="contributor-chip">C823<span class="role">Lead Developer</span></div>
+                <div class="contributor-chip">Grandpa Joey<span class="role">Contributor</span></div>
+                <div class="contributor-chip">Stein<span class="role">Contributor</span></div>
+                <div class="contributor-chip">KC<span class="role">Contributor</span></div>
+            </div>
+
+            <div class="s-section-title">Mirrors</div>
+            <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-btn">
+                Cloudflare <span class="arrow">↗</span>
+            </a>
+            <a href="https://sites.google.com/view/powerhousehub/" target="_blank" rel="noopener" class="mirror-btn">
+                Google Sites <span class="arrow">↗</span>
+            </a>
+            <div class="mirror-disclaimer">⚠ Google Sites may not work in some school districts</div>
+        </div>
+
+    </div><!-- /settings-body -->
+</div><!-- /settingsMenu -->
+
+<!-- Tutorial Overlay -->
+<div class="tutorial-overlay" id="tutorialOverlay">
+    <div class="tutorial-backdrop"></div>
+    <div class="tutorial-highlight" id="tutorialHighlight"></div>
+    <div class="tutorial-card" id="tutorialCard">
+        <div class="tutorial-step-label" id="tutorialStepLabel"></div>
+        <div class="tutorial-title" id="tutorialTitle"></div>
+        <div class="tutorial-body" id="tutorialBody"></div>
+        <div class="tutorial-actions">
+            <div class="tutorial-dots" id="tutorialDots"></div>
+            <div class="tutorial-btn-row">
+                <button class="tutorial-btn secondary" onclick="endTutorial()">Skip</button>
+                <button class="tutorial-btn" id="tutorialNext" onclick="tutorialNext()">Next</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -531,11 +577,13 @@
 
             const aboutRes = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/about.txt');
             if (aboutRes.ok) document.getElementById('aboutText').innerText = await aboutRes.text();
+            updateAboutLogo();
 
             renderFilters();
             renderGames();
         } catch (e) { console.error("Load failed", e); }
     }
+    // async fn already returns a promise — .then() works on it
 
     function renderFilters() {
         const bar = document.getElementById('filterBar');
@@ -583,6 +631,26 @@
         } else {
             shelf.style.display = 'none';
         }
+
+        // ── Recommended shelf ──
+        const recShelf = document.getElementById('recommendedShelf');
+        if (history.length > 0 && games.length > 0) {
+            const playedTitles     = new Set(history.map(g => g.title));
+            const playedCategories = [...new Set(history.map(g => g.category))];
+            let pool = games.filter(g => playedCategories.includes(g.category) && !playedTitles.has(g.title));
+            if (pool.length < 4) pool = [...pool, ...games.filter(g => !playedTitles.has(g.title) && !pool.includes(g))];
+            pool.sort((a,b) => { const s=x=>x.split('').reduce((a,c)=>a+c.charCodeAt(0),0); return(s(a.title)%7)-(s(b.title)%7); });
+            const picks = pool.slice(0,8);
+            if (picks.length > 0) {
+                recShelf.style.display = 'block';
+                document.getElementById('recommendedGrid').innerHTML = picks.map(g => `
+                    <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')})">
+                        <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                        ${g.verified ? '<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">' : ''}
+                        <div class="shelf-label">${g.title}</div>
+                    </a>`).join('');
+            } else recShelf.style.display = 'none';
+        } else recShelf.style.display = 'none';
 
         const filtered = games.filter(g => {
             const matchesSearch = g.title.toLowerCase().includes(search);
@@ -633,44 +701,276 @@
         document.getElementById('settingsBackdrop').classList.remove('show');
     }
 
-    function updateUI() {
-        const isDark = document.getElementById('themeToggle').checked;
-        const isRounded = document.getElementById('cornerToggle').checked;
-        const accent = document.getElementById('accentPicker').value;
+    // ── SETTINGS TABS ────────────────────────────────────────────────────
+    function switchTab(tab) {
+        ['appearance','data','about'].forEach(t => {
+            document.getElementById('pane-' + t).classList.toggle('active', t === tab);
+            document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+        });
+    }
 
-        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    // ── FONTS ────────────────────────────────────────────────────────────
+    const FONTS = [
+        { id: 'outfit',      name: 'Outfit (Default)', stack: "'Outfit', sans-serif",      url: 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap' },
+        { id: 'inter',       name: 'Inter',            stack: "'Inter', sans-serif",         url: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap' },
+        { id: 'poppins',     name: 'Poppins',          stack: "'Poppins', sans-serif",       url: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap' },
+        { id: 'roboto',      name: 'Roboto',           stack: "'Roboto', sans-serif",        url: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap' },
+        { id: 'space-grotesk', name: 'Space Grotesk', stack: "'Space Grotesk', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap' },
+        { id: 'jetbrains',   name: 'JetBrains Mono',  stack: "'JetBrains Mono', monospace",  url: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap' },
+    ];
+
+    function renderFontList() {
+        const current = localStorage.getItem('power_font') || 'outfit';
+        document.getElementById('fontList').innerHTML = FONTS.map(f => `
+            <div class="font-option ${f.id === current ? 'active' : ''}" onclick="setFont('${f.id}')" style="font-family:${f.stack}">
+                <span class="font-option-name">${f.name}</span>
+                <span class="font-option-preview">Aa Bb 123</span>
+            </div>
+        `).join('');
+    }
+
+    function setFont(id) {
+        const f = FONTS.find(x => x.id === id);
+        if (!f) return;
+        // Load the Google Font if not already loaded
+        const existing = document.getElementById('fontLink');
+        if (existing) existing.href = f.url;
+        document.documentElement.style.setProperty('--font', f.stack);
+        localStorage.setItem('power_font', id);
+        renderFontList();
+    }
+
+    // ── THEME SYSTEM ──────────────────────────────────────────────────────
+    const THEMES = ['midnight', 'dark', 'amoled', 'slate', 'light', 'system'];
+    const DARK_LOGOS  = ['midnight','dark','amoled','slate'];
+
+    function isLogoDark(theme) {
+        if (theme === 'system') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        return DARK_LOGOS.includes(theme);
+    }
+
+    function setTheme(theme) {
+        if (!THEMES.includes(theme)) theme = 'midnight';
+        document.body.setAttribute('data-theme', theme);
+
+        // Update logo
+        const logo = document.getElementById('mainLogo');
+        logo.src = isLogoDark(theme)
+            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png'
+            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png';
+
+        // Highlight active swatch
+        THEMES.forEach(t => {
+            const sw = document.getElementById('swatch-' + t);
+            if (sw) sw.classList.toggle('active', t === theme);
+        });
+
+        localStorage.setItem('power_theme', theme);
+        updateAboutLogo();
+    }
+
+    function updateUI() {
+        const isRounded = document.getElementById('cornerToggle').checked;
+        const accent    = document.getElementById('accentPicker').value;
+
         document.body.setAttribute('data-corners', isRounded ? 'rounded' : 'sharp');
         document.documentElement.style.setProperty('--accent', accent);
 
-        const logo = document.getElementById('mainLogo');
-        logo.src = isDark
-            ? "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png"
-            : "https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png";
-
-        localStorage.setItem('power_theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
+        localStorage.setItem('power_accent',  accent);
     }
 
-    // Close settings on outside click (desktop only — backdrop handles mobile)
+    function resetAccent() {
+        document.getElementById('accentPicker').value = '#0066FF';
+        updateUI();
+    }
+
+    function updateAboutLogo() {
+        const theme = localStorage.getItem('power_theme') || 'midnight';
+        const el = document.getElementById('aboutLogo');
+        if (el) el.src = isLogoDark(theme)
+            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png'
+            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png';
+    }
+
+    function loadSettings() {
+        const theme   = localStorage.getItem('power_theme')   || 'midnight';
+        const corners = localStorage.getItem('power_corners') || 'rounded';
+        const accent  = localStorage.getItem('power_accent')  || '#0066FF';
+        const font    = localStorage.getItem('power_font')    || 'outfit';
+
+        document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        document.getElementById('accentPicker').value   = accent;
+        setFont(font);
+        setTheme(theme);
+        renderFontList();
+    }
+
+    // ── TUTORIAL ──────────────────────────────────────────────────────────
+    const TUTORIAL_STEPS = [
+        {
+            title: "Welcome to Powerhouse!",
+            body: "This quick tour will show you the ropes. Tap Next to continue, or Skip to dive straight in.",
+            target: null, position: 'center'
+        },
+        {
+            title: "Pick your theme",
+            body: "Choose a look that feels right for you. You can change this anytime in Settings.",
+            target: null, position: 'center', isThemePicker: true
+        },
+        {
+            title: "Search Games",
+            body: "Type any game name here to instantly filter the library.",
+            target: '#searchInput', position: 'below'
+        },
+        {
+            title: "Filter by Category",
+            body: "Browse by type — Arcade, Puzzle, Media, and more. UNBLOCKED shows only verified games.",
+            target: '#filterBar', position: 'below'
+        },
+        {
+            title: "Game Cards",
+            body: "Click any card to launch the game. Verified games (✔ badge) are confirmed unblocked.",
+            target: '#game-grid', position: 'above'
+        },
+        {
+            title: "Settings",
+            body: "Change your theme, toggle rounded corners, pick an accent color, and more.",
+            target: '.settings-btn', position: 'below-left'
+        },
+        {
+            title: "You're all set!",
+            body: "Enjoy Powerhouse! Tap REDO in Settings anytime to see this tour again.",
+            target: null, position: 'center'
+        }
+    ];
+
+    let tutorialStep = 0;
+
+    function startTutorial() {
+        tutorialStep = 0;
+        document.getElementById('tutorialOverlay').classList.add('active');
+        renderTutorialStep();
+    }
+
+    function endTutorial() {
+        document.getElementById('tutorialOverlay').classList.remove('active');
+        clearHighlight();
+        localStorage.setItem('power_tutorial_done', 'true');
+    }
+
+    function tutorialNext() {
+        tutorialStep++;
+        if (tutorialStep >= TUTORIAL_STEPS.length) { endTutorial(); return; }
+        renderTutorialStep();
+    }
+
+    function clearHighlight() {
+        const hl = document.getElementById('tutorialHighlight');
+        hl.style.opacity = '0'; hl.style.width = '0'; hl.style.height = '0';
+    }
+
+    function renderTutorialStep() {
+        const step  = TUTORIAL_STEPS[tutorialStep];
+        const isLast = tutorialStep === TUTORIAL_STEPS.length - 1;
+
+        document.getElementById('tutorialStepLabel').textContent = `Step ${tutorialStep + 1} of ${TUTORIAL_STEPS.length}`;
+        document.getElementById('tutorialTitle').textContent = step.title;
+        document.getElementById('tutorialNext').textContent  = isLast ? 'Finish' : 'Next';
+
+        // Dots
+        document.getElementById('tutorialDots').innerHTML = TUTORIAL_STEPS.map((_, i) =>
+            `<div class="tutorial-dot ${i === tutorialStep ? 'active' : ''}"></div>`
+        ).join('');
+
+        // Theme picker step
+        const bodyEl = document.getElementById('tutorialBody');
+        if (step.isThemePicker) {
+            const currentTheme = localStorage.getItem('power_theme') || 'midnight';
+            bodyEl.innerHTML = step.body + `
+                <div class="tutorial-theme-picker">
+                    ${THEMES.map(t => `
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                            <button class="tutorial-theme-swatch swatch-${t} ${t === currentTheme ? 'active' : ''}"
+                                    onclick="setTheme('${t}'); document.querySelectorAll('.tutorial-theme-swatch').forEach(s=>s.classList.remove('active')); this.classList.add('active');"
+                                    title="${t}">
+                            </button>
+                            <span style="font-size:0.6rem;font-weight:900;opacity:0.6;text-transform:uppercase;">${t}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        } else {
+            bodyEl.textContent = step.body;
+        }
+
+        // Highlight
+        const hl = document.getElementById('tutorialHighlight');
+        if (step.target) {
+            const el = document.querySelector(step.target);
+            if (el) {
+                const r = el.getBoundingClientRect(), pad = 6;
+                hl.style.opacity = '1';
+                hl.style.left   = (r.left - pad) + 'px';
+                hl.style.top    = (r.top  - pad) + 'px';
+                hl.style.width  = (r.width  + pad * 2) + 'px';
+                hl.style.height = (r.height + pad * 2) + 'px';
+                positionCard(el, step.position);
+            } else { clearHighlight(); positionCard(null, step.position); }
+        } else { clearHighlight(); positionCard(null, step.position); }
+    }
+
+    function positionCard(targetEl, position) {
+        const card = document.getElementById('tutorialCard');
+        const cardW = 300, cardH = 220;
+        const vw = window.innerWidth, vh = window.innerHeight, margin = 16;
+        if (!targetEl || position === 'center') {
+            card.style.left   = Math.max(margin, (vw - cardW) / 2) + 'px';
+            card.style.top    = Math.max(margin, (vh - cardH) / 2) + 'px';
+            card.style.bottom = 'auto';
+            return;
+        }
+        const r = targetEl.getBoundingClientRect();
+        if (position === 'below' || position === 'below-left') {
+            let top  = r.bottom + 16;
+            if (top + cardH > vh - margin) top = r.top - cardH - 16;
+            card.style.top    = Math.max(margin, top) + 'px';
+            card.style.bottom = 'auto';
+            let left = position === 'below-left' ? r.right - cardW : r.left;
+            card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
+        } else if (position === 'above') {
+            let top = r.top - cardH - 16;
+            if (top < margin) top = r.bottom + 16;
+            card.style.top    = Math.max(margin, top) + 'px';
+            card.style.bottom = 'auto';
+            card.style.left   = Math.max(margin, Math.min(r.left, vw - cardW - margin)) + 'px';
+        }
+    }
+
+    // Close settings on outside click (desktop only)
     window.onclick = (e) => {
         const menu = document.getElementById('settingsMenu');
-        if (
-            menu.classList.contains('show') &&
+        if (menu.classList.contains('show') &&
             !e.target.closest('.settings-menu') &&
             !e.target.closest('.settings-btn') &&
-            window.innerWidth >= 600
-        ) {
-            closeSettings();
-        }
+            window.innerWidth >= 600) closeSettings();
     };
 
-    // Keyboard: close settings on Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeSettings();
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
+
+    // Listen for OS theme change when system theme is active
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if ((localStorage.getItem('power_theme') || 'midnight') === 'system') setTheme('system');
     });
 
     window.onload = () => {
-        fetchData();
+        loadSettings();
         updateUI();
+        renderFontList();
+        fetchData().then(() => {
+            if (!localStorage.getItem('power_tutorial_done')) setTimeout(startTutorial, 800);
+        });
     };
 </script>
 </body>
