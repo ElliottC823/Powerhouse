@@ -610,5 +610,14 @@
     "link": "https://www.youtube.com/user/FunVideoTV",
     "verified": false,
     "useBlank": false
+  },
+  {
+    "title": "GeoDuels",
+    "category": "Arcade",
+    "desc": "Play GeoDuels, a competitive GeoGuessr-style multiplayer geography game with ranked duels, Street View rounds, and singleplayer practice.",
+    "thumb": "https://igebeprgtgspizprnkoz.supabase.co/storage/v1/object/public/vibe-assets/url-intake/9e213d86-8245-4581-b7e2-a3640c80a8d5/screenshots/1773777984205-0-e691340ec26d.webp",
+    "link": "https://geoduels.io/",
+    "verified": false,
+    "useBlank": true
   }
 ]
