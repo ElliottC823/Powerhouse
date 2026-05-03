@@ -28,8 +28,8 @@
     "image": "ghostinthemachine.jpg",
     "code": "GHOSTINTHEMACHINE",
     "surface": "rgba(53, 144, 100, 1)",
-    "surface2": "rgba(43, 122, 84, 1)",
-    "text": "#e0ffe0",
+    "surface2": "rgba(43, 107, 76, 1)",
+    "text": "#ffffff",
     "border": "rgba(64, 153, 110, 1)"
   }
 ]
