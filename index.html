@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png">
     <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -572,7 +572,7 @@
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
 
 <header>
-    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
+    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search games..." oninput="renderGames()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
@@ -679,7 +679,7 @@
         <!-- ── ABOUT TAB ── -->
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
-                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse">
+                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
                 <div class="about-version">V1.6.2</div>
             </div>
 
@@ -729,8 +729,8 @@
     let games = [];
     let currentFilter = 'ALL';
 
-    const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png';
-    const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png';
+    const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png';
+    const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
 
     // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
     function loadInBlank(url, title, thumb) {
@@ -1030,8 +1030,8 @@
         // Update logo
         const logo = document.getElementById('mainLogo');
         logo.src = isLogoDark(theme)
-            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png'
-            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png';
+            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
+            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
 
         // Highlight active swatch
         THEMES.forEach(t => {
@@ -1067,8 +1067,8 @@
         const theme = localStorage.getItem('power_theme') || 'midnight';
         const el = document.getElementById('aboutLogo');
         if (el) el.src = isLogoDark(theme)
-            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png'
-            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-light.png';
+            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
+            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
     }
 
     function loadSettings() {
