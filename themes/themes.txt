@@ -27,9 +27,9 @@
     "accent": "#359064",
     "image": "ghostinthemachine.jpg",
     "code": "GHOSTINTHEMACHINE",
-    "surface": "rgba(53, 144, 100, 1)",
-    "surface2": "rgba(43, 107, 76, 1)",
-    "text": "#ffffff",
-    "border": "rgba(64, 153, 110, 1)"
+    "surface": "rgba(0,20,0,0.72)",
+    "surface2": "rgba(0,35,0,0.78)",
+    "text": "#e0ffe0",
+    "border": "rgba(0,160,0,0.35)"
   }
 ]
