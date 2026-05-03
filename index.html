@@ -13,8 +13,18 @@
         :root {
             --accent: #0066FF;
             --radius: 16px;
+            --radius-sm: calc(var(--radius) * 0.6);
+            --radius-xs: calc(var(--radius) * 0.4);
             --header-height: 60px;
             --font: 'Outfit', sans-serif;
+            --font-weight-normal: 400;
+            --font-weight-bold: 700;
+            --font-weight-black: 800;
+            /* Liquid glass vars */
+            --glass-bg: rgba(255,255,255,0.08);
+            --glass-border: rgba(255,255,255,0.14);
+            --glass-blur: 18px;
+            --glass-shadow: 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
@@ -73,7 +83,17 @@
                 --shadow: 0 4px 24px rgba(0,0,0,0.08); --logo: light;
             }
         }
-        [data-corners="sharp"] { --radius: 0px !important; }
+        [data-corners="sharp"] {
+            --radius: 0px !important;
+            --radius-sm: 0px !important;
+            --radius-xs: 0px !important;
+        }
+        /* Apply sharp to EVERY rounded element when sharp mode active */
+        [data-corners="sharp"] *,
+        [data-corners="sharp"] *::before,
+        [data-corners="sharp"] *::after {
+            border-radius: 0 !important;
+        }
 
         @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
@@ -142,7 +162,7 @@
             padding: 4px; overflow: hidden;
         }
         .shelf-img {
-            width: 68px; height: 68px; border-radius: calc(var(--radius) * 0.7);
+            width: 68px; height: 68px; border-radius: var(--radius-sm);
             object-fit: cover; border: 1.5px solid var(--border);
             margin: 0 auto 6px; display: block;
             transition: transform 0.15s;
@@ -194,7 +214,7 @@
         .game-title { font-weight: 800; font-size: clamp(0.72rem,2.5vw,0.92rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .play-btn {
             background: var(--accent); color: #fff; padding: 5px 11px;
-            border-radius: calc(var(--radius) * 0.6); font-weight: 800; font-size: 0.68rem;
+            border-radius: var(--radius-xs); font-weight: var(--font-weight-black); font-size: 0.68rem;
             white-space: nowrap; flex-shrink: 0; min-height: 30px;
             display: flex; align-items: center; letter-spacing: 0.04em;
         }
@@ -404,6 +424,129 @@
         .tutorial-theme-swatch:hover { transform: scale(1.1); }
         .tutorial-theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 
+
+        /* ── LIQUID GLASS ── */
+        /* ── LIQUID GLASS — applied globally ── */
+        /* Shared glass mixin via a single broad selector */
+        [data-glass="on"] header,
+        [data-glass="on"] .settings-menu,
+        [data-glass="on"] .game-card,
+        [data-glass="on"] .filter-btn,
+        [data-glass="on"] .settings-btn,
+        [data-glass="on"] #searchInput,
+        [data-glass="on"] .tutorial-card,
+        [data-glass="on"] .shelf-container,
+        [data-glass="on"] .s-btn,
+        [data-glass="on"] .font-option,
+        [data-glass="on"] .weight-pill,
+        [data-glass="on"] .mirror-btn,
+        [data-glass="on"] .contributor-chip,
+        [data-glass="on"] .theme-swatch,
+        [data-glass="on"] .settings-header,
+        [data-glass="on"] .play-btn {
+            backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+        }
+
+        /* Surfaces that get glass background */
+        [data-glass="on"] header,
+        [data-glass="on"] .settings-menu,
+        [data-glass="on"] .game-card,
+        [data-glass="on"] .filter-btn,
+        [data-glass="on"] .settings-btn,
+        [data-glass="on"] #searchInput,
+        [data-glass="on"] .tutorial-card,
+        [data-glass="on"] .s-btn,
+        [data-glass="on"] .font-option,
+        [data-glass="on"] .weight-pill,
+        [data-glass="on"] .mirror-btn,
+        [data-glass="on"] .contributor-chip,
+        [data-glass="on"] .settings-header {
+            background: var(--glass-bg) !important;
+            border-color: var(--glass-border) !important;
+        }
+
+        /* Surfaces that also get shadow */
+        [data-glass="on"] header,
+        [data-glass="on"] .settings-menu,
+        [data-glass="on"] .game-card,
+        [data-glass="on"] .tutorial-card {
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* header border-bottom specifically */
+        [data-glass="on"] header {
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* Active filter pill keeps accent tint */
+        [data-glass="on"] .filter-btn.active {
+            background: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+            border-color: var(--accent) !important;
+        }
+
+        /* Play button keeps accent */
+        [data-glass="on"] .play-btn {
+            background: color-mix(in srgb, var(--accent) 70%, transparent) !important;
+        }
+
+        /* Shelf items get glass on their images */
+        [data-glass="on"] .shelf-img {
+            border-color: var(--glass-border) !important;
+        }
+
+        /* Shelf containers get subtle glass tint */
+        [data-glass="on"] .shelf-container {
+            background: color-mix(in srgb, var(--glass-bg) 60%, transparent);
+            border-radius: var(--radius);
+            margin: 0 clamp(14px,4%,24px) 6px;
+            padding: 12px 14px;
+        }
+
+        /* Settings body rows */
+        [data-glass="on"] .s-row {
+            border-bottom-color: var(--glass-border) !important;
+        }
+
+        /* Light theme — stronger tint so it reads against light bg */
+        [data-theme="light"][data-glass="on"] header,
+        [data-theme="light"][data-glass="on"] .settings-menu,
+        [data-theme="light"][data-glass="on"] .game-card,
+        [data-theme="light"][data-glass="on"] .filter-btn,
+        [data-theme="light"][data-glass="on"] .settings-btn,
+        [data-theme="light"][data-glass="on"] #searchInput,
+        [data-theme="light"][data-glass="on"] .tutorial-card,
+        [data-theme="light"][data-glass="on"] .s-btn,
+        [data-theme="light"][data-glass="on"] .font-option,
+        [data-theme="light"][data-glass="on"] .weight-pill,
+        [data-theme="light"][data-glass="on"] .mirror-btn,
+        [data-theme="light"][data-glass="on"] .contributor-chip,
+        [data-theme="light"][data-glass="on"] .settings-header {
+            --glass-bg: rgba(255,255,255,0.6);
+            --glass-border: rgba(200,205,230,0.65);
+        }
+
+        /* ── FONT WEIGHT OVERRIDES ── */
+        [data-font-weight="light"]   body { --font-weight-normal:300; --font-weight-bold:400; --font-weight-black:600; }
+        [data-font-weight="regular"] body { --font-weight-normal:400; --font-weight-bold:600; --font-weight-black:700; }
+        [data-font-weight="bold"]    body { --font-weight-normal:500; --font-weight-bold:800; --font-weight-black:900; }
+        /* Apply weight vars throughout */
+        body { font-weight: var(--font-weight-normal); }
+        .game-title, .shelf-label, .s-label, .shelf-title, .filter-btn, .settings-tab { font-weight: var(--font-weight-bold) !important; }
+        .game-title, .shelf-title, .settings-title, h4 { font-weight: var(--font-weight-black) !important; }
+
+        /* Font weight selector */
+        .weight-pills { display: flex; gap: 6px; margin-top: 4px; }
+        .weight-pill {
+            flex: 1; padding: 7px 4px; border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border); background: var(--surface2);
+            cursor: pointer; font-family: inherit; font-size: 0.75rem;
+            color: var(--text); transition: border-color 0.15s, background 0.15s;
+            text-align: center; font-weight: 600;
+        }
+        .weight-pill:hover { border-color: var(--accent); }
+        .weight-pill.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--surface2)); color: var(--accent); }
+
         /* Tutorial overlay */
         .tutorial-overlay { display:none; position:fixed; inset:0; z-index:9000; pointer-events:none; }
         .tutorial-overlay.active { display:block; }
@@ -434,7 +577,10 @@
         <input type="text" id="searchInput" placeholder="Search games..." oninput="renderGames()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="controls">
-        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings">⚙</button>
+        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/>
+        <path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+        </svg></button>
     </div>
 </header>
 
@@ -494,6 +640,19 @@
 
             <div class="s-section-title" style="margin-top:18px;">Font</div>
             <div class="font-list" id="fontList"></div>
+
+            <div class="s-section-title" style="margin-top:14px;">Font Weight</div>
+            <div class="weight-pills">
+                <button class="weight-pill" id="wpill-light"   onclick="setFontWeight('light')"  >Light</button>
+                <button class="weight-pill" id="wpill-regular" onclick="setFontWeight('regular')">Regular</button>
+                <button class="weight-pill" id="wpill-bold"    onclick="setFontWeight('bold')"   >Bold</button>
+            </div>
+
+            <div class="s-section-title" style="margin-top:18px;">Effects</div>
+            <div class="s-row">
+                <div><div class="s-label">Liquid Glass</div><div class="s-sublabel">Frosted glass effect on surfaces</div></div>
+                <input type="checkbox" id="glassToggle" onchange="updateUI()">
+            </div>
         </div>
 
         <!-- ── DATA TAB ── -->
@@ -521,7 +680,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.6.0</div>
+                <div class="about-version">V1.6.2</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -530,7 +689,7 @@
             <div class="s-section-title">Contributors</div>
             <div class="contributor-grid">
                 <div class="contributor-chip">C823<span class="role">Lead Developer</span></div>
-                <div class="contributor-chip">Grandpa Joey<span class="role">Senior Developer</span></div>
+                <div class="contributor-chip">Grandpa Joey<span class="role">Contributor</span></div>
                 <div class="contributor-chip">Stein<span class="role">Contributor</span></div>
                 <div class="contributor-chip">KC<span class="role">Contributor</span></div>
             </div>
@@ -542,7 +701,7 @@
             <a href="https://sites.google.com/view/powerhousehub/" target="_blank" rel="noopener" class="mirror-btn">
                 Google Sites <span class="arrow">↗</span>
             </a>
-            <div class="mirror-disclaimer">⚠ Google Sites may not work in some school districts</div>
+            <div class="mirror-disclaimer">Note: Google Sites may not work in some school districts</div>
         </div>
 
     </div><!-- /settings-body -->
@@ -569,6 +728,109 @@
 <script>
     let games = [];
     let currentFilter = 'ALL';
+
+    const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-icon.png';
+    const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/POWERHOUSE-dark.png';
+
+    // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
+    function loadInBlank(url, title, thumb) {
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            window.open(url, '_blank');
+            return;
+        }
+        const displayTitle = title || 'Powerhouse';
+        const gameLogo     = thumb || '';
+        const tab = window.open('about:blank', '_blank');
+        if (!tab) return;
+
+        const ph_html = [
+            '<!DOCTYPE html>',
+            '<html lang="en"><head>',
+            '<meta charset="UTF-8">',
+            '<meta name="viewport" content="width=device-width,initial-scale=1.0">',
+            '<title>' + displayTitle.replace(/</g,'&lt;') + ' — Powerhouse</title>',
+            '<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">',
+            '<link rel="icon" type="image/png" href="' + FAVICON_URL + '">',
+            '<style>',
+            '*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}',
+            ':root{--bg:#13151b;--surface:#1e2028;--border:#35394a;--accent:#0066FF;--text:#f5f6fa;--radius:16px;--bar:52px;}',
+            'html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Outfit,sans-serif;overflow:hidden;}',
+            '#bar{position:fixed;top:0;left:0;right:0;height:var(--bar);background:var(--surface);border-bottom:2px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 14px;z-index:100;transition:transform 0.3s ease;}',
+            '#bar.hidden{transform:translateY(-100%);}',
+            '#bar img.logo{height:22px;object-fit:contain;flex-shrink:0;cursor:pointer;}',
+            '.bar-divider{width:1px;height:24px;background:var(--border);flex-shrink:0;}',
+            '#game-thumb{width:30px;height:30px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;display:' + (gameLogo ? 'block' : 'none') + ';}',
+            '#game-name{font-weight:900;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}',
+            '.bar-btn{background:var(--bg);border:2px solid var(--border);color:var(--text);border-radius:10px;padding:5px 12px;font-family:inherit;font-weight:900;font-size:0.75rem;cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;transition:border-color 0.15s;min-height:34px;text-decoration:none;}',
+            '.bar-btn:hover{border-color:var(--accent);}',
+            '.bar-btn:active{opacity:0.7;}',
+            '.bar-btn.accent{background:var(--accent);border-color:var(--accent);color:#fff;}',
+            '.bar-btn.accent:hover{background:#0055dd;}',
+            '#toggle-bar{position:fixed;top:calc(var(--bar) + 6px);right:10px;z-index:99;background:var(--surface);border:2px solid var(--border);color:var(--text);border-radius:0 0 10px 10px;padding:3px 10px;font-family:inherit;font-weight:900;font-size:0.65rem;cursor:pointer;transition:top 0.3s ease,border-color 0.15s;}',
+            '#toggle-bar.bar-hidden{top:6px;border-radius:10px;}',
+            '#toggle-bar:hover{border-color:var(--accent);}',
+            '#frame-wrap{position:fixed;top:var(--bar);left:0;right:0;bottom:0;transition:top 0.3s ease;}',
+            '#frame-wrap.bar-hidden{top:0;}',
+            'iframe{width:100%;height:100%;border:none;display:block;}',
+            '#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:var(--bg);z-index:10;}',
+            '.spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}',
+            '@keyframes spin{to{transform:rotate(360deg);}}',
+            '#loading p{font-weight:700;font-size:0.9rem;opacity:0.5;}',
+            '#blocked{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:30px;background:var(--bg);z-index:10;}',
+            '#blocked h2{font-size:1.3rem;font-weight:900;}',
+            '#blocked p{font-size:0.9rem;opacity:0.6;max-width:340px;line-height:1.6;}',
+            '.open-btn{margin-top:6px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:13px 32px;font-family:inherit;font-weight:900;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.15s;}',
+            '.open-btn:hover{background:#0055dd;}',
+            '</style></head><body>',
+            '<div id="bar">',
+            '  <img class="logo" id="ph-logo" src="' + LOGO_DARK + '" alt="Powerhouse" title="Powerhouse" style="cursor:pointer">',
+            '  <div class="bar-divider"></div>',
+            '  <img id="game-thumb" src="' + gameLogo + '" alt="" onerror="this.style.display=\'none\'">',
+            '  <div id="game-name">' + displayTitle.replace(/</g,'&lt;') + '</div>',
+            '  <a class="bar-btn" href="' + url + '" target="_blank" rel="noopener">Open Direct</a>',
+            '  <button class="bar-btn accent" onclick="window.close()">Close</button>',
+            '</div>',
+            '<button id="toggle-bar" onclick="toggleBar()">Hide</button>',
+            '<div id="frame-wrap">',
+            '  <div id="loading"><div class="spinner"></div><p>Loading ' + displayTitle.replace(/</g,'&lt;') + '...</p></div>',
+            '  <div id="blocked">',
+            '    <h2>Site Blocked Embedding</h2>',
+            '    <p>This site cannot be loaded inside Powerhouse. Open it directly instead.</p>',
+            '    <a class="open-btn" href="' + url + '" target="_blank" rel="noopener">Open ' + displayTitle.replace(/</g,'&lt;') + '</a>',
+            '  </div>',
+            '  <iframe id="frame" src="' + url + '" allowfullscreen></iframe>',
+            '</div>',
+            '<script>',
+            'document.getElementById("ph-logo").addEventListener("click",function(){window.open("https://powerhousemirrors.c823.workers.dev","_blank");});',
+            'var frame=document.getElementById("frame"),loading=document.getElementById("loading"),blocked=document.getElementById("blocked");',
+            'var settled=false;',
+            'function showBlocked(){if(settled)return;settled=true;loading.style.display="none";blocked.style.display="flex";frame.style.display="none";}',
+            'function showFrame(){if(settled)return;settled=true;loading.style.display="none";}',
+            'frame.onload=function(){try{var d=frame.contentDocument||frame.contentWindow.document;if(!d||d.URL==="about:blank"||(d.body&&d.body.innerHTML.trim()===""))showBlocked();else showFrame();}catch(e){showFrame();}};',
+            'frame.onerror=function(){showBlocked();};',
+            'setTimeout(function(){if(!settled)showBlocked();},6000);',
+            'var barVisible=true;',
+            'function toggleBar(){barVisible=!barVisible;document.getElementById("bar").classList.toggle("hidden",!barVisible);document.getElementById("frame-wrap").classList.toggle("bar-hidden",!barVisible);var p=document.getElementById("toggle-bar");p.classList.toggle("bar-hidden",!barVisible);p.innerHTML=barVisible?"Hide":"Show";}',
+            '<\/script>',
+            '</body></html>'
+        ].join('\n');
+        tab.document.write(ph_html);
+        tab.document.close();
+    }
+
+    // Opening logic:
+    //   useBlank: true  → always about:blank
+    //   useBlank: false → always open directly (overrides verified)
+    //   useBlank: undefined/null → fall back to !verified
+    function openGame(url, verified, title, useBlank, thumb, event) {
+        if (event) event.preventDefault();
+        let shouldUseBlank;
+        if (useBlank === true)       shouldUseBlank = true;
+        else if (useBlank === false) shouldUseBlank = false;
+        else                         shouldUseBlank = !verified;
+        if (shouldUseBlank) loadInBlank(url, title, thumb);
+        else window.open(url, '_blank');
+    }
 
     async function fetchData() {
         try {
@@ -622,7 +884,7 @@
         if (history.length > 0) {
             shelf.style.display = 'block';
             document.getElementById('historyGrid').innerHTML = history.map(g => `
-                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -644,7 +906,7 @@
             if (picks.length > 0) {
                 recShelf.style.display = 'block';
                 document.getElementById('recommendedGrid').innerHTML = picks.map(g => `
-                    <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')})">
+                    <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
                         <img src="${g.thumb}" class="shelf-img" loading="lazy">
                         ${g.verified ? '<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">' : ''}
                         <div class="shelf-label">${g.title}</div>
@@ -666,12 +928,12 @@
         });
 
         if (filtered.length === 0) {
-            grid.innerHTML = `<div class="empty-state">No games found 🎮</div>`;
+            grid.innerHTML = `<div class="empty-state">No games found</div>`;
             return;
         }
 
         grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g, '&quot;')})">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
                 <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
                 <div class="game-info">
                     <div class="game-title-container">
@@ -716,8 +978,18 @@
         { id: 'poppins',     name: 'Poppins',          stack: "'Poppins', sans-serif",       url: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap' },
         { id: 'roboto',      name: 'Roboto',           stack: "'Roboto', sans-serif",        url: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap' },
         { id: 'space-grotesk', name: 'Space Grotesk', stack: "'Space Grotesk', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap' },
+        { id: 'source-sans', name: 'Source Sans 3',   stack: "'Source Sans 3', sans-serif",  url: 'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap' },
         { id: 'jetbrains',   name: 'JetBrains Mono',  stack: "'JetBrains Mono', monospace",  url: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap' },
     ];
+
+    function setFontWeight(w) {
+        document.body.setAttribute('data-font-weight', w);
+        localStorage.setItem('power_font_weight', w);
+        ['light','regular','bold'].forEach(x => {
+            const el = document.getElementById('wpill-' + x);
+            if (el) el.classList.toggle('active', x === w);
+        });
+    }
 
     function renderFontList() {
         const current = localStorage.getItem('power_font') || 'outfit';
@@ -774,12 +1046,16 @@
     function updateUI() {
         const isRounded = document.getElementById('cornerToggle').checked;
         const accent    = document.getElementById('accentPicker').value;
+        const glassEl   = document.getElementById('glassToggle');
+        const isGlass   = glassEl ? glassEl.checked : false;
 
         document.body.setAttribute('data-corners', isRounded ? 'rounded' : 'sharp');
+        document.body.setAttribute('data-glass',   isGlass   ? 'on'      : 'off');
         document.documentElement.style.setProperty('--accent', accent);
 
         localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
         localStorage.setItem('power_accent',  accent);
+        localStorage.setItem('power_glass',   isGlass ? 'on' : 'off');
     }
 
     function resetAccent() {
@@ -796,14 +1072,21 @@
     }
 
     function loadSettings() {
-        const theme   = localStorage.getItem('power_theme')   || 'midnight';
-        const corners = localStorage.getItem('power_corners') || 'rounded';
-        const accent  = localStorage.getItem('power_accent')  || '#0066FF';
-        const font    = localStorage.getItem('power_font')    || 'outfit';
+        const theme      = localStorage.getItem('power_theme')       || 'midnight';
+        const corners    = localStorage.getItem('power_corners')     || 'rounded';
+        const accent     = localStorage.getItem('power_accent')      || '#0066FF';
+        const font       = localStorage.getItem('power_font')        || 'outfit';
+        const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
+        const glass      = localStorage.getItem('power_glass')       || 'off';
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
         document.getElementById('accentPicker').value   = accent;
+        const glassEl = document.getElementById('glassToggle');
+        if (glassEl) glassEl.checked = (glass === 'on');
+        document.body.setAttribute('data-glass', glass);
+
         setFont(font);
+        setFontWeight(fontWeight);
         setTheme(theme);
         renderFontList();
     }
@@ -811,7 +1094,7 @@
     // ── TUTORIAL ──────────────────────────────────────────────────────────
     const TUTORIAL_STEPS = [
         {
-            title: "Welcome to Powerhouse!",
+            title: "Welcome to Powerhouse",
             body: "This quick tour will show you the ropes. Tap Next to continue, or Skip to dive straight in.",
             target: null, position: 'center'
         },
@@ -832,7 +1115,7 @@
         },
         {
             title: "Game Cards",
-            body: "Click any card to launch the game. Verified games (✔ badge) are confirmed unblocked.",
+            body: "Click any card to launch the game. Verified games (badge) are confirmed unblocked.",
             target: '#game-grid', position: 'above'
         },
         {
@@ -841,7 +1124,7 @@
             target: '.settings-btn', position: 'below-left'
         },
         {
-            title: "You're all set!",
+            title: "You're all set",
             body: "Enjoy Powerhouse! Tap REDO in Settings anytime to see this tour again.",
             target: null, position: 'center'
         }
