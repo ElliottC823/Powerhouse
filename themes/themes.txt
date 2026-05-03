@@ -1,0 +1,24 @@
+[
+  {
+    "id": "10",
+    "name": "10",
+    "accent": "#ff2020",
+    "image": "10.jpg",
+    "code": "POWER10",
+    "surface": "rgba(20,0,0,0.72)",
+    "surface2": "rgba(35,0,0,0.78)",
+    "text": "#ffe8e8",
+    "border": "rgba(200,0,0,0.35)"
+  },
+  {
+    "id": "cave",
+    "name": "Cave",
+    "accent": "#00c44a",
+    "image": "cave.jpg",
+    "code": "CAVE",
+    "surface": "rgba(0,20,0,0.72)",
+    "surface2": "rgba(0,35,0,0.78)",
+    "text": "#e0ffe0",
+    "border": "rgba(0,160,0,0.35)"
+  }
+]
