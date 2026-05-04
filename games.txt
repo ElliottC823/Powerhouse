@@ -623,7 +623,7 @@
   {
     "title": "Lake Boys Productions",
     "category": "Media",
-    "desc": "Doing Pranks at Meijer (GONE TO FAR!)",
+    "desc": "Ft. Grandpa Joey, Stein, and Big M.",
     "thumb": "https://yt3.googleusercontent.com/a1qglvAjzdFooHEfqEZ0c9WYGr-T1KYVCLxFcskwoLtdQwb199sJw9fH4b-qcQxAjml8zJfBrA=s900-c-k-c0x00ffffff-no-rj",
     "link": "https://www.youtube.com/@TheLakeBoysProductions",
     "verified": false,
