@@ -74,6 +74,87 @@
             --text-muted: rgba(232,234,246,0.5); --border: #363a55;
             --shadow: 0 4px 24px rgba(0,0,0,0.4); --logo: dark;
         }
+
+        /* ── CUSTOM IMAGE THEMES ── */
+        [data-theme="10"] {
+            --bg: #0a0000;
+            --bg-gradient: none;
+            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/10.png');
+            --header-gradient: rgba(10,0,0,0.75);
+            --surface: rgba(20,0,0,0.7);
+            --surface2: rgba(30,0,0,0.75);
+            --text: #ffe8e8;
+            --text-muted: rgba(255,232,232,0.5);
+            --border: rgba(200,0,0,0.35);
+            --shadow: 0 4px 24px rgba(0,0,0,0.6);
+            --logo: dark;
+            --accent: #ff2020;
+            --theme-accent-locked: 1;
+        }
+        [data-theme="cave"] {
+            --bg: #000a00;
+            --bg-gradient: none;
+            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/cave.png');
+            --header-gradient: rgba(0,15,0,0.75);
+            --surface: rgba(0,20,0,0.7);
+            --surface2: rgba(0,30,0,0.75);
+            --text: #e0ffe0;
+            --text-muted: rgba(224,255,224,0.5);
+            --border: rgba(0,160,0,0.35);
+            --shadow: 0 4px 24px rgba(0,0,0,0.6);
+            --logo: dark;
+            --accent: #00c44a;
+            --theme-accent-locked: 1;
+        }
+
+        /* Image-based theme backgrounds — applied via JS to body directly */
+        body[data-custom-theme] {
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: scroll !important;
+            background-repeat: no-repeat !important;
+        }
+        /* Semi-transparent header for image themes */
+        body[data-custom-theme] header {
+            background: var(--header-gradient) !important;
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+        }
+        /* Semi-transparent cards/surfaces for image themes */
+        body[data-custom-theme] .game-card,
+        body[data-custom-theme] .settings-menu,
+        body[data-custom-theme] .filter-btn,
+        body[data-custom-theme] #searchInput,
+        body[data-custom-theme] .settings-btn {
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+        }
+
+        /* Lock accent color picker when theme controls it */
+        [data-accent-locked="true"] .accent-controls {
+            opacity: 0.4;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        [data-accent-locked="true"] .accent-locked-note {
+            display: block;
+        }
+        .accent-locked-note {
+            display: none;
+            font-size: 0.65rem;
+            opacity: 0.55;
+            font-style: italic;
+        }
+
+        /* Custom theme swatches */
+
+        .custom-swatch { overflow: hidden; }
+        .locked-swatch { opacity: 0.6; }
+        .locked-swatch:hover { opacity: 0.85; }
+
+        .swatch-10   { background: linear-gradient(135deg, #1a0000 50%, #3a0000 100%); }
+        .swatch-cave { background: linear-gradient(135deg, #001a00 50%, #003a00 100%); }
+
         @media (prefers-color-scheme: light) {
             [data-theme="system"] {
                 --bg: #f2f3f8; --bg-gradient: linear-gradient(160deg,#f2f3f8 0%,#e8eaf4 100%);
@@ -435,7 +516,6 @@
         [data-glass="on"] .settings-btn,
         [data-glass="on"] #searchInput,
         [data-glass="on"] .tutorial-card,
-        [data-glass="on"] .shelf-container,
         [data-glass="on"] .s-btn,
         [data-glass="on"] .font-option,
         [data-glass="on"] .weight-pill,
@@ -495,9 +575,9 @@
             border-color: var(--glass-border) !important;
         }
 
-        /* Shelf containers get subtle glass tint */
+        /* Shelf containers get subtle glass tint — NO backdrop-filter to avoid header bleed */
         [data-glass="on"] .shelf-container {
-            background: color-mix(in srgb, var(--glass-bg) 60%, transparent);
+            background: color-mix(in srgb, var(--glass-bg) 40%, transparent);
             border-radius: var(--radius);
             margin: 0 clamp(14px,4%,24px) 6px;
             padding: 12px 14px;
@@ -625,6 +705,12 @@
                 <button class="theme-swatch swatch-system"   onclick="setTheme('system')"   title="System"   id="swatch-system"></button>
             </div>
 
+            <div class="s-section-title" style="margin-top:14px;">Custom Themes</div>
+            <div class="theme-picker" id="customThemePicker">
+                <div style="font-size:0.75rem;opacity:0.4;font-weight:600;">Loading themes...</div>
+            </div>
+            <span class="accent-locked-note" id="accentLockedNote">Accent color is set by this theme</span>
+
             <div class="s-section-title" style="margin-top:18px;">Interface</div>
             <div class="s-row">
                 <div><div class="s-label">Rounded UI</div><div class="s-sublabel">Smooth card corners</div></div>
@@ -680,7 +766,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.6.2</div>
+                <div class="about-version">V1.7.4</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -689,7 +775,7 @@
             <div class="s-section-title">Contributors</div>
             <div class="contributor-grid">
                 <div class="contributor-chip">C823<span class="role">Lead Developer</span></div>
-                <div class="contributor-chip">Grandpa Joey<span class="role">Contributor</span></div>
+                <div class="contributor-chip">Grandpa Joey<span class="role">Senior Developer</span></div>
                 <div class="contributor-chip">Stein<span class="role">Contributor</span></div>
                 <div class="contributor-chip">KC<span class="role">Contributor</span></div>
             </div>
@@ -702,6 +788,13 @@
                 Google Sites <span class="arrow">↗</span>
             </a>
             <div class="mirror-disclaimer">Note: Google Sites may not work in some school districts</div>
+
+            <div class="s-section-title" style="margin-top:18px;">Redeem Code</div>
+            <div class="redeem-box">
+                <input type="text" id="redeemInput" class="redeem-input" placeholder="Enter theme code..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                <button class="s-btn primary" onclick="redeemCode()">Redeem</button>
+            </div>
+            <div id="redeemMsg" class="redeem-msg"></div>
         </div>
 
     </div><!-- /settings-body -->
@@ -729,7 +822,8 @@
     let games = [];
     let currentFilter = 'ALL';
 
-    const FAVICON_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png';
+    const FAVICON_URL  = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png';
+    const THEMES_DIR   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes';
     const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
 
     // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
@@ -886,7 +980,7 @@
             document.getElementById('historyGrid').innerHTML = history.map(g => `
                 <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy">
-                    ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">` : ''}
+                    ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
                 </a>
             `).join('');
@@ -908,7 +1002,7 @@
                 document.getElementById('recommendedGrid').innerHTML = picks.map(g => `
                     <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
                         <img src="${g.thumb}" class="shelf-img" loading="lazy">
-                        ${g.verified ? '<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="shelf-verified">' : ''}
+                        ${g.verified ? '<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">' : ''}
                         <div class="shelf-label">${g.title}</div>
                     </a>`).join('');
             } else recShelf.style.display = 'none';
@@ -938,7 +1032,7 @@
                 <div class="game-info">
                     <div class="game-title-container">
                         <div class="game-title">${g.title}</div>
-                        ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/verified.svg" class="verified-badge" title="Verified Unblocked">` : ''}
+                        ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="verified-badge" title="Verified Unblocked">` : ''}
                     </div>
                     <div class="play-btn">PLAY</div>
                 </div>
@@ -1013,8 +1107,91 @@
     }
 
     // ── THEME SYSTEM ──────────────────────────────────────────────────────
-    const THEMES = ['midnight', 'dark', 'amoled', 'slate', 'light', 'system'];
-    const DARK_LOGOS  = ['midnight','dark','amoled','slate'];
+    const THEMES = ['midnight', 'dark', 'amoled', 'slate', 'light', 'system', '10', 'cave'];
+    const DARK_LOGOS  = ['midnight','dark','amoled','slate','10','cave'];
+
+    // Custom themes loaded from themes.txt — keyed by id
+    let CUSTOM_THEMES = {};   // populated by loadCustomThemes()
+    let unlockedThemes = new Set(JSON.parse(localStorage.getItem('power_unlocked_themes') || '[]'));
+
+    async function loadCustomThemes() {
+        try {
+            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/themes.txt');
+            if (!res.ok) throw new Error('themes.txt ' + res.status);
+            const data = await res.json();
+            data.forEach(t => { CUSTOM_THEMES[t.id] = t; });
+            renderCustomThemePicker();
+        } catch(e) {
+            console.warn('Could not load custom themes:', e);
+            const p = document.getElementById('customThemePicker');
+            if (p) p.innerHTML = '<div style="font-size:0.75rem;opacity:0.4;">Could not load custom themes</div>';
+        }
+    }
+
+    function renderCustomThemePicker() {
+        const picker = document.getElementById('customThemePicker');
+        if (!picker) return;
+        const currentTheme = localStorage.getItem('power_theme') || 'midnight';
+        const entries = Object.values(CUSTOM_THEMES);
+        if (entries.length === 0) {
+            picker.innerHTML = '<div style="font-size:0.75rem;opacity:0.4;">No custom themes available</div>';
+            return;
+        }
+        picker.innerHTML = entries.map(t => {
+            const unlocked = unlockedThemes.has(t.id);
+            const isActive = currentTheme === t.id;
+            return `<button
+                class="theme-swatch custom-swatch ${isActive ? 'active' : ''} ${unlocked ? '' : 'locked-swatch'}"
+                id="swatch-${t.id}"
+                onclick="${unlocked ? `setTheme('${t.id}')` : `showLockedMsg('${t.id}')`}"
+                title="${t.name}"
+                style="background-image:url('${THEMES_DIR}/${t.image}');background-size:cover;background-position:center;position:relative;overflow:hidden;">
+                ${!unlocked ? '<span style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,0.55);font-size:0.8rem;">&#128274;</span>' : ''}
+            </button>`;
+        }).join('');
+    }
+
+    function showLockedMsg(id) {
+        const t = CUSTOM_THEMES[id];
+        const msg = document.getElementById('redeemMsg');
+        if (msg) {
+            msg.textContent = `"${t ? t.name : id}" requires a code — redeem it in the About tab.`;
+            msg.className = 'redeem-msg info';
+            // Switch to about tab so they see the redeem box
+            switchTab('about');
+        }
+    }
+
+    function redeemCode() {
+        const input = document.getElementById('redeemInput');
+        const msg   = document.getElementById('redeemMsg');
+        const code  = input.value.trim();
+        if (!code) {
+            msg.textContent = 'Please enter a code.';
+            msg.className = 'redeem-msg error';
+            return;
+        }
+        // Find matching theme
+        const match = Object.values(CUSTOM_THEMES).find(t => t.code && t.code.toLowerCase() === code.toLowerCase());
+        if (!match) {
+            msg.textContent = 'Invalid code. Try again.';
+            msg.className = 'redeem-msg error';
+            input.value = '';
+            return;
+        }
+        if (unlockedThemes.has(match.id)) {
+            msg.textContent = `"${match.name}" is already unlocked!`;
+            msg.className = 'redeem-msg info';
+            return;
+        }
+        // Unlock it
+        unlockedThemes.add(match.id);
+        localStorage.setItem('power_unlocked_themes', JSON.stringify([...unlockedThemes]));
+        msg.textContent = `"${match.name}" theme unlocked! Switch to Appearance to use it.`;
+        msg.className = 'redeem-msg success';
+        input.value = '';
+        renderCustomThemePicker();
+    }
 
     function isLogoDark(theme) {
         if (theme === 'system') {
@@ -1024,7 +1201,10 @@
     }
 
     function setTheme(theme) {
-        if (!THEMES.includes(theme)) theme = 'midnight';
+        // Allow custom themes too — only fall back if not in either list
+        const isCustom = theme in CUSTOM_THEMES;
+        if (!THEMES.includes(theme) && !isCustom) theme = 'midnight';
+
         document.body.setAttribute('data-theme', theme);
 
         // Update logo
@@ -1033,8 +1213,53 @@
             ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
             : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
 
-        // Highlight active swatch
-        THEMES.forEach(t => {
+        if (isCustom) {
+            const t = CUSTOM_THEMES[theme];
+            // Apply background image directly on body — most reliable method
+            document.body.style.backgroundImage    = `url('${THEMES_DIR}/${t.image}')`;
+            document.body.style.backgroundSize     = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundAttachment = 'scroll';
+            document.body.style.backgroundRepeat   = 'no-repeat';
+            document.body.setAttribute('data-custom-theme', theme);
+            // Apply surface/text/border overrides
+            const root = document.documentElement;
+            if (t.surface)  root.style.setProperty('--surface',  t.surface);
+            if (t.surface2) root.style.setProperty('--surface2', t.surface2);
+            if (t.text)     root.style.setProperty('--text',     t.text);
+            if (t.border)   root.style.setProperty('--border',   t.border);
+            // Lock accent to theme value
+            root.style.setProperty('--accent', t.accent);
+            const picker = document.getElementById('accentPicker');
+            if (picker) picker.value = t.accent;
+        } else {
+            // Clear custom background
+            document.body.style.backgroundImage    = '';
+            document.body.style.backgroundSize     = '';
+            document.body.style.backgroundPosition = '';
+            document.body.style.backgroundAttachment = '';
+            document.body.style.backgroundRepeat   = '';
+            document.body.removeAttribute('data-custom-theme');
+            // Remove overridden CSS vars
+            const root = document.documentElement;
+            root.style.removeProperty('--surface');
+            root.style.removeProperty('--surface2');
+            root.style.removeProperty('--text');
+            root.style.removeProperty('--border');
+            // Restore saved accent
+            const savedAccent = localStorage.getItem('power_accent') || '#0066FF';
+            root.style.setProperty('--accent', savedAccent);
+            const picker = document.getElementById('accentPicker');
+            if (picker) picker.value = savedAccent;
+        }
+
+        // Lock/unlock accent picker UI
+        document.body.setAttribute('data-accent-locked', isCustom ? 'true' : 'false');
+        const lockedNote = document.getElementById('accentLockedNote');
+        if (lockedNote) lockedNote.style.display = isCustom ? 'block' : 'none';
+
+        // Highlight active swatch in both standard and custom pickers
+        [...THEMES, ...Object.keys(CUSTOM_THEMES)].forEach(t => {
             const sw = document.getElementById('swatch-' + t);
             if (sw) sw.classList.toggle('active', t === theme);
         });
@@ -1247,10 +1472,31 @@
         if ((localStorage.getItem('power_theme') || 'midnight') === 'system') setTheme('system');
     });
 
-    window.onload = () => {
-        loadSettings();
+    window.onload = async () => {
+        // Load non-theme settings immediately (corners, accent, font, glass)
+        const corners    = localStorage.getItem('power_corners')     || 'rounded';
+        const accent     = localStorage.getItem('power_accent')      || '#0066FF';
+        const font       = localStorage.getItem('power_font')        || 'outfit';
+        const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
+        const glass      = localStorage.getItem('power_glass')       || 'off';
+
+        document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        document.getElementById('accentPicker').value   = accent;
+        const glassEl = document.getElementById('glassToggle');
+        if (glassEl) glassEl.checked = (glass === 'on');
+        document.body.setAttribute('data-glass', glass);
+        setFont(font);
+        setFontWeight(fontWeight);
         updateUI();
         renderFontList();
+
+        // Load custom themes FIRST — then apply the saved theme so custom
+        // themes are available in CUSTOM_THEMES before setTheme runs
+        await loadCustomThemes();
+
+        const theme = localStorage.getItem('power_theme') || 'midnight';
+        setTheme(theme);
+
         fetchData().then(() => {
             if (!localStorage.getItem('power_tutorial_done')) setTimeout(startTutorial, 800);
         });
