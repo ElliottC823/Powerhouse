@@ -14,7 +14,7 @@
     "id": "LONDON",
     "name": "London Aerial",
     "accent": "#6fa8dc",
-    "image": "img100.jpg",
+    "image": "london.jpg",
     "code": "LONDON",
     "surface": "rgba(44, 54, 63, 0.75)",
     "surface2": "rgba(60, 75, 85, 0.82)",
