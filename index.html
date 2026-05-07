@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png">
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png">
     <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,11 +20,7 @@
             --font-weight-normal: 400;
             --font-weight-bold: 700;
             --font-weight-black: 800;
-            /* Liquid glass vars */
-            --glass-bg: rgba(255,255,255,0.08);
-            --glass-border: rgba(255,255,255,0.14);
-            --glass-blur: 18px;
-            --glass-shadow: 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
+
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
@@ -342,6 +338,31 @@
         .play-btn:hover { opacity: 0.88; }
         .verified-badge { width: 12px; height: 12px; cursor: help; flex-shrink: 0; opacity: 0.85; }
 
+
+        /* ── FAVORITE BUTTON ── */
+        .fav-btn {
+            position: absolute;
+            top: 6px; right: 6px;
+            background: rgba(0,0,0,0.55);
+            border: none; border-radius: 50%;
+            width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.15s, transform 0.15s, background 0.15s;
+            z-index: 2;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .game-card:hover .fav-btn { opacity: 1; }
+        .fav-btn.favorited { opacity: 1; background: rgba(0,0,0,0.65); }
+        .fav-btn:hover { transform: scale(1.15); background: rgba(0,0,0,0.8); }
+        .fav-btn:active { transform: scale(0.9); }
+        /* Always show on touch devices */
+        @media (hover: none) { .fav-btn { opacity: 0.75; } }
+
         /* ── EMPTY STATE ── */
         .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; opacity:0.4; font-weight:600; font-size:0.9rem; }
 
@@ -582,104 +603,6 @@
         }
 
         /* ── LIQUID GLASS ── */
-        /* ── LIQUID GLASS — applied globally ── */
-        /* Shared glass mixin via a single broad selector */
-        [data-glass="on"] header,
-        [data-glass="on"] .settings-menu,
-        [data-glass="on"] .game-card,
-        [data-glass="on"] .filter-btn,
-        [data-glass="on"] .settings-btn,
-        [data-glass="on"] #searchInput,
-        [data-glass="on"] .tutorial-card,
-        [data-glass="on"] .s-btn,
-        [data-glass="on"] .font-option,
-        [data-glass="on"] .weight-pill,
-        [data-glass="on"] .mirror-btn,
-        [data-glass="on"] .contributor-chip,
-        [data-glass="on"] .theme-swatch,
-        [data-glass="on"] .settings-header,
-        [data-glass="on"] .play-btn {
-            backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-        }
-
-        /* Surfaces that get glass background */
-        [data-glass="on"] header,
-        [data-glass="on"] .settings-menu,
-        [data-glass="on"] .game-card,
-        [data-glass="on"] .filter-btn,
-        [data-glass="on"] .settings-btn,
-        [data-glass="on"] #searchInput,
-        [data-glass="on"] .tutorial-card,
-        [data-glass="on"] .s-btn,
-        [data-glass="on"] .font-option,
-        [data-glass="on"] .weight-pill,
-        [data-glass="on"] .mirror-btn,
-        [data-glass="on"] .contributor-chip,
-        [data-glass="on"] .settings-header {
-            background: var(--glass-bg) !important;
-            border-color: var(--glass-border) !important;
-        }
-
-        /* Surfaces that also get shadow */
-        [data-glass="on"] header,
-        [data-glass="on"] .settings-menu,
-        [data-glass="on"] .game-card,
-        [data-glass="on"] .tutorial-card {
-            box-shadow: var(--glass-shadow);
-        }
-
-        /* header border-bottom specifically */
-        [data-glass="on"] header {
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        /* Active filter pill keeps accent tint */
-        [data-glass="on"] .filter-btn.active {
-            background: color-mix(in srgb, var(--accent) 55%, transparent) !important;
-            border-color: var(--accent) !important;
-        }
-
-        /* Play button keeps accent */
-        [data-glass="on"] .play-btn {
-            background: color-mix(in srgb, var(--accent) 70%, transparent) !important;
-        }
-
-        /* Shelf items get glass on their images */
-        [data-glass="on"] .shelf-img {
-            border-color: var(--glass-border) !important;
-        }
-
-        /* Shelf containers get subtle glass tint — NO backdrop-filter to avoid header bleed */
-        [data-glass="on"] .shelf-container {
-            background: color-mix(in srgb, var(--glass-bg) 40%, transparent);
-            border-radius: var(--radius);
-            margin: 0 clamp(14px,4%,24px) 6px;
-            padding: 12px 14px;
-        }
-
-        /* Settings body rows */
-        [data-glass="on"] .s-row {
-            border-bottom-color: var(--glass-border) !important;
-        }
-
-        /* Light theme — stronger tint so it reads against light bg */
-        [data-theme="light"][data-glass="on"] header,
-        [data-theme="light"][data-glass="on"] .settings-menu,
-        [data-theme="light"][data-glass="on"] .game-card,
-        [data-theme="light"][data-glass="on"] .filter-btn,
-        [data-theme="light"][data-glass="on"] .settings-btn,
-        [data-theme="light"][data-glass="on"] #searchInput,
-        [data-theme="light"][data-glass="on"] .tutorial-card,
-        [data-theme="light"][data-glass="on"] .s-btn,
-        [data-theme="light"][data-glass="on"] .font-option,
-        [data-theme="light"][data-glass="on"] .weight-pill,
-        [data-theme="light"][data-glass="on"] .mirror-btn,
-        [data-theme="light"][data-glass="on"] .contributor-chip,
-        [data-theme="light"][data-glass="on"] .settings-header {
-            --glass-bg: rgba(255,255,255,0.6);
-            --glass-border: rgba(200,205,230,0.65);
-        }
 
         /* ── FONT WEIGHT OVERRIDES ── */
         [data-font-weight="light"]   body { --font-weight-normal:300; --font-weight-bold:400; --font-weight-black:600; }
@@ -721,7 +644,7 @@
         .tutorial-btn:active { opacity:0.7; }
     </style>
 </head>
-<body data-theme="midnight">
+<body data-theme="dark">
 
 <!-- Settings backdrop -->
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
@@ -753,6 +676,11 @@
 <div class="shelf-container" id="recommendedShelf">
     <div class="shelf-title">Recommended</div>
     <div class="shelf-scroll" id="recommendedGrid"></div>
+</div>
+
+<div class="shelf-container" id="favoritesShelf">
+    <div class="shelf-title">Favorites</div>
+    <div class="shelf-scroll" id="favoritesGrid"></div>
 </div>
 
 <nav class="filter-bar" id="filterBar"></nav>
@@ -817,15 +745,20 @@
                 <button class="weight-pill" id="wpill-bold"    onclick="setFontWeight('bold')"   >Bold</button>
             </div>
 
-            <div class="s-section-title" style="margin-top:18px;">Effects</div>
-            <div class="s-row">
-                <div><div class="s-label">Liquid Glass</div><div class="s-sublabel">Frosted glass effect on surfaces</div></div>
-                <input type="checkbox" id="glassToggle" onchange="updateUI()">
-            </div>
+
         </div>
 
         <!-- ── DATA TAB ── -->
         <div class="settings-pane" id="pane-data">
+            <div class="s-section-title">Favorites</div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">Favorites</div>
+                    <div class="s-sublabel">Games you have hearted</div>
+                </div>
+                <button class="s-btn danger" onclick="clearFavorites()">Clear</button>
+            </div>
+
             <div class="s-section-title">History</div>
             <div class="s-row">
                 <div>
@@ -849,7 +782,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.8.3</div>
+                <div class="about-version">V1.9.0</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -906,12 +839,13 @@
     let games = [];
     let currentFilter = 'ALL';
 
-    const FAVICON_URL  = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png';
+    const FAVICON_URL  = 'https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png';
     const THEMES_DIR   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes';
     const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
 
     // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
     function loadInBlank(url, title, thumb) {
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#0066FF';
         if (url.includes('youtube.com') || url.includes('youtu.be')) {
             window.open(url, '_blank');
             return;
@@ -931,7 +865,7 @@
             '<link rel="icon" type="image/png" href="' + FAVICON_URL + '">',
             '<style>',
             '*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}',
-            ':root{--bg:#13151b;--surface:#1e2028;--border:#35394a;--accent:#0066FF;--text:#f5f6fa;--radius:16px;--bar:52px;}',
+            ':root{--bg:#13151b;--surface:#1e2028;--border:#35394a;--accent:' + accentColor + ';--text:#f5f6fa;--radius:16px;--bar:52px;}',
             'html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Outfit,sans-serif;overflow:hidden;}',
             '#bar{position:fixed;top:0;left:0;right:0;height:var(--bar);background:var(--surface);border-bottom:2px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 14px;z-index:100;transition:transform 0.3s ease;}',
             '#bar.hidden{transform:translateY(-100%);}',
@@ -943,7 +877,7 @@
             '.bar-btn:hover{border-color:var(--accent);}',
             '.bar-btn:active{opacity:0.7;}',
             '.bar-btn.accent{background:var(--accent);border-color:var(--accent);color:#fff;}',
-            '.bar-btn.accent:hover{background:#0055dd;}',
+            '.bar-btn.accent:hover{opacity:0.85;}',
             '#toggle-bar{position:fixed;top:calc(var(--bar) + 6px);right:10px;z-index:99;background:var(--surface);border:2px solid var(--border);color:var(--text);border-radius:0 0 10px 10px;padding:3px 10px;font-family:inherit;font-weight:900;font-size:0.65rem;cursor:pointer;transition:top 0.3s ease,border-color 0.15s;}',
             '#toggle-bar.bar-hidden{top:6px;border-radius:10px;}',
             '#toggle-bar:hover{border-color:var(--accent);}',
@@ -958,7 +892,7 @@
             '#blocked h2{font-size:1.3rem;font-weight:900;}',
             '#blocked p{font-size:0.9rem;opacity:0.6;max-width:340px;line-height:1.6;}',
             '.open-btn{margin-top:6px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);padding:13px 32px;font-family:inherit;font-weight:900;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.15s;}',
-            '.open-btn:hover{background:#0055dd;}',
+            '.open-btn:hover{opacity:0.85;}',
             '</style></head><body>',
             '<div id="bar">',
             '  <img class="logo" id="ph-logo" src="' + LOGO_DARK + '" alt="Powerhouse" title="Powerhouse" style="cursor:pointer">',
@@ -1052,6 +986,34 @@
         renderGames();
     }
 
+    // ── FAVORITES ───────────────────────────────────────────────────────────
+    function getFavorites() {
+        return JSON.parse(localStorage.getItem('power_favorites') || '[]');
+    }
+
+    function isFavorited(title) {
+        return getFavorites().some(g => g.title === title);
+    }
+
+    function toggleFavorite(game, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let favs = getFavorites();
+        const idx = favs.findIndex(g => g.title === game.title);
+        if (idx === -1) {
+            favs.unshift(game);
+        } else {
+            favs.splice(idx, 1);
+        }
+        localStorage.setItem('power_favorites', JSON.stringify(favs));
+        renderGames();
+    }
+
+    function clearFavorites() {
+        localStorage.removeItem('power_favorites');
+        renderGames();
+    }
+
     function renderGames() {
         const grid = document.getElementById('game-grid');
         const search = document.getElementById('searchInput').value.toLowerCase();
@@ -1092,6 +1054,22 @@
             } else recShelf.style.display = 'none';
         } else recShelf.style.display = 'none';
 
+        // ── Favorites shelf ──
+        const favShelf = document.getElementById('favoritesShelf');
+        const favs = getFavorites();
+        if (favs.length > 0) {
+            favShelf.style.display = 'block';
+            document.getElementById('favoritesGrid').innerHTML = favs.map(g => `
+                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\'")}',event)">
+                    <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                    ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">` : ''}
+                    <div class="shelf-label">${g.title}</div>
+                </a>
+            `).join('');
+        } else {
+            favShelf.style.display = 'none';
+        }
+
         const filtered = games.filter(g => {
             const matchesSearch = g.title.toLowerCase().includes(search);
             let matchesFilter = false;
@@ -1104,6 +1082,9 @@
             }
             return matchesSearch && matchesFilter;
         });
+
+        // Sort A-Z by default
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
 
         if (filtered.length === 0) {
             grid.innerHTML = `<div class="empty-state">No games found</div>`;
@@ -1158,6 +1139,7 @@
         { id: 'space-grotesk', name: 'Space Grotesk', stack: "'Space Grotesk', sans-serif", url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap' },
         { id: 'source-sans', name: 'Source Sans 3',   stack: "'Source Sans 3', sans-serif",  url: 'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap' },
         { id: 'jetbrains',   name: 'JetBrains Mono',  stack: "'JetBrains Mono', monospace",  url: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap' },
+        { id: 'wingdings',   name: 'Wingdings',          stack: "'Wingdings', sans-serif",        url: null },
     ];
 
     function setFontWeight(w) {
@@ -1182,9 +1164,9 @@
     function setFont(id) {
         const f = FONTS.find(x => x.id === id);
         if (!f) return;
-        // Load the Google Font if not already loaded
+        // Load the Google Font if not already loaded (null url = system font)
         const existing = document.getElementById('fontLink');
-        if (existing) existing.href = f.url;
+        if (existing && f.url) existing.href = f.url;
         document.documentElement.style.setProperty('--font', f.stack);
         localStorage.setItem('power_font', id);
         renderFontList();
@@ -1217,7 +1199,7 @@
         const section = document.getElementById('customThemeSection');
         if (!picker || !section) return;
 
-        const currentTheme = localStorage.getItem('power_theme') || 'midnight';
+        const currentTheme = localStorage.getItem('power_theme') || 'dark';
         const entries = Object.values(CUSTOM_THEMES);
 
         // Only show themes the user has unlocked
@@ -1352,16 +1334,11 @@
     function updateUI() {
         const isRounded = document.getElementById('cornerToggle').checked;
         const accent    = document.getElementById('accentPicker').value;
-        const glassEl   = document.getElementById('glassToggle');
-        const isGlass   = glassEl ? glassEl.checked : false;
-
         document.body.setAttribute('data-corners', isRounded ? 'rounded' : 'sharp');
-        document.body.setAttribute('data-glass',   isGlass   ? 'on'      : 'off');
         document.documentElement.style.setProperty('--accent', accent);
 
         localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
         localStorage.setItem('power_accent',  accent);
-        localStorage.setItem('power_glass',   isGlass ? 'on' : 'off');
     }
 
     function resetAccent() {
@@ -1370,7 +1347,7 @@
     }
 
     function updateAboutLogo() {
-        const theme = localStorage.getItem('power_theme') || 'midnight';
+        const theme = localStorage.getItem('power_theme') || 'dark';
         const el = document.getElementById('aboutLogo');
         if (el) el.src = isLogoDark(theme)
             ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
@@ -1378,18 +1355,14 @@
     }
 
     function loadSettings() {
-        const theme      = localStorage.getItem('power_theme')       || 'midnight';
+        const theme      = localStorage.getItem('power_theme')       || 'dark';
         const corners    = localStorage.getItem('power_corners')     || 'rounded';
         const accent     = localStorage.getItem('power_accent')      || '#0066FF';
         const font       = localStorage.getItem('power_font')        || 'outfit';
         const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
-        const glass      = localStorage.getItem('power_glass')       || 'off';
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
         document.getElementById('accentPicker').value   = accent;
-        const glassEl = document.getElementById('glassToggle');
-        if (glassEl) glassEl.checked = (glass === 'on');
-        document.body.setAttribute('data-glass', glass);
 
         setFont(font);
         setFontWeight(fontWeight);
@@ -1477,7 +1450,7 @@
         // Theme picker step
         const bodyEl = document.getElementById('tutorialBody');
         if (step.isThemePicker) {
-            const currentTheme = localStorage.getItem('power_theme') || 'midnight';
+            const currentTheme = localStorage.getItem('power_theme') || 'dark';
             bodyEl.innerHTML = step.body + `
                 <div class="tutorial-theme-picker">
                     ${THEMES.map(t => `
@@ -1582,11 +1555,13 @@
 
     async function trackVisit() {
         try {
-            const today     = new Date().toISOString().slice(0, 10);
-            const lastVisit = sessionStorage.getItem('ph_visited');
+            // Use localStorage so the flag survives tab closes and browser restarts
+            // — a device only counts once ever, not once per session
+            const VISITED_KEY = 'ph_device_visited';
+            const alreadyCounted = localStorage.getItem(VISITED_KEY);
 
-            if (lastVisit === today) {
-                // Already counted this session — just fetch current number
+            if (alreadyCounted) {
+                // Device already counted — just fetch and display current count
                 const res = await fetch(VISITS_URL);
                 if (!res.ok) return;
                 const data = await res.json();
@@ -1594,12 +1569,12 @@
                 return;
             }
 
-            // POST increments by 1 and returns the new count
+            // First ever visit on this device — POST to increment
             const res = await fetch(VISITS_URL, { method: 'POST' });
             if (!res.ok) return;
             const data = await res.json();
             showVisitCount(data.count);
-            sessionStorage.setItem('ph_visited', today);
+            localStorage.setItem(VISITED_KEY, '1');
         } catch(e) {
             // Silently fail — counter is non-critical
         }
@@ -1617,7 +1592,7 @@
 
     // Listen for OS theme change when system theme is active
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if ((localStorage.getItem('power_theme') || 'midnight') === 'system') setTheme('system');
+        if ((localStorage.getItem('power_theme') || 'dark') === 'system') setTheme('system');
     });
 
     window.onload = async () => {
@@ -1626,13 +1601,9 @@
         const accent     = localStorage.getItem('power_accent')      || '#0066FF';
         const font       = localStorage.getItem('power_font')        || 'outfit';
         const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
-        const glass      = localStorage.getItem('power_glass')       || 'off';
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
         document.getElementById('accentPicker').value   = accent;
-        const glassEl = document.getElementById('glassToggle');
-        if (glassEl) glassEl.checked = (glass === 'on');
-        document.body.setAttribute('data-glass', glass);
         setFont(font);
         setFontWeight(fontWeight);
         updateUI();
@@ -1642,7 +1613,7 @@
         // themes are available in CUSTOM_THEMES before setTheme runs
         await loadCustomThemes();
 
-        const theme = localStorage.getItem('power_theme') || 'midnight';
+        const theme = localStorage.getItem('power_theme') || 'dark';
         setTheme(theme);
 
         fetchData().then(() => {
