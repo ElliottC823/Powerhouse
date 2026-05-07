@@ -637,5 +637,14 @@
     "link": "https://duckmath.org/class/ultrakill",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "Cursor Camp",
+    "category": "Arcade",
+    "desc": "yes.",
+    "thumb": "https://neal.fun/link-images/cursor-camp.svg",
+    "link": "https://neal.fun/cursor-camp",
+    "verified": true,
+    "useBlank": true
   }
 ]
