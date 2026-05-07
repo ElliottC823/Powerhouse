@@ -537,6 +537,50 @@
         .tutorial-theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 
 
+
+        /* ── ANNOUNCEMENT BANNER ── */
+        #site-banner {
+            display: none;
+            width: 100%;
+            padding: 9px clamp(14px,4%,28px);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.01em;
+            position: relative;
+            z-index: 999;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        #site-banner a { color: inherit; text-decoration: underline; }
+        #site-banner-close {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: inherit; cursor: pointer;
+            opacity: 0.6; font-size: 1rem;
+            line-height: 1; padding: 4px;
+        }
+        #site-banner-close:hover { opacity: 1; }
+
+        /* ── VISITOR COUNTER ── */
+        #visitor-counter {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            opacity: 0.5;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        #visitor-counter .vc-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 5px #4ade80;
+            flex-shrink: 0;
+        }
+
         /* ── LIQUID GLASS ── */
         /* ── LIQUID GLASS — applied globally ── */
         /* Shared glass mixin via a single broad selector */
@@ -682,12 +726,18 @@
 <!-- Settings backdrop -->
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
 
+<div id="site-banner">
+    <span id="site-banner-msg"></span>
+    <button id="site-banner-close" onclick="document.getElementById('site-banner').style.display='none'" aria-label="Close">✕</button>
+</div>
+
 <header>
     <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search games..." oninput="renderGames()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="controls">
+        <div id="visitor-counter"><span class="vc-dot"></span><span id="vc-count">—</span> today</div>
         <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/>
         <path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/>
@@ -799,7 +849,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.8.0</div>
+                <div class="about-version">V1.8.2</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -1495,6 +1545,73 @@
             window.innerWidth >= 600) closeSettings();
     };
 
+
+    // ── BANNER ────────────────────────────────────────────────────────────────
+    async function loadBanner() {
+        try {
+            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/banner.txt');
+            if (!res.ok) return;
+            const text = (await res.text()).trim();
+            // Format: STATUS|MESSAGE|COLOR
+            // STATUS: ENABLED or DISABLED
+            const parts = text.split('|');
+            if (parts.length < 3) return;
+            const [status, message, color] = parts;
+            if (status.trim().toUpperCase() !== 'ENABLED') return;
+            const banner = document.getElementById('site-banner');
+            const msg    = document.getElementById('site-banner-msg');
+            banner.style.background = color.trim();
+            // Pick contrasting text color
+            const hex = color.trim().replace('#','');
+            const r = parseInt(hex.substr(0,2),16);
+            const g = parseInt(hex.substr(2,2),16);
+            const b = parseInt(hex.substr(4,2),16);
+            const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
+            banner.style.color = luminance > 0.5 ? '#000' : '#fff';
+            msg.textContent = message.trim();
+            banner.style.display = 'block';
+        } catch(e) { console.warn('Banner load failed:', e); }
+    }
+
+    // ── VISITOR COUNTER ───────────────────────────────────────────────────────
+    // Uses countapi.xyz — a free, no-setup global hit counter.
+    // Resets daily by using today's date as part of the key.
+    // No backend, no KV, no worker changes needed.
+    const VISITS_URL = 'https://powerhouse-api.c823.workers.dev/visits';
+
+    async function trackVisit() {
+        try {
+            const today     = new Date().toISOString().slice(0, 10);
+            const lastVisit = sessionStorage.getItem('ph_visited');
+
+            if (lastVisit === today) {
+                // Already counted this session — just fetch current number
+                const res = await fetch(VISITS_URL);
+                if (!res.ok) return;
+                const data = await res.json();
+                showVisitCount(data.count);
+                return;
+            }
+
+            // POST increments by 1 and returns the new count
+            const res = await fetch(VISITS_URL, { method: 'POST' });
+            if (!res.ok) return;
+            const data = await res.json();
+            showVisitCount(data.count);
+            sessionStorage.setItem('ph_visited', today);
+        } catch(e) {
+            // Silently fail — counter is non-critical
+        }
+    }
+
+    function showVisitCount(n) {
+        if (n == null) return;
+        const el      = document.getElementById('vc-count');
+        const counter = document.getElementById('visitor-counter');
+        if (el) el.textContent = Number(n).toLocaleString();
+        if (counter) counter.style.display = 'flex';
+    }
+
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
 
     // Listen for OS theme change when system theme is active
@@ -1530,6 +1647,8 @@
         fetchData().then(() => {
             if (!localStorage.getItem('power_tutorial_done')) setTimeout(startTutorial, 800);
         });
+        loadBanner();
+        trackVisit();
     };
 </script>
 </body>
