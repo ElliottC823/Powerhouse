@@ -363,6 +363,80 @@
         /* Always show on touch devices */
         @media (hover: none) { .fav-btn { opacity: 0.75; } }
 
+
+        /* ── AD CARDS ── */
+        .ad-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
+            display: block;
+            position: relative;
+            transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        @media (hover: hover) {
+            .ad-card:hover {
+                transform: translateY(-2px);
+                border-color: var(--accent);
+                box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+            }
+        }
+        .ad-card:active { transform: scale(0.98); }
+        .ad-thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+        .ad-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+        @media (hover: hover) { .ad-card:hover .ad-thumb { transform: scale(1.04); } }
+        .ad-badge {
+            position: absolute;
+            top: 6px; left: 6px;
+            background: rgba(0,0,0,0.7);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.55rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+        .ad-info {
+            padding: 9px 10px;
+            background: linear-gradient(180deg, var(--surface) 0%, color-mix(in srgb, var(--surface) 90%, var(--bg)) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+        .ad-label {
+            font-size: clamp(0.7rem, 2.2vw, 0.82rem);
+            font-weight: 600;
+            opacity: 0.7;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .ad-play {
+            background: color-mix(in srgb, var(--accent) 30%, var(--surface2));
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: var(--radius-xs);
+            font-weight: 700;
+            font-size: 0.65rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-height: 26px;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+        }
+
         /* ── EMPTY STATE ── */
         .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; opacity:0.4; font-weight:600; font-size:0.9rem; }
 
@@ -728,6 +802,10 @@
                 <input type="checkbox" id="cornerToggle" checked onchange="updateUI()">
             </div>
             <div class="s-row">
+                <div><div class="s-label">Fake Ads</div><div class="s-sublabel">Mix ad cards into the game grid</div></div>
+                <input type="checkbox" id="adsToggle" onchange="updateUI()">
+            </div>
+            <div class="s-row">
                 <div><div class="s-label">Accent Color</div><div class="s-sublabel">Highlight color</div></div>
                 <div class="accent-controls">
                     <button class="s-btn" onclick="resetAccent()">Reset</button>
@@ -782,7 +860,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.9.0</div>
+                <div class="about-version">V1.9.3</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -986,6 +1064,61 @@
         renderGames();
     }
 
+
+    // ── FAKE ADS ─────────────────────────────────────────────────────────────
+    // Images are fetched from main/images/ — filename list from images.txt
+    let adImages = [];
+
+    async function loadAdImages() {
+        try {
+            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/images/images.txt');
+            if (!res.ok) throw new Error(res.status);
+            const text = await res.text();
+            // images.txt: one filename per line, e.g. "ad1.png"
+            adImages = text.split('\n').map(l => l.trim()).filter(Boolean);
+        } catch(e) {
+            console.warn('Could not load ad images:', e);
+        }
+    }
+
+    function randomAdImage() {
+        if (adImages.length === 0) return null;
+        return 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/images/' +
+               adImages[Math.floor(Math.random() * adImages.length)];
+    }
+
+    function buildAdCard() {
+        const imgSrc = randomAdImage();
+        if (!imgSrc) return '';
+        return `<div class="ad-card" onclick="window.open('https://en.wikipedia.org/wiki/Special:Random', '_blank')">
+            <div class="ad-thumb-wrap">
+                <img class="ad-thumb" src="${imgSrc}" loading="lazy" alt="Advertisement">
+            </div>
+            <div class="ad-badge">Ad</div>
+            <div class="ad-info">
+                <span class="ad-label">Sponsored</span>
+                <span class="ad-play">Visit</span>
+            </div>
+        </div>`;
+    }
+
+    function injectAds(cards) {
+        const adsOn = localStorage.getItem('power_ads') === 'on';
+        if (!adsOn || adImages.length === 0 || cards.length === 0) return cards;
+        // Insert one ad every ~5 cards, starting at position 4
+        const result = [...cards];
+        let inserted = 0;
+        const interval = 5;
+        for (let i = interval - 1; i < result.length + inserted; i += interval) {
+            const adHtml = buildAdCard();
+            if (adHtml) {
+                result.splice(i, 0, adHtml);
+                inserted++;
+            }
+        }
+        return result;
+    }
+
     // ── FAVORITES ───────────────────────────────────────────────────────────
     function getFavorites() {
         return JSON.parse(localStorage.getItem('power_favorites') || '[]');
@@ -1091,9 +1224,17 @@
             return;
         }
 
-        grid.innerHTML = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
-                <div class="thumb-wrap"><img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}"></div>
+        grid.innerHTML = '';
+        const cardHtmls = filtered.map(g => `
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\\\'")}',event)">
+                <div class="thumb-wrap" style="position:relative;">
+                    <img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}">
+                    <button class="fav-btn ${isFavorited(g.title) ? 'favorited' : ''}"
+                        onclick="toggleFavorite(${JSON.stringify(g).replace(/"/g,'&quot;')}, event)"
+                        title="${isFavorited(g.title) ? 'Remove from favorites' : 'Add to favorites'}">
+                        ${isFavorited(g.title) ? '♥' : '♡'}
+                    </button>
+                </div>
                 <div class="game-info">
                     <div class="game-title-container">
                         <div class="game-title">${g.title}</div>
@@ -1102,7 +1243,8 @@
                     <div class="play-btn">PLAY</div>
                 </div>
             </a>
-        `).join('');
+        `);
+        grid.innerHTML = injectAds(cardHtmls).join('');
     }
 
     function toggleSettings() {
@@ -1339,6 +1481,9 @@
 
         localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
         localStorage.setItem('power_accent',  accent);
+        const adsEl = document.getElementById('adsToggle');
+        if (adsEl) localStorage.setItem('power_ads', adsEl.checked ? 'on' : 'off');
+        renderGames();
     }
 
     function resetAccent() {
@@ -1362,6 +1507,9 @@
         const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        const adsSaved = localStorage.getItem('power_ads') || 'off';
+        const adsEl2 = document.getElementById('adsToggle');
+        if (adsEl2) adsEl2.checked = (adsSaved === 'on');
         document.getElementById('accentPicker').value   = accent;
 
         setFont(font);
@@ -1603,6 +1751,9 @@
         const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
+        const adsSaved = localStorage.getItem('power_ads') || 'off';
+        const adsEl2 = document.getElementById('adsToggle');
+        if (adsEl2) adsEl2.checked = (adsSaved === 'on');
         document.getElementById('accentPicker').value   = accent;
         setFont(font);
         setFontWeight(fontWeight);
@@ -1612,6 +1763,7 @@
         // Load custom themes FIRST — then apply the saved theme so custom
         // themes are available in CUSTOM_THEMES before setTheme runs
         await loadCustomThemes();
+        loadAdImages(); // non-blocking — ads load in background
 
         const theme = localStorage.getItem('power_theme') || 'dark';
         setTheme(theme);
