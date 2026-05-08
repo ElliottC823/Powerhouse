@@ -646,5 +646,14 @@
     "link": "https://neal.fun/cursor-camp",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "TuneIn",
+    "category": "Utility",
+    "desc": "radio.",
+    "thumb": "https://store-images.s-microsoft.com/image/apps.44829.9007199266246398.fab84bd6-dd10-4a80-9137-0a0428d5234f.75f86c00-f9c7-4097-a291-20a532f66d90?h=210",
+    "link": "https://tunein.com",
+    "verified": true,
+    "useBlank": true
   }
 ]
