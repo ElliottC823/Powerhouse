@@ -655,5 +655,14 @@
     "link": "https://tunein.com",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "FrontWars",
+    "category": "Simulator",
+    "desc": "yes.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvng2WwNwI-ua_aN-8MrLWhrB1qzUBTgEIXQ&s",
+    "link": "https://frontwars.io/",
+    "verified": false,
+    "useBlank": true
   }
 ]
