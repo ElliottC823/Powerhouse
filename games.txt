@@ -514,7 +514,7 @@
   },
   {
     "title": "Jelly Mario",
-    "category": "Games",
+    "category": "Arcade",
     "desc": "A trippy, physics-based reimagining of Super Mario Bros where everything is made of jelly.",
     "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
     "link": "https://jellymar.io/",
@@ -667,7 +667,7 @@
   },
   {
     "title": "Snek.io",
-    "category": "Aracde",
+    "category": "Arcade",
     "desc": "gambling.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmMaiThJHROSKgRaj4GGQdeZ92WB3bLWx3cA&s",
     "link": "https://snek-io.netlify.app/",
