@@ -225,10 +225,10 @@
     "useBlank": false
   },
   {
-    "title": "Soundboard",
+    "title": "Sound Buttons",
     "category": "Utility",
     "desc": "Find the best funny sound buttons to play and download.",
-    "thumb": "https://addons.mozilla.org/user-media/previews/full/315/315163.png?modified=1740817557",
+    "thumb": "https://play-lh.googleusercontent.com/6BSIx2y6WflHgfJoR63nxCNpKe22dmh5sutzai2B-5V0p91z08EA_RYnK6Eak7S_ow=w3840-h2160-rw",
     "link": "https://soundbuttonsworld.com/",
     "verified": true,
     "useBlank": true
