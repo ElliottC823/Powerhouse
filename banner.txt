@@ -1,1 +1,1 @@
-ENABLED|goguardian blocked the mirrors page 😡|#0066FF
+DISABLED|goguardian blocked the mirrors page 😡|#0066FF
