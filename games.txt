@@ -664,5 +664,14 @@
     "link": "https://frontwars.io/",
     "verified": false,
     "useBlank": true
+  },
+  {
+    "title": "Snek.io",
+    "category": "Aracde",
+    "desc": "gambling.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmMaiThJHROSKgRaj4GGQdeZ92WB3bLWx3cA&s",
+    "link": "https://snek-io.netlify.app/",
+    "verified": false,
+    "useBlank": true
   }
 ]
