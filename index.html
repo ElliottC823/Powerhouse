@@ -193,7 +193,7 @@
             border: 1px solid var(--border);
             background: color-mix(in srgb, var(--surface) 90%, transparent);
             color: var(--text);
-            font-family: inherit; font-weight: 400; font-size: 14px; outline: none;
+            font-family: inherit; font-weight: 400; font-size: 16px; outline: none;
             transition: border-color 0.1s, box-shadow 0.1s;
         }
         #searchInput:focus {
@@ -669,7 +669,7 @@
 <header>
     <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search games..." oninput="renderGames()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <input type="text" id="searchInput" placeholder="Search games..." oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="controls">
         <div id="visitor-counter"><span class="vc-dot"></span><span id="vc-count">—</span> views today</div>
@@ -854,6 +854,13 @@
 <script>
     let games = [];
     let currentFilter = 'ALL';
+
+    // ── DEBOUNCE ─────────────────────────────────────────────────────────────
+    function debounce(fn, delay) {
+        let t;
+        return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+    }
+    const debouncedRender = debounce(renderGames, 150);
 
     const FAVICON_URL  = 'https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png';
     const THEMES_DIR   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes';
@@ -1600,7 +1607,7 @@
   {
     "title": "Ultrakill",
     "category": "Media",
-    "desc": "steam game yes.",
+    "desc": "A brutal, fast-paced retro FPS with a unique blood-fuel mechanic.",
     "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/capsule_616x353.jpg?t=1774188523",
     "link": "https://duckmath.org/class/ultrakill",
     "verified": true,
@@ -1609,7 +1616,7 @@
   {
     "title": "Cursor Camp",
     "category": "Arcade",
-    "desc": "yes.",
+    "desc": "A chaotic multiplayer cursor-based game by Neal.fun.",
     "thumb": "https://neal.fun/link-images/cursor-camp.svg",
     "link": "https://neal.fun/cursor-camp",
     "verified": true,
@@ -1618,7 +1625,7 @@
   {
     "title": "TuneIn",
     "category": "Utility",
-    "desc": "radio.",
+    "desc": "Stream live radio stations from around the world.",
     "thumb": "https://store-images.s-microsoft.com/image/apps.44829.9007199266246398.fab84bd6-dd10-4a80-9137-0a0428d5234f.75f86c00-f9c7-4097-a291-20a532f66d90?h=210",
     "link": "https://tunein.com",
     "verified": false,
@@ -1627,7 +1634,7 @@
   {
     "title": "FrontWars",
     "category": "Simulator",
-    "desc": "yes.",
+    "desc": "A turn-based strategy war game with territory control.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvng2WwNwI-ua_aN-8MrLWhrB1qzUBTgEIXQ&s",
     "link": "https://frontwars.io/",
     "verified": false,
@@ -1636,7 +1643,7 @@
   {
     "title": "Snek.io",
     "category": "Arcade",
-    "desc": "gambling.",
+    "desc": "A multiplayer snake game — grow the longest snake to win.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmMaiThJHROSKgRaj4GGQdeZ92WB3bLWx3cA&s",
     "link": "https://snek-io.netlify.app/",
     "verified": false,
@@ -1679,6 +1686,10 @@
 
     function clearHistory() {
         localStorage.removeItem('power_history');
+        const hs = document.getElementById('historyGrid');
+        const rs = document.getElementById('recommendedGrid');
+        if (hs) hs.scrollLeft = 0;
+        if (rs) rs.scrollLeft = 0;
         renderGames();
     }
 
@@ -1762,6 +1773,8 @@
 
     function clearFavorites() {
         localStorage.removeItem('power_favorites');
+        const fs = document.getElementById('favoritesGrid');
+        if (fs) fs.scrollLeft = 0;
         renderGames();
     }
 
@@ -1776,7 +1789,7 @@
             shelf.style.display = 'block';
             document.getElementById('historyGrid').innerHTML = history.map(g => `
                 <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
-                    <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                    <img src="${g.thumb}" class="shelf-img" loading="lazy" alt="${g.title}">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
                 </a>
@@ -1792,13 +1805,17 @@
             const playedCategories = [...new Set(history.map(g => g.category))];
             let pool = games.filter(g => playedCategories.includes(g.category) && !playedTitles.has(g.title));
             if (pool.length < 4) pool = [...pool, ...games.filter(g => !playedTitles.has(g.title) && !pool.includes(g))];
-            pool.sort((a,b) => { const s=x=>x.split('').reduce((a,c)=>a+c.charCodeAt(0),0); return(s(a.title)%7)-(s(b.title)%7); });
+            // Fisher-Yates shuffle for genuine variety each session
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
             const picks = pool.slice(0,8);
             if (picks.length > 0) {
                 recShelf.style.display = 'block';
                 document.getElementById('recommendedGrid').innerHTML = picks.map(g => `
                     <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
-                        <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                        <img src="${g.thumb}" class="shelf-img" loading="lazy" alt="${g.title}">
                         ${g.verified ? '<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">' : ''}
                         <div class="shelf-label">${g.title}</div>
                     </a>`).join('');
@@ -1812,7 +1829,7 @@
             favShelf.style.display = 'block';
             document.getElementById('favoritesGrid').innerHTML = favs.map(g => `
                 <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\'")}',event)">
-                    <img src="${g.thumb}" class="shelf-img" loading="lazy">
+                    <img src="${g.thumb}" class="shelf-img" loading="lazy" alt="${g.title}">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
                 </a>
@@ -1822,7 +1839,10 @@
         }
 
         const filtered = games.filter(g => {
-            const matchesSearch = g.title.toLowerCase().includes(search);
+            const matchesSearch = !search ||
+                g.title.toLowerCase().includes(search) ||
+                (g.desc  && g.desc.toLowerCase().includes(search)) ||
+                (g.category && g.category.toLowerCase().includes(search));
             let matchesFilter = false;
             if (currentFilter === 'ALL') {
                 matchesFilter = true;
@@ -2291,7 +2311,7 @@
             bodyEl.innerHTML = step.body + `
                 <div class="tutorial-theme-picker">
                     ${THEMES.map(t => `
-                        <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
                             <button class="tutorial-theme-swatch swatch-${t} ${t === currentTheme ? 'active' : ''}"
                                     onclick="setTheme('${t}'); document.querySelectorAll('.tutorial-theme-swatch').forEach(s=>s.classList.remove('active')); this.classList.add('active');"
                                     title="${t}">
@@ -2348,13 +2368,16 @@
     }
 
     // Close settings on outside click (desktop only)
-    window.onclick = (e) => {
+    // Use addEventListener so we don't stomp other onclick handlers
+    document.addEventListener('click', (e) => {
         const menu = document.getElementById('settingsMenu');
+        const tutorialActive = document.getElementById('tutorialOverlay').classList.contains('active');
+        if (tutorialActive) return; // don't close settings during tutorial
         if (menu.classList.contains('show') &&
             !e.target.closest('.settings-menu') &&
             !e.target.closest('.settings-btn') &&
             window.innerWidth >= 600) closeSettings();
-    };
+    });
 
 
     // ── BANNER ────────────────────────────────────────────────────────────────
@@ -2426,6 +2449,12 @@
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
+
+    // Re-position tutorial highlight on resize so it tracks its target
+    window.addEventListener('resize', () => {
+        const overlay = document.getElementById('tutorialOverlay');
+        if (overlay.classList.contains('active')) renderTutorialStep();
+    });
 
     // Listen for OS theme change when system theme is active
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
