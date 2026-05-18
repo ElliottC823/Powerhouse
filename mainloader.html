@@ -3,86 +3,322 @@
 <head>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            height: 100%; 
-            overflow: hidden; 
-            background: #0d0e12; 
-            display: flex; 
-            justify-content: center; 
+        :root {
+            --accent:   #0066FF;
+            --bg:       #0d0e12;
+            --surface:  #1e2028;
+            --surface2: #252830;
+            --text:     #f5f6fa;
+            --text-muted: rgba(245,246,250,0.45);
+            --border:   #35394a;
+            --radius:   16px;
+            --radius-sm: 10px;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            background-image: linear-gradient(160deg, #0d0e12 0%, #13151b 100%);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+        }
+
+        /* ── subtle grid texture matching index.html's dark bg ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        /* ── header bar — identical to index.html ── */
+        header {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, #13151b 0%, #1a1c24 100%);
+            border-bottom: 1px solid var(--border);
+            display: flex;
             align-items: center;
+            padding: 0 20px;
+            z-index: 10;
+            /* Respect notch */
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        .logo-img {
+            height: 28px;
+            object-fit: contain;
+            opacity: 0;
+            animation: fadeUp 0.5s ease 0.1s forwards;
+        }
+
+        /* ── centre stage ── */
+        main {
+            position: fixed; inset: 0;
+            display: flex;
             flex-direction: column;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            padding-top: 60px; /* clear header */
         }
 
-        /* The Loading Circle */
+        /* ── card container ── */
+        .loader-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+            box-shadow: 0 4px 40px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeUp 0.45s ease 0.2s forwards;
+            min-width: 280px;
+        }
+
+        /* ── spinner — same border style as game proxy page ── */
+        .spinner-wrap {
+            position: relative;
+            width: 56px; height: 56px;
+        }
+
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.1);
-            border-top: 5px solid #0066FF;
+            width: 56px; height: 56px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            animation: spin 0.75s linear infinite;
         }
 
-        #loader-text {
-            color: #0066FF;
-            font-weight: bold;
-            letter-spacing: 2px;
+        /* accent glow behind spinner */
+        .spinner-wrap::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,102,255,0.18) 0%, transparent 70%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ── text block ── */
+        .loader-label {
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            font-size: 14px;
+            color: var(--text-muted);
         }
 
+        .loader-status {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+            min-height: 1.4em;
+            transition: opacity 0.2s;
+        }
+
+        /* ── progress bar ── */
+        .progress-track {
+            width: 200px;
+            height: 3px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 99px;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 8px rgba(0,102,255,0.6);
+        }
+
+        /* ── error state ── */
+        .error-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center;
+        }
+
+        .error-icon {
+            width: 44px; height: 44px;
+            background: rgba(255,59,59,0.12);
+            border: 1px solid rgba(255,59,59,0.3);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .error-title {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #ff4444;
+        }
+
+        .error-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            max-width: 220px;
+            line-height: 1.6;
+        }
+
+        .retry-btn {
+            margin-top: 4px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 24px;
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .retry-btn:hover  { opacity: 0.85; }
+        .retry-btn:active { opacity: 0.65; }
+
+        /* ── animations ── */
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50%       { opacity: 1;   transform: scale(1.08); }
         }
 
+        /* ── hidden content container ── */
         #content { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="loader-container">
-        <div class="spinner"></div>
-        <div id="loader-text">LOADING POWERHOUSE</div>
-    </div>
+    <header>
+        <img class="logo-img"
+             id="headerLogo"
+             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
+             alt="Powerhouse">
+    </header>
+
+    <main>
+        <div class="loader-card" id="loaderCard">
+
+            <!-- loading state -->
+            <div id="loadingState" style="display:flex;flex-direction:column;align-items:center;gap:28px;">
+                <div class="spinner-wrap">
+                    <div class="spinner"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div class="loader-label">Powerhouse</div>
+                    <div class="loader-status" id="loaderStatus">Connecting…</div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- error state -->
+            <div class="error-card" id="errorState">
+                <div class="error-icon">✕</div>
+                <div class="error-title">Load Failed</div>
+                <div class="error-sub" id="errorSub">Could not reach GitHub. Check your connection and try again.</div>
+                <button class="retry-btn" onclick="retry()">Try Again</button>
+            </div>
+
+        </div>
+    </main>
 
     <div id="content"></div>
 
     <script>
+        const statusEl  = document.getElementById('loaderStatus');
+        const fillEl    = document.getElementById('progressFill');
+        const loadingEl = document.getElementById('loadingState');
+        const errorEl   = document.getElementById('errorState');
+        const errorSub  = document.getElementById('errorSub');
+
+        function setProgress(pct, label) {
+            fillEl.style.width = pct + '%';
+            if (label) statusEl.textContent = label;
+        }
+
+        function showError(msg) {
+            loadingEl.style.display = 'none';
+            errorEl.style.display   = 'flex';
+            if (msg) errorSub.textContent = msg;
+        }
+
         async function loadPowerhouse() {
-            const loaderText = document.getElementById('loader-text');
+            // Reset to loading state in case of retry
+            loadingEl.style.display = 'flex';
+            errorEl.style.display   = 'none';
+            setProgress(0, 'Connecting…');
+
             const repoURL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/index.html';
-            
+
             try {
+                setProgress(15, 'Fetching Powerhouse…');
+
                 const response = await fetch(repoURL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                setProgress(55, 'Downloading…');
+
                 const html = await response.text();
-                
-                // Fix for relative assets: Inject a <base> tag so images/css load from GitHub
-                const baseTag = `<base href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/">`;
+
+                setProgress(80, 'Preparing…');
+
+                // Inject <base> tag so relative assets resolve from GitHub
+                const baseTag      = `<base href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/">`;
                 const processedHtml = html.replace('<head>', `<head>${baseTag}`);
+
+                setProgress(100, 'Launching…');
+
+                // Small pause so the 100% state is visible
+                await new Promise(r => setTimeout(r, 280));
 
                 document.open();
                 document.write(processedHtml);
                 document.close();
+
             } catch (error) {
-                loaderText.innerText = "LOAD FAILED. CHECK CONNECTION.";
-                loaderText.style.color = "#ff4444";
-                console.error("Powerhouse Load Error:", error);
+                console.error('Powerhouse Load Error:', error);
+                showError(`Could not reach GitHub (${error.message}). Check your connection and try again.`);
             }
         }
 
-        // Slight delay to ensure the spinner is visible if the catch is instant
+        function retry() {
+            loadPowerhouse();
+        }
+
         window.addEventListener('load', () => {
-            setTimeout(loadPowerhouse, 500);
+            setTimeout(loadPowerhouse, 400);
         });
     </script>
 </body>
