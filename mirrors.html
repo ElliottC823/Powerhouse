@@ -11,180 +11,246 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #0066FF;
-            --bg: #0d0e12;
-            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/background-dark.svg');
-            --surface: #16181d;
-            --text: #f0f2f5;
-            --border: #2a2d35;
-            --radius: 12px;
-            --shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
-            --safe-top: env(safe-area-inset-top, 0px);
+            --accent:     #0078D4;
+            --accent2:    #106EBE;
+            --bg:         #0d0e12;
+            --surface:    #1e2028;
+            --surface2:   #252830;
+            --text:       #f5f6fa;
+            --text-muted: rgba(245,246,250,0.45);
+            --border:     #35394a;
+            --radius:     8px;
+            --radius-sm:  6px;
+            --shadow:     0 2px 8px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.25);
+            --safe-top:    env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
-            --safe-left: env(safe-area-inset-left, 0px);
-            --safe-right: env(safe-area-inset-right, 0px);
+            --safe-left:   env(safe-area-inset-left, 0px);
+            --safe-right:  env(safe-area-inset-right, 0px);
         }
 
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; animation: none !important; }
         }
 
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Segoe UI Variable', 'Segoe UI', 'Outfit', system-ui, sans-serif;
             background-color: var(--bg);
-            background-image: var(--bg-image);
-            /* scroll instead of fixed — fixed is GPU-expensive on mobile */
-            background-attachment: scroll;
-            background-size: cover;
-            background-position: center top;
+            background-image: linear-gradient(160deg, #0d0e12 0%, #13151b 100%);
             color: var(--text);
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            /* Respect notch/home bar on all sides */
-            padding: calc(20px + var(--safe-top))
-                     calc(20px + var(--safe-right))
-                     calc(20px + var(--safe-bottom))
-                     calc(20px + var(--safe-left));
+            display: flex;
+            flex-direction: column;
             -webkit-overflow-scrolling: touch;
         }
 
-        .container {
-            background-color: var(--surface);
-            border: 3px solid var(--accent);
-            border-radius: var(--radius);
-            /* Fluid padding: tighter on small phones, roomier on tablets */
-            padding: clamp(24px, 6vw, 40px);
-            width: 100%;
-            max-width: 440px;
-            box-shadow: var(--shadow);
-            text-align: center;
+        /* ── Mica noise texture ── */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.022;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .logo-container {
-            margin-bottom: 22px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 18px;
+        /* ── Header — matches index.html ── */
+        header {
+            position: sticky; top: 0; z-index: 100;
+            height: calc(48px + var(--safe-top));
+            padding: var(--safe-top) 20px 0;
+            background: linear-gradient(90deg, #13151b 0%, #1a1c24 100%);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
         }
 
         .logo-img {
-            /* Fluid width so it never overflows on narrow phones */
-            width: clamp(160px, 70%, 280px);
+            height: 24px;
+            object-fit: contain;
+            opacity: 0;
+            animation: fadeUp 0.5s ease 0.1s forwards;
+        }
+
+        /* ── Page content ── */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(32px + var(--safe-top))
+                     calc(20px + var(--safe-right))
+                     calc(32px + var(--safe-bottom))
+                     calc(20px + var(--safe-left));
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Card ── */
+        .container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: clamp(24px, 6vw, 36px);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeUp 0.4s ease 0.15s forwards;
+        }
+
+        /* ── Logo block ── */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-logo {
+            width: clamp(140px, 60%, 220px);
             height: auto;
-            filter: drop-shadow(0 0 10px rgba(0, 102, 255, 0.3));
             display: block;
-            margin: 0 auto;
         }
 
-        h1 {
-            margin: 0 0 20px 0;
-            font-weight: 900;
+        .page-title {
+            font-size: 0.62rem;
+            font-weight: 600;
             text-transform: uppercase;
-            /* Fluid font size: scales between small phones and Chromebooks */
-            font-size: clamp(1.1rem, 4vw, 1.4rem);
-            color: var(--text);
-            letter-spacing: 1px;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin: 0;
         }
 
+        /* ── Mirror links ── */
         .link-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
+            margin-bottom: 20px;
         }
 
         .mirror-link {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            /* Fluid vertical padding; minimum 52px tall for 44px+ touch target */
-            padding: clamp(14px, 3vw, 15px) 16px;
+            justify-content: space-between;
+            gap: 12px;
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+            padding: 12px 14px;
             min-height: 52px;
-            border-radius: var(--radius);
+            border-radius: var(--radius-sm);
             color: var(--text);
             text-decoration: none;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: clamp(0.85rem, 3vw, 1rem);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-            /* Only transition non-layout properties for performance */
-            transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-            /* Prevent text selection on long-press */
+            transition: border-color 0.1s, background 0.1s, color 0.1s;
             -webkit-user-select: none;
             user-select: none;
         }
 
-        /* Hover lift only on pointer devices — no sticky hover on touch */
         @media (hover: hover) {
             .mirror-link:hover {
                 border-color: var(--accent);
-                transform: translate(-3px, -3px);
-                box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+                background: color-mix(in srgb, var(--accent) 8%, var(--surface2));
                 color: var(--accent);
             }
+            .mirror-link:hover .mirror-arrow { opacity: 1; color: var(--accent); }
         }
 
-        /* Press feedback for touch */
-        .mirror-link:active {
-            transform: scale(0.97);
-            opacity: 0.8;
-        }
+        .mirror-link:active { opacity: 0.7; }
+
+        .mirror-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 
         .mirror-link-label {
-            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .disclaimer {
-            display: block;
             font-size: 0.68rem;
-            font-weight: 700;
-            opacity: 0.6;
-            margin-top: 3px;
-            text-transform: none;
-            letter-spacing: 0;
+            color: var(--text-muted);
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
+        .mirror-arrow {
+            font-size: 0.8rem;
+            opacity: 0.35;
+            flex-shrink: 0;
+            transition: opacity 0.1s, color 0.1s;
+        }
+
+        /* ── Footer ── */
         .footer {
-            margin-top: 28px;
-            font-size: 0.7rem;
-            font-weight: 900;
-            opacity: 0.5;
+            font-size: 0.62rem;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
-        </div>
+    <header>
+        <img class="logo-img"
+             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
+             alt="Powerhouse">
+    </header>
 
-        <h1>Mirror Links</h1>
+    <main>
+        <div class="container">
 
-        <div class="link-list">
-            <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-link">
-                <span class="mirror-link-label">Cloudflare (Main)</span>
-            </a>
-            <a href="https://kraftpaket.c1120.workers.dev" target="_blank" rel="noopener" class="mirror-link">
-                <span class="mirror-link-label">Cloudflare (Backup)</span>
-                <span class="disclaimer">Backup for Cloudflare (Main) in case of a block.</span>
-            </a>
-        </div>
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
+                     alt="Powerhouse" class="card-logo">
+                <p class="page-title">Mirror Links</p>
+            </div>
 
-        <div class="footer">
-            Powerhouse V1.4.36
+            <div class="link-list">
+                <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-link">
+                    <div class="mirror-text">
+                        <span class="mirror-link-label">Cloudflare (Main)</span>
+                    </div>
+                    <span class="mirror-arrow">↗</span>
+                </a>
+                <a href="https://kraftpaket.c1120.workers.dev" target="_blank" rel="noopener" class="mirror-link">
+                    <div class="mirror-text">
+                        <span class="mirror-link-label">Cloudflare (Backup)</span>
+                        <span class="disclaimer">Backup — may not always be up to date</span>
+                    </div>
+                    <span class="mirror-arrow">↗</span>
+                </a>
+            </div>
+
+            <div class="footer">Powerhouse V1.9.3</div>
+
         </div>
-    </div>
+    </main>
 
 </body>
 </html>
