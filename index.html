@@ -8,18 +8,27 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png">
-    <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* ═══════════════════════════════════════════════════════
+           POWERHOUSE — Windows 11 Fluent Design Reskin
+           Segoe UI Variable · Mica/Acrylic · Fluent depth
+        ═══════════════════════════════════════════════════════ */
+
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
         :root {
-            --accent: #0066FF;
-            --radius: 16px;
-            --radius-sm: calc(var(--radius) * 0.6);
-            --radius-xs: calc(var(--radius) * 0.4);
-            --header-height: 60px;
-            --font: 'Outfit', sans-serif;
+            --accent:   #0078D4;
+            --accent2:  #106EBE;
+            --accent-light: rgba(0,120,212,0.12);
+            --radius:   8px;
+            --radius-sm: 6px;
+            --radius-xs: 4px;
+            --header-height: 48px;
+            --font: 'Segoe UI Variable', 'Segoe UI', 'Nunito', system-ui, sans-serif;
             --font-weight-normal: 400;
-            --font-weight-bold: 700;
-            --font-weight-black: 800;
+            --font-weight-bold: 600;
+            --font-weight-black: 700;
 
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -27,7 +36,7 @@
             --safe-right: env(safe-area-inset-right, 0px);
         }
 
-        /* ── THEMES ── */
+        /* ── THEMES — W11 Dark ── */
         [data-theme="midnight"] {
             --bg: #1a1d2e; --bg-gradient: linear-gradient(160deg,#1a1d2e 0%,#141620 100%);
             --header-gradient: linear-gradient(90deg,#1e2235 0%,#252840 100%);
@@ -56,6 +65,7 @@
             --text-muted: rgba(228,230,240,0.5); --border: #44485e;
             --shadow: 0 4px 24px rgba(0,0,0,0.3); --logo: dark;
         }
+        /* ── W11 Light theme ── */
         [data-theme="light"] {
             --bg: #f2f3f8; --bg-gradient: linear-gradient(160deg,#f2f3f8 0%,#e8eaf4 100%);
             --header-gradient: linear-gradient(90deg,#fff 0%,#f2f3f8 100%);
@@ -73,81 +83,51 @@
 
         /* ── CUSTOM IMAGE THEMES ── */
         [data-theme="10"] {
-            --bg: #0a0000;
-            --bg-gradient: none;
+            --bg: #0a0000; --bg-gradient: none;
             --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/10.png');
-            --header-gradient: rgba(10,0,0,0.75);
-            --surface: rgba(20,0,0,0.7);
-            --surface2: rgba(30,0,0,0.75);
-            --text: #ffe8e8;
-            --text-muted: rgba(255,232,232,0.5);
-            --border: rgba(200,0,0,0.35);
-            --shadow: 0 4px 24px rgba(0,0,0,0.6);
-            --logo: dark;
-            --accent: #ff2020;
-            --theme-accent-locked: 1;
+            --header-gradient: rgba(10,0,0,0.82);
+            --surface: rgba(44,0,0,0.7); --surface2: rgba(60,0,0,0.75);
+            --text: #ffe8e8; --text-muted: rgba(255,232,232,0.5);
+            --border: rgba(200,0,0,0.2); --shadow: 0 2px 8px rgba(0,0,0,0.5);
+            --logo: dark; --accent: #ff2020; --theme-accent-locked: 1;
         }
         [data-theme="cave"] {
-            --bg: #000a00;
-            --bg-gradient: none;
+            --bg: #000a00; --bg-gradient: none;
             --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/cave.png');
-            --header-gradient: rgba(0,15,0,0.75);
-            --surface: rgba(0,20,0,0.7);
-            --surface2: rgba(0,30,0,0.75);
-            --text: #e0ffe0;
-            --text-muted: rgba(224,255,224,0.5);
-            --border: rgba(0,160,0,0.35);
-            --shadow: 0 4px 24px rgba(0,0,0,0.6);
-            --logo: dark;
-            --accent: #00c44a;
-            --theme-accent-locked: 1;
+            --header-gradient: rgba(0,15,0,0.82);
+            --surface: rgba(0,40,0,0.7); --surface2: rgba(0,55,0,0.75);
+            --text: #e0ffe0; --text-muted: rgba(224,255,224,0.5);
+            --border: rgba(0,160,0,0.2); --shadow: 0 2px 8px rgba(0,0,0,0.5);
+            --logo: dark; --accent: #00c44a; --theme-accent-locked: 1;
         }
 
-        /* Image-based theme backgrounds — applied via JS to body directly */
         body[data-custom-theme] {
             background-size: cover !important;
             background-position: center !important;
             background-attachment: scroll !important;
             background-repeat: no-repeat !important;
         }
-        /* Semi-transparent header for image themes */
         body[data-custom-theme] header {
             background: var(--header-gradient) !important;
-            backdrop-filter: blur(14px) saturate(160%);
-            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
         }
-        /* Semi-transparent cards/surfaces for image themes */
         body[data-custom-theme] .game-card,
         body[data-custom-theme] .settings-menu,
         body[data-custom-theme] .filter-btn,
         body[data-custom-theme] #searchInput,
         body[data-custom-theme] .settings-btn {
-            backdrop-filter: blur(12px) saturate(160%);
-            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
         }
 
-        /* Lock accent color picker when theme controls it */
-        [data-accent-locked="true"] .accent-controls {
-            opacity: 0.4;
-            pointer-events: none;
-            cursor: not-allowed;
-        }
-        [data-accent-locked="true"] .accent-locked-note {
-            display: block;
-        }
-        .accent-locked-note {
-            display: none;
-            font-size: 0.65rem;
-            opacity: 0.55;
-            font-style: italic;
-        }
-
-        /* Custom theme swatches */
+        [data-accent-locked="true"] .accent-controls { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
+        [data-accent-locked="true"] .accent-locked-note { display: block; }
+        .accent-locked-note { display: none; font-size: 0.65rem; opacity: 0.55; font-style: italic; }
 
         .custom-swatch { overflow: hidden; }
         .locked-swatch { opacity: 0.6; }
         .locked-swatch:hover { opacity: 0.85; }
-
         .swatch-10   { background: linear-gradient(135deg, #1a0000 50%, #3a0000 100%); }
         .swatch-cave { background: linear-gradient(135deg, #001a00 50%, #003a00 100%); }
 
@@ -160,20 +140,11 @@
                 --shadow: 0 4px 24px rgba(0,0,0,0.08); --logo: light;
             }
         }
-        [data-corners="sharp"] {
-            --radius: 0px !important;
-            --radius-sm: 0px !important;
-            --radius-xs: 0px !important;
-        }
-        /* Apply sharp to EVERY rounded element when sharp mode active */
-        [data-corners="sharp"] *,
-        [data-corners="sharp"] *::before,
-        [data-corners="sharp"] *::after {
-            border-radius: 0 !important;
-        }
+
+        [data-corners="sharp"] { --radius: 0px !important; --radius-sm: 0px !important; --radius-xs: 0px !important; }
+        [data-corners="sharp"] *, [data-corners="sharp"] *::before, [data-corners="sharp"] *::after { border-radius: 0 !important; }
 
         @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
@@ -186,92 +157,106 @@
             padding-left: var(--safe-left);
             padding-right: var(--safe-right);
             padding-bottom: var(--safe-bottom);
-            transition: background 0.25s, color 0.25s;
+            transition: background 0.2s, color 0.2s;
         }
 
-        /* ── HEADER — Steam-style flat nav bar ── */
+        /* ── MICA NOISE LAYER — authentic W11 texture ── */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.022;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── HEADER — W11 title bar style with acrylic ── */
         header {
             background: var(--header-gradient);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 0 clamp(14px,4%,28px);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 0 clamp(12px,3%,24px);
             padding-top: var(--safe-top);
             height: calc(var(--header-height) + var(--safe-top));
-            display: flex; align-items: center; justify-content: space-between; gap: 14px;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
             position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid var(--border);
-            transition: background 0.25s, border-color 0.25s;
+            transition: background 0.2s, border-color 0.2s;
         }
-        .logo-img { height: 28px; flex-shrink: 0; max-width: 120px; object-fit: contain; }
-        .search-container { flex-grow: 1; min-width: 0; max-width: 380px; }
+        .logo-img { height: 24px; flex-shrink: 0; max-width: 110px; object-fit: contain; }
+        .search-container { flex-grow: 1; min-width: 0; max-width: 340px; }
+
+        /* W11 search box with bottom underline focus style */
         #searchInput {
-            width: 100%; padding: 7px 14px;
+            width: 100%; padding: 6px 12px;
             border-radius: var(--radius);
             border: 1px solid var(--border);
-            background: color-mix(in srgb, var(--surface) 80%, transparent);
+            background: color-mix(in srgb, var(--surface) 90%, transparent);
             color: var(--text);
-            font-family: inherit; font-weight: 500; font-size: 16px; outline: none;
-            transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+            font-family: inherit; font-weight: 400; font-size: 14px; outline: none;
+            transition: border-color 0.1s, box-shadow 0.1s;
         }
         #searchInput:focus {
             border-color: var(--accent);
-            background: var(--surface);
-            box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+            box-shadow: 0 0 0 1px var(--accent);
         }
-        #searchInput::placeholder { color: var(--text-muted); font-weight: 400; }
-        .controls { flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+        #searchInput::placeholder { color: var(--text-muted); }
+        .controls { flex-shrink: 0; display: flex; align-items: center; gap: 4px; }
+
+        /* W11 icon button */
         .settings-btn {
             background: transparent;
             border: 1px solid transparent;
-            padding: 7px 10px; border-radius: var(--radius-sm);
+            padding: 6px 8px; border-radius: var(--radius-sm);
             cursor: pointer; color: var(--text-muted); font-size: 1rem; line-height: 1;
-            min-width: 40px; min-height: 40px;
+            min-width: 36px; min-height: 36px;
             display: flex; align-items: center; justify-content: center;
-            transition: color 0.15s, background 0.15s, border-color 0.15s;
+            transition: color 0.1s, background 0.1s;
         }
-        .settings-btn:hover { color: var(--text); background: var(--surface2); border-color: var(--border); }
-        .settings-btn:active { opacity: 0.7; }
+        .settings-btn:hover { color: var(--text); background: color-mix(in srgb, var(--text) 8%, transparent); }
+        .settings-btn:active { background: color-mix(in srgb, var(--text) 14%, transparent); opacity: 1; }
 
-        /* ── SHELVES ── Steam-style horizontal scroll rows */
-        .shelf-container { padding: 18px clamp(14px,4%,28px) 8px; display: none; }
+        /* ── SHELVES ── */
+        .shelf-container { padding: 16px clamp(12px,3%,24px) 6px; display: none; }
         .shelf-title {
-            font-weight: 700; font-size: 1rem; margin-bottom: 12px;
-            letter-spacing: 0.01em; opacity: 1;
+            font-weight: 600; font-size: 0.82rem; margin-bottom: 10px;
+            letter-spacing: 0.005em; opacity: 0.7;
             display: flex; align-items: center; gap: 8px;
+            text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem;
         }
-        .shelf-title::after {
-            content: ''; flex: 1; height: 1px;
-            background: linear-gradient(90deg, var(--border), transparent);
-        }
+        .shelf-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
         .shelf-scroll {
-            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px;
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
             scrollbar-width: thin; scrollbar-color: var(--border) transparent;
             -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity;
         }
-        .shelf-scroll::-webkit-scrollbar { height: 3px; }
+        .shelf-scroll::-webkit-scrollbar { height: 2px; }
         .shelf-scroll::-webkit-scrollbar-track { background: transparent; }
         .shelf-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
         .shelf-item {
-            flex: 0 0 80px; min-width: 0; text-align: center; text-decoration: none;
+            flex: 0 0 76px; min-width: 0; text-align: center; text-decoration: none;
             color: inherit; position: relative; scroll-snap-align: start;
-            padding: 4px; overflow: hidden;
+            padding: 4px; overflow: hidden; border-radius: var(--radius);
+            transition: background 0.1s;
         }
+        .shelf-item:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
         .shelf-img {
-            width: 72px; height: 72px; border-radius: var(--radius-sm);
+            width: 68px; height: 68px; border-radius: var(--radius-sm);
             object-fit: cover; border: 1px solid var(--border);
-            margin: 0 auto 5px; display: block;
-            transition: transform 0.15s, border-color 0.15s;
+            margin: 0 auto 4px; display: block;
+            transition: transform 0.15s;
         }
-        .shelf-item:hover .shelf-img { transform: scale(1.06); border-color: var(--accent); }
+        .shelf-item:hover .shelf-img { transform: scale(1.04); }
         .shelf-label {
-            font-size: 0.68rem; font-weight: 600; overflow: hidden;
+            font-size: 0.66rem; font-weight: 400; overflow: hidden;
             text-overflow: ellipsis; white-space: nowrap;
-            display: block; width: 0; min-width: 100%; opacity: 0.8;
+            display: block; width: 0; min-width: 100%; opacity: 0.7;
         }
-        .shelf-verified { position: absolute; top: 0; right: 8px; width: 14px; height: 14px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4)); }
+        .shelf-verified { position: absolute; top: 0; right: 8px; width: 13px; height: 13px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
 
-        /* ── FILTER BAR — Steam category tabs ── */
+        /* ── FILTER BAR — W11 pivot/tab style ── */
         .filter-bar {
-            display: flex; gap: 2px; padding: 0 clamp(14px,4%,28px) 0;
+            display: flex; gap: 0; padding: 0 clamp(12px,3%,24px) 0;
             overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
             border-bottom: 1px solid var(--border);
@@ -279,200 +264,161 @@
         .filter-bar::-webkit-scrollbar { display: none; }
         .filter-btn {
             background: transparent; border: none; border-bottom: 2px solid transparent;
-            padding: 10px 16px; font-weight: 600; font-family: inherit;
+            padding: 8px 14px; font-weight: 400; font-family: inherit;
             cursor: pointer; color: var(--text-muted); white-space: nowrap;
-            font-size: 0.82rem; min-height: 42px; flex-shrink: 0;
+            font-size: 0.8rem; min-height: 38px; flex-shrink: 0;
             margin-bottom: -1px;
-            transition: color 0.15s, border-color 0.15s;
+            transition: color 0.1s, border-color 0.1s;
             border-radius: 0;
         }
-        .filter-btn:hover { color: var(--text); }
-        .filter-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+        .filter-btn:hover { color: var(--text); background: color-mix(in srgb, var(--text) 5%, transparent); }
+        .filter-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
         .filter-btn:active { opacity: 0.7; }
 
-        /* ── GAME GRID — Steam store-style cards ── */
+        /* ── GAME GRID — W11 card style ── */
         #game-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: clamp(8px,2vw,16px);
-            padding: clamp(12px,3%,20px) clamp(14px,4%,28px);
+            gap: clamp(6px,1.5vw,12px);
+            padding: clamp(10px,2.5%,18px) clamp(12px,3%,24px);
         }
         @media (min-width: 600px)  { #game-grid { grid-template-columns: repeat(3,1fr); } }
-        @media (min-width: 900px)  { #game-grid { grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); } }
+        @media (min-width: 900px)  { #game-grid { grid-template-columns: repeat(auto-fill,minmax(210px,1fr)); } }
 
+        /* W11 card: subtle shadow, thin border, smooth hover lift */
         .game-card {
             background: var(--surface); border-radius: var(--radius);
             overflow: hidden; text-decoration: none; color: inherit;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+            box-shadow: var(--shadow);
             border: 1px solid var(--border); display: block;
             transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
             -webkit-user-select: none; user-select: none;
         }
         @media (hover: hover) {
             .game-card:hover {
-                transform: translateY(-2px);
-                border-color: var(--accent);
-                box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+                transform: translateY(-1px);
+                border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+                box-shadow: 0 4px 16px rgba(0,0,0,0.18), 0 0 0 1px var(--accent);
             }
         }
-        .game-card:active { transform: scale(0.98); }
+        .game-card:active { transform: scale(0.99); opacity: 0.9; }
         .thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative; }
-        .thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
-        @media (hover: hover) { .game-card:hover .thumb { transform: scale(1.04); } }
+        .thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s ease; }
+        @media (hover: hover) { .game-card:hover .thumb { transform: scale(1.03); } }
         .game-info {
-            padding: 9px 10px;
-            background: linear-gradient(180deg, var(--surface) 0%, color-mix(in srgb, var(--surface) 90%, var(--bg)) 100%);
+            padding: 8px 10px;
+            background: var(--surface);
             display: flex; justify-content: space-between; align-items: center; gap: 6px;
         }
         .game-title-container { display: flex; align-items: center; gap: 4px; min-width: 0; }
-        .game-title { font-weight: 600; font-size: clamp(0.7rem,2.2vw,0.88rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .game-title { font-weight: 400; font-size: clamp(0.7rem,2.2vw,0.84rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* W11 filled accent button */
         .play-btn {
             background: var(--accent); color: #fff; padding: 4px 10px;
-            border-radius: var(--radius-xs); font-weight: 700; font-size: 0.65rem;
-            white-space: nowrap; flex-shrink: 0; min-height: 26px;
-            display: flex; align-items: center; letter-spacing: 0.05em;
-            text-transform: uppercase;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            transition: opacity 0.15s;
+            border-radius: var(--radius-xs); font-weight: 600; font-size: 0.62rem;
+            white-space: nowrap; flex-shrink: 0; min-height: 24px;
+            display: flex; align-items: center; letter-spacing: 0.02em;
+            transition: background 0.1s, opacity 0.1s;
         }
-        .play-btn:hover { opacity: 0.88; }
+        .play-btn:hover { background: var(--accent2); }
         .verified-badge { width: 12px; height: 12px; cursor: help; flex-shrink: 0; opacity: 0.85; }
-
 
         /* ── FAVORITE BUTTON ── */
         .fav-btn {
-            position: absolute;
-            top: 6px; right: 6px;
-            background: rgba(0,0,0,0.55);
+            position: absolute; top: 6px; right: 6px;
+            background: rgba(0,0,0,0.5);
             border: none; border-radius: 50%;
             width: 28px; height: 28px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 0.85rem;
-            opacity: 0;
-            transition: opacity 0.15s, transform 0.15s, background 0.15s;
-            z-index: 2;
-            backdrop-filter: blur(4px);
+            opacity: 0; transition: opacity 0.15s, transform 0.15s;
+            z-index: 2; backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            flex-shrink: 0;
-            line-height: 1;
+            flex-shrink: 0; line-height: 1;
         }
         .game-card:hover .fav-btn { opacity: 1; }
         .fav-btn.favorited { opacity: 1; background: rgba(0,0,0,0.65); }
-        .fav-btn:hover { transform: scale(1.15); background: rgba(0,0,0,0.8); }
+        .fav-btn:hover { transform: scale(1.15); }
         .fav-btn:active { transform: scale(0.9); }
-        /* Always show on touch devices */
         @media (hover: none) { .fav-btn { opacity: 0.75; } }
-
 
         /* ── AD CARDS ── */
         .ad-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            overflow: hidden;
-            cursor: pointer;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-            border: 1px solid var(--border);
-            display: block;
-            position: relative;
+            background: var(--surface); border-radius: var(--radius);
+            overflow: hidden; cursor: pointer; box-shadow: var(--shadow);
+            border: 1px solid var(--border); display: block; position: relative;
             transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
-            -webkit-user-select: none;
-            user-select: none;
+            -webkit-user-select: none; user-select: none;
         }
         @media (hover: hover) {
             .ad-card:hover {
-                transform: translateY(-2px);
-                border-color: var(--accent);
-                box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+                transform: translateY(-1px);
+                border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+                box-shadow: 0 4px 16px rgba(0,0,0,0.18), 0 0 0 1px var(--accent);
             }
         }
-        .ad-card:active { transform: scale(0.98); }
+        .ad-card:active { transform: scale(0.99); }
         .ad-thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
-        .ad-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
-        @media (hover: hover) { .ad-card:hover .ad-thumb { transform: scale(1.04); } }
+        .ad-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s ease; }
+        @media (hover: hover) { .ad-card:hover .ad-thumb { transform: scale(1.03); } }
         .ad-badge {
-            position: absolute;
-            top: 6px; left: 6px;
-            background: rgba(0,0,0,0.7);
-            color: rgba(255,255,255,0.7);
-            font-size: 0.55rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 2px 6px;
-            border-radius: 4px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            pointer-events: none;
+            position: absolute; top: 6px; left: 6px;
+            background: rgba(0,0,0,0.65); color: rgba(255,255,255,0.7);
+            font-size: 0.52rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; padding: 2px 5px; border-radius: 3px;
+            backdrop-filter: blur(4px); pointer-events: none;
         }
         .ad-info {
-            padding: 9px 10px;
-            background: linear-gradient(180deg, var(--surface) 0%, color-mix(in srgb, var(--surface) 90%, var(--bg)) 100%);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px;
+            padding: 8px 10px; background: var(--surface);
+            display: flex; justify-content: space-between; align-items: center; gap: 6px;
         }
-        .ad-label {
-            font-size: clamp(0.7rem, 2.2vw, 0.82rem);
-            font-weight: 600;
-            opacity: 0.7;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+        .ad-label { font-size: clamp(0.7rem,2.2vw,0.8rem); font-weight: 400; opacity: 0.65; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .ad-play {
-            background: color-mix(in srgb, var(--accent) 30%, var(--surface2));
-            color: var(--accent);
-            padding: 4px 10px;
-            border-radius: var(--radius-xs);
-            font-weight: 700;
-            font-size: 0.65rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-            min-height: 26px;
-            display: flex;
-            align-items: center;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+            background: color-mix(in srgb, var(--accent) 15%, var(--surface2));
+            color: var(--accent); padding: 4px 10px;
+            border-radius: var(--radius-xs); font-weight: 600; font-size: 0.62rem;
+            white-space: nowrap; flex-shrink: 0; min-height: 24px;
+            display: flex; align-items: center; letter-spacing: 0.02em;
+            border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
         }
 
         /* ── EMPTY STATE ── */
-        .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; opacity:0.4; font-weight:600; font-size:0.9rem; }
+        .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; opacity:0.35; font-weight:400; font-size:0.88rem; }
 
-        /* ── SETTINGS PANEL ── */
+        /* ── SETTINGS PANEL — W11 flyout style ── */
         .settings-backdrop {
             display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.65); z-index: 1999;
-            opacity: 0; transition: opacity 0.2s;
-            backdrop-filter: blur(3px);
+            background: rgba(0,0,0,0.4); z-index: 1999;
+            opacity: 0; transition: opacity 0.15s;
+            backdrop-filter: blur(2px);
         }
         .settings-backdrop.show { display: block; opacity: 1; }
 
         .settings-menu {
             display: none; position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: var(--surface);
-            border-radius: 16px 16px 0 0;
-            border: 1px solid var(--border);
-            border-bottom: none;
-            z-index: 2000; max-height: 88vh;
-            overflow: hidden;
-            box-shadow: 0 -8px 40px rgba(0,0,0,0.5);
+            background: color-mix(in srgb, var(--surface) 95%, transparent);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-radius: 8px 8px 0 0;
+            border: 1px solid var(--border); border-bottom: none;
+            z-index: 2000; max-height: 88vh; overflow: hidden;
+            box-shadow: 0 -4px 32px rgba(0,0,0,0.25);
             transform: translateY(100%);
-            transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
+            transition: transform 0.22s cubic-bezier(0.32,0.72,0,1);
             display: flex; flex-direction: column;
         }
         @media (min-width: 600px) {
             .settings-menu {
                 bottom: auto; left: auto;
-                top: calc(var(--header-height) + var(--safe-top) + 8px);
-                right: clamp(12px,4%,24px);
+                top: calc(var(--header-height) + var(--safe-top) + 6px);
+                right: clamp(10px,3%,20px);
                 border-radius: 8px; border: 1px solid var(--border);
-                width: min(360px, 92vw); max-height: 82vh;
-                transform: translateY(-6px) scale(0.98);
+                width: min(340px, 92vw); max-height: 82vh;
+                transform: translateY(-4px) scale(0.98);
                 opacity: 0;
-                transition: transform 0.18s ease, opacity 0.18s ease;
+                transition: transform 0.15s ease, opacity 0.15s ease;
                 display: flex; flex-direction: column;
             }
             .settings-menu.show { transform: translateY(0) scale(1); opacity: 1; }
@@ -480,39 +426,36 @@
         .settings-menu.show { display: flex; transform: translateY(0); opacity: 1; }
 
         .sheet-handle {
-            width: 32px; height: 3px; background: var(--border);
-            border-radius: 2px; margin: 10px auto 0; flex-shrink: 0;
+            width: 28px; height: 3px; background: var(--border);
+            border-radius: 2px; margin: 8px auto 0; flex-shrink: 0;
         }
         @media (min-width: 600px) { .sheet-handle { display: none; } }
 
         /* Settings header */
-        .settings-header { padding: 12px 14px 0; flex-shrink: 0; }
+        .settings-header { padding: 10px 14px 0; flex-shrink: 0; }
         .settings-title {
-            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 0.12em; opacity: 0.35; margin-bottom: 8px;
+            font-size: 0.62rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; opacity: 0.4; margin-bottom: 8px;
         }
-        .settings-tabs {
-            display: flex; gap: 0;
-            border-bottom: 1px solid var(--border);
-        }
+        .settings-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
         .settings-tab {
             background: none; border: none; color: var(--text-muted);
-            font-family: inherit; font-weight: 600; font-size: 0.78rem;
-            padding: 8px 12px 9px; cursor: pointer;
+            font-family: inherit; font-weight: 400; font-size: 0.78rem;
+            padding: 7px 12px 8px; cursor: pointer;
             border-bottom: 2px solid transparent;
-            transition: color 0.12s, border-color 0.12s;
+            transition: color 0.1s, border-color 0.1s;
             position: relative; bottom: -1px;
             white-space: nowrap; border-radius: 0;
         }
-        .settings-tab:hover { color: var(--text); }
-        .settings-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+        .settings-tab:hover { color: var(--text); background: color-mix(in srgb, var(--text) 5%, transparent); }
+        .settings-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 
         /* Settings body */
         .settings-body {
             flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-            padding: 14px 14px calc(14px + var(--safe-bottom));
+            padding: 12px 14px calc(12px + var(--safe-bottom));
         }
-        .settings-body::-webkit-scrollbar { width: 3px; }
+        .settings-body::-webkit-scrollbar { width: 2px; }
         .settings-body::-webkit-scrollbar-track { background: transparent; }
         .settings-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
@@ -522,199 +465,194 @@
         /* Settings rows */
         .s-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0; gap: 12px;
-            border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+            padding: 9px 0; gap: 12px;
+            border-bottom: 1px solid var(--border);
         }
         .s-row:last-child { border-bottom: none; }
-        .s-label { font-size: 0.83rem; font-weight: 600; }
-        .s-sublabel { font-size: 0.68rem; opacity: 0.45; font-weight: 400; margin-top: 2px; }
+        .s-label { font-size: 0.82rem; font-weight: 400; }
+        .s-sublabel { font-size: 0.67rem; opacity: 0.45; font-weight: 400; margin-top: 2px; }
 
         /* Section headings */
         .s-section-title {
-            font-size: 0.62rem; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 0.12em; color: var(--text-muted);
-            margin: 18px 0 8px; opacity: 1;
-            padding-bottom: 5px;
-            border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+            font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-muted);
+            margin: 16px 0 6px; opacity: 1;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
         }
         .s-section-title:first-child { margin-top: 0; }
 
         /* Inputs */
         input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: var(--accent); }
-        input[type="color"] { width: 36px; height: 28px; border: none; border-radius: 6px; cursor: pointer; padding: 2px; background: transparent; flex-shrink: 0; }
+        input[type="color"] { width: 34px; height: 26px; border: none; border-radius: 4px; cursor: pointer; padding: 2px; background: transparent; flex-shrink: 0; }
 
-        /* Buttons */
+        /* W11 command buttons */
         .s-btn {
-            background: var(--surface2); color: var(--text);
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            color: var(--text);
             border: 1px solid var(--border);
-            padding: 5px 12px; border-radius: 4px; cursor: pointer;
-            font-size: 0.72rem; font-weight: 700; font-family: inherit;
-            min-height: 30px; white-space: nowrap;
-            transition: border-color 0.12s, background 0.12s;
+            padding: 4px 12px; border-radius: var(--radius-sm); cursor: pointer;
+            font-size: 0.72rem; font-weight: 400; font-family: inherit;
+            min-height: 28px; white-space: nowrap;
+            transition: background 0.1s, border-color 0.1s;
         }
-        .s-btn:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface2)); }
+        .s-btn:hover { background: color-mix(in srgb, var(--text) 10%, transparent); border-color: color-mix(in srgb, var(--border) 150%, transparent); }
         .s-btn:active { opacity: 0.7; }
-        .s-btn.danger { background: rgba(255,68,68,0.1); border-color: rgba(255,68,68,0.25); color: #ff6b6b; }
-        .s-btn.danger:hover { border-color: #ff4444; background: rgba(255,68,68,0.18); }
+        .s-btn.danger { background: rgba(196,43,28,0.1); border-color: rgba(196,43,28,0.25); color: #c42b1c; }
+        .s-btn.danger:hover { background: rgba(196,43,28,0.16); border-color: rgba(196,43,28,0.5); }
         .s-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-        .s-btn.primary:hover { opacity: 0.88; }
+        .s-btn.primary:hover { background: var(--accent2); border-color: var(--accent2); }
 
         .accent-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
         /* Theme swatches */
-        .theme-picker { display: flex; gap: 6px; flex-wrap: wrap; padding: 4px 0 2px; }
+        .theme-picker { display: flex; gap: 5px; flex-wrap: wrap; padding: 4px 0 2px; }
         .theme-swatch {
-            width: 32px; height: 32px; border-radius: 6px;
+            width: 30px; height: 30px; border-radius: 4px;
             border: 2px solid transparent; cursor: pointer; position: relative;
-            flex-shrink: 0; transition: border-color 0.12s, transform 0.12s; outline: none;
+            flex-shrink: 0; transition: border-color 0.1s, transform 0.1s; outline: none;
         }
-        .theme-swatch:hover  { transform: scale(1.08); }
+        .theme-swatch:hover  { transform: scale(1.06); }
         .theme-swatch:active { transform: scale(0.94); }
         .theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-        .swatch-midnight { background: linear-gradient(135deg,#1a1d2e 50%,#252840 100%); }
-        .swatch-dark     { background: linear-gradient(135deg,#0d0e12 50%,#1e2028 100%); }
+        .swatch-midnight { background: linear-gradient(135deg,#202020 50%,#2c2c2c 100%); }
+        .swatch-dark     { background: linear-gradient(135deg,#202020 50%,#2c2c2c 100%); }
         .swatch-amoled   { background: #000; }
-        .swatch-slate    { background: linear-gradient(135deg,#2a2d38 50%,#33374a 100%); }
-        .swatch-light    { background: linear-gradient(135deg,#f0f2f8 50%,#fff 100%); border-color: var(--border); }
-        .swatch-system   { background: linear-gradient(135deg,#1a1d2e 0%,#1a1d2e 50%,#f0f2f8 50%,#f0f2f8 100%); }
-        .swatch-system::after {
-            content: "⟳"; position: absolute; inset: 0;
-            display: grid; place-items: center; font-size: 1rem; color: var(--accent);
-        }
+        .swatch-slate    { background: linear-gradient(135deg,#1e1e2e 50%,#2a2a3c 100%); }
+        .swatch-light    { background: linear-gradient(135deg,#f3f3f3 50%,#ffffff 100%); border-color: var(--border); }
+        .swatch-system   { background: linear-gradient(135deg,#202020 0%,#202020 50%,#f3f3f3 50%,#f3f3f3 100%); }
+        .swatch-system::after { content: "⟳"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 1rem; color: var(--accent); }
 
         /* Font picker */
-        .font-list { display: flex; flex-direction: column; gap: 4px; }
+        .font-list { display: flex; flex-direction: column; gap: 3px; }
         .font-option {
-            background: var(--surface2); border: 1.5px solid var(--border);
-            border-radius: 10px; padding: 10px 14px;
-            cursor: pointer; transition: border-color 0.15s;
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 8px 12px;
+            cursor: pointer; transition: border-color 0.1s, background 0.1s;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .font-option:hover { border-color: var(--accent); }
-        .font-option.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface2)); }
-        .font-option-name { font-size: 0.9rem; font-weight: 700; }
-        .font-option-preview { font-size: 0.72rem; opacity: 0.5; }
+        .font-option:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, var(--surface2)); }
+        .font-option.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface2)); }
+        .font-option-name { font-size: 0.88rem; font-weight: 400; }
+        .font-option-preview { font-size: 0.7rem; opacity: 0.45; }
 
         /* About panel */
-        .about-hero {
-            text-align: center; padding: 8px 0 16px;
-            border-bottom: 1px solid var(--border); margin-bottom: 14px;
-        }
-        .about-hero img { height: 36px; object-fit: contain; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
-        .about-version { font-size: 0.65rem; opacity: 0.4; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
-        .about-text { font-size: 0.82rem; line-height: 1.6; opacity: 0.8; margin-bottom: 14px; }
-        .contributor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+        .about-hero { text-align: center; padding: 6px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+        .about-hero img { height: 32px; object-fit: contain; margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
+        .about-version { font-size: 0.62rem; opacity: 0.4; font-weight: 400; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+        .about-text { font-size: 0.8rem; line-height: 1.6; opacity: 0.75; margin-bottom: 12px; font-weight: 400; }
+        .contributor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 12px; }
         .contributor-chip {
-            background: var(--surface2); border: 1.5px solid var(--border);
-            border-radius: 10px; padding: 8px 12px;
-            font-size: 0.78rem; font-weight: 700;
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 7px 10px;
+            font-size: 0.76rem; font-weight: 400;
         }
-        .contributor-chip .role { font-size: 0.65rem; opacity: 0.5; font-weight: 600; display: block; margin-top: 1px; }
+        .contributor-chip .role { font-size: 0.63rem; opacity: 0.45; font-weight: 400; display: block; margin-top: 1px; }
         .mirror-btn {
             display: flex; align-items: center; justify-content: space-between;
-            background: var(--surface2); border: 1.5px solid var(--border);
-            border-radius: 10px; padding: 10px 14px; text-decoration: none;
-            color: var(--text); font-weight: 700; font-size: 0.82rem;
-            margin-bottom: 6px; transition: border-color 0.15s;
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 9px 12px; text-decoration: none;
+            color: var(--text); font-weight: 400; font-size: 0.8rem;
+            margin-bottom: 5px; transition: border-color 0.1s, background 0.1s;
         }
-        .mirror-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .mirror-btn .arrow { opacity: 0.4; font-size: 0.8rem; }
-        .mirror-disclaimer { font-size: 0.65rem; opacity: 0.45; margin-top: 3px; }
+        .mirror-btn:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+        .mirror-btn .arrow { opacity: 0.4; font-size: 0.75rem; }
+        .mirror-disclaimer { font-size: 0.63rem; opacity: 0.4; margin-top: 3px; }
+
+        /* Redeem */
+        .redeem-box { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+        .redeem-input {
+            flex: 1; padding: 5px 10px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            color: var(--text); font-family: inherit; font-size: 0.78rem; outline: none;
+            transition: border-color 0.1s;
+        }
+        .redeem-input:focus { border-color: var(--accent); }
+        .redeem-input::placeholder { color: var(--text-muted); }
+        .redeem-msg { font-size: 0.72rem; margin-top: 4px; min-height: 1.2em; }
+        .redeem-msg.error   { color: #c42b1c; }
+        .redeem-msg.success { color: #107c10; }
+        .redeem-msg.info    { color: var(--accent); }
 
         /* Tutorial theme picker */
-        .tutorial-theme-picker { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 12px 0 4px; }
+        .tutorial-theme-picker { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 0 4px; }
         .tutorial-theme-swatch {
-            width: 40px; height: 40px; border-radius: 10px;
+            width: 36px; height: 36px; border-radius: 6px;
             border: 2px solid transparent; cursor: pointer;
-            transition: border-color 0.15s, transform 0.15s; position: relative;
+            transition: border-color 0.1s, transform 0.1s; position: relative;
         }
-        .tutorial-theme-swatch:hover { transform: scale(1.1); }
-        .tutorial-theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
-
-
+        .tutorial-theme-swatch:hover { transform: scale(1.08); }
+        .tutorial-theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 
         /* ── ANNOUNCEMENT BANNER ── */
         #site-banner {
-            display: none;
-            width: 100%;
-            padding: 9px clamp(14px,4%,28px);
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 0.01em;
-            position: relative;
-            z-index: 999;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: none; width: 100%;
+            padding: 7px clamp(12px,3%,24px);
+            font-size: 0.78rem; font-weight: 400; text-align: center;
+            letter-spacing: 0.01em; position: relative; z-index: 999;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
         #site-banner a { color: inherit; text-decoration: underline; }
         #site-banner-close {
-            position: absolute; right: 12px; top: 50%;
-            transform: translateY(-50%);
-            background: none; border: none;
-            color: inherit; cursor: pointer;
-            opacity: 0.6; font-size: 1rem;
-            line-height: 1; padding: 4px;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: inherit; cursor: pointer;
+            opacity: 0.5; font-size: 0.9rem; line-height: 1; padding: 4px;
         }
         #site-banner-close:hover { opacity: 1; }
 
         /* ── VISITOR COUNTER ── */
         #visitor-counter {
-            display: none;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            opacity: 0.5;
-            white-space: nowrap;
-            flex-shrink: 0;
+            display: none; align-items: center; gap: 5px;
+            font-size: 0.68rem; font-weight: 400; opacity: 0.45;
+            white-space: nowrap; flex-shrink: 0;
         }
         #visitor-counter .vc-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: #4ade80;
-            box-shadow: 0 0 5px #4ade80;
-            flex-shrink: 0;
+            width: 5px; height: 5px; border-radius: 50%;
+            background: #107c10; box-shadow: 0 0 4px #107c10; flex-shrink: 0;
         }
-
-        /* ── LIQUID GLASS ── */
 
         /* ── FONT WEIGHT OVERRIDES ── */
         [data-font-weight="light"]   body { --font-weight-normal:300; --font-weight-bold:400; --font-weight-black:600; }
         [data-font-weight="regular"] body { --font-weight-normal:400; --font-weight-bold:600; --font-weight-black:700; }
-        [data-font-weight="bold"]    body { --font-weight-normal:500; --font-weight-bold:800; --font-weight-black:900; }
-        /* Apply weight vars throughout */
+        [data-font-weight="bold"]    body { --font-weight-normal:500; --font-weight-bold:700; --font-weight-black:800; }
         body { font-weight: var(--font-weight-normal); }
         .game-title, .shelf-label, .s-label, .shelf-title, .filter-btn, .settings-tab { font-weight: var(--font-weight-bold) !important; }
         .game-title, .shelf-title, .settings-title, h4 { font-weight: var(--font-weight-black) !important; }
 
         /* Font weight selector */
-        .weight-pills { display: flex; gap: 6px; margin-top: 4px; }
+        .weight-pills { display: flex; gap: 5px; margin-top: 4px; }
         .weight-pill {
-            flex: 1; padding: 7px 4px; border-radius: var(--radius-sm);
-            border: 1.5px solid var(--border); background: var(--surface2);
-            cursor: pointer; font-family: inherit; font-size: 0.75rem;
-            color: var(--text); transition: border-color 0.15s, background 0.15s;
-            text-align: center; font-weight: 600;
+            flex: 1; padding: 6px 4px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            cursor: pointer; font-family: inherit; font-size: 0.73rem;
+            color: var(--text); transition: border-color 0.1s, background 0.1s;
+            text-align: center; font-weight: 400;
         }
         .weight-pill:hover { border-color: var(--accent); }
-        .weight-pill.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--surface2)); color: var(--accent); }
+        .weight-pill.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface2)); color: var(--accent); }
 
         /* Tutorial overlay */
         .tutorial-overlay { display:none; position:fixed; inset:0; z-index:9000; pointer-events:none; }
         .tutorial-overlay.active { display:block; }
-        .tutorial-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.75); pointer-events:all; }
-        .tutorial-highlight { position:absolute; border-radius:var(--radius); box-shadow:0 0 0 9999px rgba(0,0,0,0.75), 0 0 0 3px var(--accent); pointer-events:none; transition:all 0.35s cubic-bezier(0.4,0,0.2,1); z-index:9001; opacity:0; }
-        .tutorial-card { position:absolute; background:var(--surface); border:1.5px solid var(--accent); border-radius:var(--radius); padding:18px 20px; width:min(300px,88vw); z-index:9002; pointer-events:all; box-shadow:0 8px 40px rgba(0,0,0,0.5); }
-        .tutorial-step-label { font-size:0.62rem; font-weight:900; text-transform:uppercase; color:var(--accent); margin-bottom:5px; letter-spacing:1px; }
-        .tutorial-title { font-size:1rem; font-weight:900; margin-bottom:7px; }
-        .tutorial-body { font-size:0.82rem; line-height:1.55; opacity:0.8; margin-bottom:14px; }
+        .tutorial-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.6); pointer-events:all; }
+        .tutorial-highlight { position:absolute; border-radius:var(--radius); box-shadow:0 0 0 9999px rgba(0,0,0,0.6), 0 0 0 2px var(--accent); pointer-events:none; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); z-index:9001; opacity:0; }
+        .tutorial-card { position:absolute; background:var(--surface); border:1px solid var(--accent); border-radius:var(--radius); padding:16px 18px; width:min(280px,88vw); z-index:9002; pointer-events:all; box-shadow:0 8px 32px rgba(0,0,0,0.35); backdrop-filter:blur(20px); }
+        .tutorial-step-label { font-size:0.6rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; letter-spacing:1px; }
+        .tutorial-title { font-size:0.95rem; font-weight:600; margin-bottom:6px; }
+        .tutorial-body { font-size:0.8rem; line-height:1.55; opacity:0.75; margin-bottom:12px; font-weight:400; }
         .tutorial-actions { display:flex; justify-content:space-between; align-items:center; gap:10px; }
-        .tutorial-dots { display:flex; gap:5px; align-items:center; }
-        .tutorial-dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:background 0.2s,transform 0.2s; }
+        .tutorial-dots { display:flex; gap:4px; align-items:center; }
+        .tutorial-dot { width:5px; height:5px; border-radius:50%; background:var(--border); transition:background 0.15s,transform 0.15s; }
         .tutorial-dot.active { background:var(--accent); transform:scale(1.3); }
-        .tutorial-btn-row { display:flex; gap:8px; }
-        .tutorial-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 16px; font-weight:800; font-size:0.8rem; font-family:inherit; cursor:pointer; min-height:34px; }
-        .tutorial-btn.secondary { background:transparent; color:var(--text); border:1.5px solid var(--border); opacity:0.7; }
+        .tutorial-btn-row { display:flex; gap:6px; }
+        .tutorial-btn { background:var(--accent); color:#fff; border:none; border-radius:var(--radius-sm); padding:6px 14px; font-weight:600; font-size:0.78rem; font-family:inherit; cursor:pointer; min-height:30px; transition:background 0.1s; }
+        .tutorial-btn:hover { background:var(--accent2); }
+        .tutorial-btn.secondary { background:transparent; color:var(--text); border:1px solid var(--border); opacity:0.7; }
         .tutorial-btn:active { opacity:0.7; }
     </style>
 </head>
@@ -809,7 +747,7 @@
                 <div><div class="s-label">Accent Color</div><div class="s-sublabel">Highlight color</div></div>
                 <div class="accent-controls">
                     <button class="s-btn" onclick="resetAccent()">Reset</button>
-                    <input type="color" id="accentPicker" value="#0066FF" oninput="updateUI()">
+                    <input type="color" id="accentPicker" value="#0078D4" oninput="updateUI()">
                 </div>
             </div>
 
@@ -923,7 +861,7 @@
 
     // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
     function loadInBlank(url, title, thumb) {
-        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#0066FF';
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#0078D4';
         if (url.includes('youtube.com') || url.includes('youtu.be')) {
             window.open(url, '_blank');
             return;
@@ -931,7 +869,11 @@
         const displayTitle = title || 'Powerhouse';
         const gameLogo     = thumb || '';
         const tab = window.open('about:blank', '_blank');
-        if (!tab) return;
+        if (!tab) {
+            // Popup blocked — fall back to direct navigation
+            window.open(url, '_blank');
+            return;
+        }
 
         const ph_html = [
             '<!DOCTYPE html>',
@@ -996,9 +938,10 @@
             'var settled=false;',
             'function showBlocked(){if(settled)return;settled=true;loading.style.display="none";blocked.style.display="flex";frame.style.display="none";}',
             'function showFrame(){if(settled)return;settled=true;loading.style.display="none";}',
-            'frame.onload=function(){try{var d=frame.contentDocument||frame.contentWindow.document;if(!d||d.URL==="about:blank"||(d.body&&d.body.innerHTML.trim()===""))showBlocked();else showFrame();}catch(e){showFrame();}};',
+            'var loadCount=0;',
+            'frame.onload=function(){loadCount++;try{var d=frame.contentDocument||frame.contentWindow.document;if(!d)return;if(loadCount===1&&(d.URL==="about:blank"||d.URL===""))return;if(d.body&&d.body.innerHTML.trim()==="")showBlocked();else showFrame();}catch(e){showFrame();}};',
             'frame.onerror=function(){showBlocked();};',
-            'setTimeout(function(){if(!settled)showBlocked();},6000);',
+            'setTimeout(function(){if(!settled)showBlocked();},12000);',
             'var barVisible=true;',
             'function toggleBar(){barVisible=!barVisible;document.getElementById("bar").classList.toggle("hidden",!barVisible);document.getElementById("frame-wrap").classList.toggle("bar-hidden",!barVisible);var p=document.getElementById("toggle-bar");p.classList.toggle("bar-hidden",!barVisible);p.innerHTML=barVisible?"Hide":"Show";}',
             '<\/script>',
@@ -1022,18 +965,693 @@
         else window.open(url, '_blank');
     }
 
+    // ── EMBEDDED DATA (no fetch needed) ──────────────────────────────────────
+    const EMBEDDED_GAMES = [
+  {
+    "title": "SoFlo Wheelie Life",
+    "category": "Simulator",
+    "desc": "Pop wheelies and navigate through a neon SoFlo inspired world.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQetoevXJFXRoM1Z2hAes9LxTtJNqbp_b8RvQ&s",
+    "link": "https://scratch.mit.edu/projects/1290209730/fullscreen/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Brgr Duty",
+    "category": "Arcade",
+    "desc": "In a world infested by living burger monsters, a simple sauce bottle must take drastic measures to ensure its survival.",
+    "thumb": "https://cdn2.scratch.mit.edu/get_image/project/1215838682_282x210.png",
+    "link": "https://scratch.mit.edu/projects/1215838682/fullscreen/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "VENDS",
+    "category": "Arcade",
+    "desc": "A game inspired by Roblox natural disaster survival games, but 2D and in scratch!",
+    "thumb": "https://cdn2.scratch.mit.edu/get_image/project/1296814899_282x210.png",
+    "link": "https://scratch.mit.edu/projects/1296814899/fullscreen/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "CrazyGames",
+    "category": "Hub",
+    "desc": "CrazyGames features the latest and best free online games. Just load up your favorite games instantly and enjoy.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnX447YDT0ztZ4GMlUiXKoaj3E68j3hnCxg&s",
+    "link": "https://crazygamesunblocked.net/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Thorns & Balloons",
+    "category": "Puzzle",
+    "desc": "Carefully aim your thorns to pop all the balloons in this physics puzzle.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSir1FUeE9ing_c6KHg3n7SMIj3OdTdfbAjQ&s",
+    "link": "https://learn-duck.firebaseapp.com/class/thorns-and-ballons",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Neal.Fun",
+    "category": "Hub",
+    "desc": "Games and stuff by Neal.",
+    "thumb": "https://res.cloudinary.com/ybmedia/image/upload/c_crop,e_improve,h_649,w_1154,x_23,y_0/c_fill,f_auto,h_1215,q_auto,w_2160/v1/m/e/e/eeb8778cf3826ffb64f9e8d77fa84512062a437c/image-86-1-scaled-e1744380714382.jpg",
+    "link": "https://neal.fun",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Space Waves",
+    "category": "Arcade",
+    "desc": "Ride the rhythmic waves in space. Simple controls, difficult mastery.",
+    "thumb": "https://i.ytimg.com/vi/0L885f9nUI8/maxresdefault.jpg",
+    "link": "https://space-waves.co/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Golf Orbit",
+    "category": "Simulator",
+    "desc": "Launch your golf ball into space in this satisfying arcade sports game.",
+    "thumb": "https://i.ytimg.com/vi/RS43Yz9sSC0/maxresdefault.jpg",
+    "link": "https://gamesnacks.com/games/7e0r297sgk0j0",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Watch Documentaries Games",
+    "category": "Hub",
+    "desc": "Real and good games on a educational website.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR9BysHlwclKDEoaCcJcLJ6rxjx-MxWQaQ8A&s",
+    "link": "https://watchdocumentaries.com/games/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Lake Boys Productions",
+    "category": "Media",
+    "desc": "Ft. Grandpa Joey, Stein, and Big M.",
+    "thumb": "https://yt3.googleusercontent.com/a1qglvAjzdFooHEfqEZ0c9WYGr-T1KYVCLxFcskwoLtdQwb199sJw9fH4b-qcQxAjml8zJfBrA=s900-c-k-c0x00ffffff-no-rj",
+    "link": "https://www.youtube.com/@TheLakeBoysProductions",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Tiny Fishing",
+    "category": "Arcade",
+    "desc": "Tiny Fishing is a relaxing and fun fishing game. Cast your line and reel in fish!",
+    "thumb": "https://www.coolmathgames.com/sites/default/files/TinyFishing_OG-logo.jpg",
+    "link": "https://tinyfishingame.com/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "The Survival",
+    "category": "Media",
+    "desc": "Explore survival builds and creative construction techniques.",
+    "thumb": "https://yt3.googleusercontent.com/jBm6Zb6THFWnfdM2Ih0GfzivYF9mJBj4gJHeE-LsnOoJl3rvVwoZc1asIxIusHRbPl8-ihWPbw=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
+    "link": "https://www.youtube.com/@TheSurvival",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Teqiyokid",
+    "category": "Media",
+    "desc": "Entertaining and creative video content from Teqiyokid.",
+    "thumb": "https://i.ytimg.com/vi/m0QRlOSZFxY/hqdefault.jpg?sqp=-oaymwFBCNACELwBSFryq4qpAzMIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLC1kIoMuQCTGIUC9sMdDHR4H2vkIw",
+    "link": "https://www.youtube.com/@Teqiyokid",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "ChatGPT",
+    "category": "Utility",
+    "desc": "Interact with the state-of-the-art AI for coding, writing, and brainstorming.",
+    "thumb": "https://www.internetmatters.org/wp-content/uploads/2025/06/Chat-GPT-logo.webp",
+    "link": "https://chatgpt.com/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Gemini",
+    "category": "Utility",
+    "desc": "Google's powerful AI model for creative and technical assistance.",
+    "thumb": "https://cdn.mos.cms.futurecdn.net/v2/t:0,l:260,cw:1576,ch:1182,q:80,w:1576/gHfBJ6FBHKnLbW36hEDvgV.png",
+    "link": "https://gemini.google.com/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Fake Skyward",
+    "category": "Utility",
+    "desc": "A creative UI recreation for educational purposes.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiaJcq89sjkx3d51DNSQENETxF-XRkS1JMFQ&s",
+    "link": "https://tinyurl.com/skyward-hvs-v1",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Super Lemon Basket",
+    "category": "Arcade",
+    "desc": "A goofy physics-based basketball game featuring a very bouncy lemon.",
+    "thumb": "https://www.coolmathgames.com/sites/default/files/super-lemon-basket.png",
+    "link": "https://www.coolmathgames.com/0-super-lemon-basket",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Eaglercraft",
+    "category": "Arcade",
+    "desc": "Play Minecraft 1.8.8 directly in your browser with full multiplayer support.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUJrDtymSXQF87It_b6EzIm1njr9MYmJPxmQ&s",
+    "link": "https://duckmath.freetls.fastly.net/class/eagle-craft",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Ai or Not?",
+    "category": "Utility",
+    "desc": "Test your skills at distinguishing between AI-generated and human images.",
+    "thumb": "https://equivant-court.com/wp-content/uploads/2024/10/what-ai-is-or-isnt-blog-image.png",
+    "link": "https://sightengine.com/ai-or-not?version=2024Q3",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "What Beats Rock",
+    "category": "Arcade",
+    "desc": "An endless game of logic where you must name something that beats the last object.",
+    "thumb": "https://whatbeatsrock.io/data/image/options/what-beats-rock-banner.jpg",
+    "link": "https://www.whatbeatsrock.com/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Bringus Studios",
+    "category": "Media",
+    "desc": "Tech exploration and fascinating experiments with optical media.",
+    "thumb": "https://yt3.googleusercontent.com/-7Piy98dHWRxfq_L7HGbHjwtztsEk-Jea4CQjbuKupyQnHBwIv8W-AbkNBNgM_l1rfYGXf4p=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
+    "link": "https://www.youtube.com/@BringusStudios/featured",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "M&Jmetal",
+    "category": "Media",
+    "desc": "Awesome metal-working and creative engineering projects.",
+    "thumb": "https://yt3.googleusercontent.com/HbSiwNm1OwCPTcsMHegI1eVM_PYFmqmWiOSDOohtgbQ6LpxW8GS4J8dhZD6keyfKKI29jSpKCas=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
+    "link": "https://www.youtube.com/@martyandjamie",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Google Space",
+    "category": "Arcade",
+    "desc": "The classic Zero-G Google search interface experiment by Mr.Doob.",
+    "thumb": "https://lh6.ggpht.com/qMSDMY5_zyRjerhq4AIrSn5R4Ar5Rq4nV-zN5HrJP3bEgH5C228FlbkyViBTTPwSWQPFKRthxiWX8YCOtymNihualOObLBxI9n3N",
+    "link": "https://mrdoob.com/projects/chromeexperiments/google-space/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "MS Paint",
+    "category": "Utility",
+    "desc": "MS Paint remake by Isaiah Odhner.",
+    "thumb": "https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/MSFT-Colorful-flower-in-the-Paint-app:VP1-539x349",
+    "link": "https://jspaint.app/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Cookie Clicker",
+    "category": "Arcade",
+    "desc": "The ultimate idle game. Bake an astronomical number of cookies.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0MEhmA4C4wPGi_KTGQjMMF0cyqZ346K7xQ&s",
+    "link": "https://orteil.dashnet.org/cookieclicker/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Sound Buttons",
+    "category": "Utility",
+    "desc": "Find the best funny sound buttons to play and download.",
+    "thumb": "https://play-lh.googleusercontent.com/6BSIx2y6WflHgfJoR63nxCNpKe22dmh5sutzai2B-5V0p91z08EA_RYnK6Eak7S_ow=w3840-h2160-rw",
+    "link": "https://soundbuttonsworld.com/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Google Doodle Games",
+    "category": "Arcade",
+    "desc": "A massive collection of interactive Google Doodles, including Pac-Man, Cricket, and more.",
+    "thumb": "https://images.netcomlearning.com/cms/images/google-baseball-doodle.jpg",
+    "link": "https://www.google.com/search?q=google+doodle+games",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Sandboxels",
+    "category": "Simulator",
+    "desc": "A falling sand physics simulator with over 500 elements.",
+    "thumb": "https://neal.fun/link-images/sandboxels.svg",
+    "link": "https://neal.fun/sandboxels/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "I'm Not a Robot",
+    "category": "Puzzle",
+    "desc": "Solve increasingly difficult CAPTCHAs to prove your humanity.",
+    "thumb": "https://neal.fun/link-images/not-a-robot.svg",
+    "link": "https://neal.fun/not-a-robot/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Stimulation Clicker",
+    "category": "Arcade",
+    "desc": "An idle clicker designed to provide maximum sensory satisfaction.",
+    "thumb": "https://neal.fun/link-images/stimulation-clicker.svg",
+    "link": "https://neal.fun/stimulation-clicker/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Infinite Craft",
+    "category": "Puzzle",
+    "desc": "An elemental crafting game with near-infinite combinations.",
+    "thumb": "https://neal.fun/link-images/infinite-craft.svg",
+    "link": "https://neal.fun/infinite-craft/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "The Password Game",
+    "category": "Puzzle",
+    "desc": "Follow increasingly absurd rules to create the ultimate password.",
+    "thumb": "https://neal.fun/link-images/password-game.svg",
+    "link": "https://neal.fun/password-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Draw a Perfect Circle",
+    "category": "Arcade",
+    "desc": "Test your steady hand and try to draw a perfect circle.",
+    "thumb": "https://neal.fun/link-images/perfect-circle.svg",
+    "link": "https://neal.fun/perfect-circle/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Absurd Trolley Problems",
+    "category": "Puzzle",
+    "desc": "Make difficult choices in increasingly ridiculous trolley scenarios.",
+    "thumb": "https://neal.fun/link-images/absurd-trolley-problems.svg",
+    "link": "https://neal.fun/absurd-trolley-problems/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Design the Next iPhone",
+    "category": "Simulator",
+    "desc": "Take control of Apple's design and create the future of smartphones.",
+    "thumb": "https://neal.fun/link-images/design-the-next-iphone.svg",
+    "link": "https://neal.fun/design-the-next-iphone/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Let's Settle This",
+    "category": "Arcade",
+    "desc": "Vote on the Internet's most debated questions and see where you stand.",
+    "thumb": "https://neal.fun/link-images/lets-settle-this.svg",
+    "link": "https://neal.fun/lets-settle-this/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "The Auction Game",
+    "category": "Arcade",
+    "desc": "Guess the prices of items sold at high-stakes auctions.",
+    "thumb": "https://neal.fun/link-images/auction-game.svg",
+    "link": "https://neal.fun/auction-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Draw Logos from Memory",
+    "category": "Arcade",
+    "desc": "How well do you remember the world's most famous logos?",
+    "thumb": "https://neal.fun/link-images/logos-from-memory.svg",
+    "link": "https://neal.fun/logos-from-memory/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Asteroid Launcher",
+    "category": "Simulator",
+    "desc": "Design your own asteroid and simulate its impact on Earth.",
+    "thumb": "https://neal.fun/link-images/asteroid-launcher.svg",
+    "link": "https://neal.fun/asteroid-launcher/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Survival Race",
+    "category": "Racing",
+    "desc": "Race through dangerous terrain and survive the obstacles.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/survival-race-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/survival-race-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Snow Rider 3D",
+    "category": "Racing",
+    "desc": "Ride your sleigh through a snowy mountain path in 3D.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/snow-rider-3d-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/snow-rider-3d-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "PolyTrack",
+    "category": "Racing",
+    "desc": "Low-poly racing action with high-speed tracks.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/polytrack-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/polytrack-game/?p=0",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "DriveMad",
+    "category": "Racing",
+    "desc": "Extreme driving challenges where every level gets crazier.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/drive-mad-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/drive-mad-game/?p=0",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Slope",
+    "category": "Arcade",
+    "desc": "A fast-paced ball rolling game with endless geometric slopes.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/slope-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/slope-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Slope 2",
+    "category": "Arcade",
+    "desc": "The thrilling sequel to Slope with even more speed and challenges.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/slope-2-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/slope-2-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Slope 3",
+    "category": "Arcade",
+    "desc": "Master the slopes in this third installment of the gravity-defying series.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/slope-3-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/slope-3-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Moto X3M",
+    "category": "Racing",
+    "desc": "Stunt-based motocross racing with over 20 intense levels.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/moto-x3m-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/moto-x3m-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Highway Traffic",
+    "category": "Racing",
+    "desc": "Avoid traffic and race at high speeds on the open highway.",
+    "thumb": "https://watchdocumentaries.com/wp-content/uploads/highway-traffic-game-360x203.jpg",
+    "link": "https://watchdocumentaries.com/highway-traffic-game/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "GeoFS",
+    "category": "Simulator",
+    "desc": "A multiplayer flight simulator with a global environment generated from satellite images and digital geographic data.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2rCMHiXjK2vD4e6XL-uDV2bpWaYSfZLZiw&s",
+    "link": "https://www.geo-fs.com/geofs.php",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Dune",
+    "category": "Arcade",
+    "desc": "A fast-paced survival game where you must stay above the line while navigating the desert dunes.",
+    "thumb": "https://cdn.jsdelivr.net/gh/mathlesson/mathlesson.github.io/img/dune.jpg",
+    "link": "https://learn-duck.firebaseapp.com/class/dune",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Retro Rush",
+    "category": "Racing",
+    "desc": "A fast-paced neon driving game where you dodge traffic and race against the clock.",
+    "thumb": "https://store-images.s-microsoft.com/image/apps.52831.13894313373290055.755c0d8b-3d2e-4002-92cb-11aff86c00d1.0df3019c-4752-4778-88ba-d1d7470765df?q=90&w=480&h=270",
+    "link": "https://azgames.io/retro-rush",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Ratatoing",
+    "category": "Media",
+    "desc": "The legendary animated tale of a chef rodent in Rio de Janeiro.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXIlEts_keifKOIFYwrVtS8_6SmvBNfMgdrQ&s",
+    "link": "https://www.youtube.com/watch?v=JC2dQaqRuBY",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "The Little Panda Fighter",
+    "category": "Media",
+    "desc": "A martial arts adventure featuring a panda with big dreams and even bigger challenges.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnrXzKvin0l5zRzzKASbnMjnDEHHnRVVNeg&s",
+    "link": "https://www.youtube.com/watch?v=mlSV-EeQy9M",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Life\u2019s a Jungle: Africa\u2019s Most Wanted",
+    "category": "Media",
+    "desc": "An animated adventure following a pampered dog who must learn to survive the challenges of the African safari.",
+    "thumb": "https://m.media-amazon.com/images/M/MV5BNGNmZjJmNGEtOTliNS00ZGY5LThlYTItYzE0NjcyYWI5MWNhXkEyXkFqcGc@._V1_.jpg",
+    "link": "https://www.youtube.com/watch?v=Zeo5JwLv6Js",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Finding Jesus",
+    "category": "Media",
+    "desc": "An underwater adventure following a group of marine friends as they share stories and lessons of faith.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWsIN8P9_JXAFtvBiVjkf8Ge5RnQ3OOQUJYA&s",
+    "link": "https://www.youtube.com/watch?v=P2zZEbiDnxQ",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Tetris",
+    "category": "Arcade",
+    "desc": "The iconic tile-matching puzzle game. Arrange falling blocks to clear lines and rack up a high score.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQW-AK-RBkoEJ6rhyMkZi0cEJU93LNZdbUg&s",
+    "link": "https://www.freetetris.org/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Coolmath Games",
+    "category": "Hub",
+    "desc": "The classic destination for brain-training and fun logic games.",
+    "thumb": "https://www.coolmathgames.com/themes/custom/coolmath/logo-stacked.svg",
+    "link": "https://www.coolmathgames.com",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Jelly Mario",
+    "category": "Arcade",
+    "desc": "A trippy, physics-based reimagining of Super Mario Bros where everything is made of jelly.",
+    "thumb": "https://i.ytimg.com/vi/m5nhNLva3D8/maxresdefault.jpg",
+    "link": "https://jellymar.io/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Deer Adventure",
+    "category": "Simulator",
+    "desc": "Become a deer? Sounds weird\u2014but that\u2019s exactly what Deer Adventure is all about. Jump in and take on the role of a deer roaming freely around the bustling, open-world city and do whatever you want, of course, as a deer.",
+    "thumb": "https://deeradventure.io/data/image/options/deer-adventure-banner.jpg",
+    "link": "https://zapgames.io/deer-adventure",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "BoredFlix",
+    "category": "Hub",
+    "desc": "Boredflix.com is a website offering free streaming of movies and TV shows without requiring sign-up. Launched in 2025 after two years of development, it quickly received significant user traffic, logging 6.1 million visits in October 2025.",
+    "thumb": "https://play-lh.googleusercontent.com/fZNXd1jZWAkZMx10JPYBNnHWVx1eccx66QyU99NWc07LBWR9B6lq1ISnbNxKsEXd030-I1Sh4Tag7TbbeySu=w240-h480-rw",
+    "link": "https://boredflix.com/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Fmovies",
+    "category": "Hub",
+    "desc": "Just a better place for watching online movies for free!",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw0Km-r9xoHAhu2fT0eY32d7h3Pb0fkQozfg&s",
+    "link": "https://ww4.fmovies.co/26/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "Spotify",
+    "category": "Media",
+    "desc": "Listen to music, podcasts, and more on Spotify.",
+    "thumb": "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/2024-spotify-brand-assets-media-kit.jpg",
+    "link": "https://open.spotify.com/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Apple Music",
+    "category": "Media",
+    "desc": "Stream over 100 million songs, ad-free on Apple Music.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQSbl1bLb2mQjx4gAIasxURGuTvURgC4t5sw&s",
+    "link": "https://music.apple.com/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Pandora",
+    "category": "Media",
+    "desc": "Free music and podcasts, personalized for you.",
+    "thumb": "https://musicconsultant.com/site/uploads/2019/06/PandoraRebrand1-1260x840.png",
+    "link": "https://www.pandora.com/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Claude",
+    "category": "Utility",
+    "desc": "Claude is an AI assistant made by Anthropic. Ask anything, brainstorm ideas, get help with writing, coding, and more.",
+    "thumb": "https://cdn.sanity.io/images/9u514z6s/production/d1ab6e8aba08df9961ad9b46eddd00b9b48663b4-2624x1440.png",
+    "link": "https://claude.ai/",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "DeepSeek",
+    "category": "Utility",
+    "desc": "DeepSeek is a powerful AI assistant for coding, reasoning, and general questions.",
+    "thumb": "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/25848982/STKB320_DEEPSEEK_AI_CVIRGINIA_A.jpg?quality=90&strip=all&crop=0,0,100,100",
+    "link": "https://chat.deepseek.com/",
+    "verified": true,
+    "useBlank": false
+  },
+  {
+    "title": "Geommetry Dash",
+    "category": "Arcade",
+    "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It’s famous for its simple mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCd8DHW4zOb9QqjJ59t9FpV8LnEeKwIttiaw&s",
+    "link": "https://crazygamesunblocked.net/geometry-dash",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Retro Bowl",
+    "category": "Arcade",
+    "desc": "Retro Bowl is a hyper-addictive, stylized American football game that blends deep front-office management with simple, arcade-style gameplay. Designed with a charming 8-bit aesthetic, it pays homage to classic titles like Tecmo Bowl while offering modern depth.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtsZZ_dJjUPe7Id2lKsCRqFT_AlAOvb3DZag&s",
+    "link": "https://retrobowl76.io/",
+    "verified": false,
+    "useBlank": true
+  },
+  {
+    "title": "FunVideoTV",
+    "category": "Media",
+    "desc": "Addicted to the Angry Birds, thats what I am !!!",
+    "thumb": "https://yt3.googleusercontent.com/qru8manzk9XSf_AHPAxEEsF5ky94GoMj17KkLgWQTSJUfAi5zTYr44W8zI1XSpnFUfXDtTLyXaU=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj",
+    "link": "https://www.youtube.com/user/FunVideoTV",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "GeoDuels",
+    "category": "Arcade",
+    "desc": "Play GeoDuels, a competitive GeoGuessr-style multiplayer geography game with ranked duels, Street View rounds, and singleplayer practice.",
+    "thumb": "https://igebeprgtgspizprnkoz.supabase.co/storage/v1/object/public/vibe-assets/url-intake/9e213d86-8245-4581-b7e2-a3640c80a8d5/screenshots/1773777984205-0-e691340ec26d.webp",
+    "link": "https://geoduels.io/",
+    "verified": false,
+    "useBlank": true
+  },
+  {
+    "title": "Ultrakill",
+    "category": "Media",
+    "desc": "steam game yes.",
+    "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1229490/capsule_616x353.jpg?t=1774188523",
+    "link": "https://duckmath.org/class/ultrakill",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Cursor Camp",
+    "category": "Arcade",
+    "desc": "yes.",
+    "thumb": "https://neal.fun/link-images/cursor-camp.svg",
+    "link": "https://neal.fun/cursor-camp",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "TuneIn",
+    "category": "Utility",
+    "desc": "radio.",
+    "thumb": "https://store-images.s-microsoft.com/image/apps.44829.9007199266246398.fab84bd6-dd10-4a80-9137-0a0428d5234f.75f86c00-f9c7-4097-a291-20a532f66d90?h=210",
+    "link": "https://tunein.com",
+    "verified": false,
+    "useBlank": false
+  },
+  {
+    "title": "FrontWars",
+    "category": "Simulator",
+    "desc": "yes.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvng2WwNwI-ua_aN-8MrLWhrB1qzUBTgEIXQ&s",
+    "link": "https://frontwars.io/",
+    "verified": false,
+    "useBlank": true
+  },
+  {
+    "title": "Snek.io",
+    "category": "Arcade",
+    "desc": "gambling.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmMaiThJHROSKgRaj4GGQdeZ92WB3bLWx3cA&s",
+    "link": "https://snek-io.netlify.app/",
+    "verified": false,
+    "useBlank": true
+  }
+];
+    const EMBEDDED_ABOUT = "Powerhouse is a custom-built game hub full of unblocked games, and websites to annoy teachers, and easily get 5 missing ELA assignments.";
+
     async function fetchData() {
-        try {
-            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
-            games = await res.json();
-
-            const aboutRes = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/about.txt');
-            if (aboutRes.ok) document.getElementById('aboutText').innerText = await aboutRes.text();
-            updateAboutLogo();
-
-            renderFilters();
-            renderGames();
-        } catch (e) { console.error("Load failed", e); }
+        games = EMBEDDED_GAMES;
+        const aboutEl = document.getElementById('aboutText');
+        if (aboutEl) aboutEl.innerText = EMBEDDED_ABOUT;
+        updateAboutLogo();
+        renderFilters();
+        renderGames();
     }
     // async fn already returns a promise — .then() works on it
 
@@ -1324,7 +1942,78 @@
 
     async function loadCustomThemes() {
         try {
-            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/themes.txt');
+            // Use embedded themes data
+            const EMBEDDED_THEMES = [
+  {
+    "id": "ICECAVE",
+    "name": "Ice Cave",
+    "accent": "#00d2ff",
+    "image": "10.jpg",
+    "code": ["ICECAVE", "BLUECAVE"],
+    "surface": "rgba(0, 30, 60, 0.75)",
+    "surface2": "rgba(0, 45, 80, 0.8)",
+    "text": "#e0f7fa",
+    "border": "rgba(0, 210, 255, 0.35)"
+  },
+  {
+    "id": "LONDON",
+    "name": "London Aerial",
+    "accent": "#6fa8dc",
+    "image": "london.jpg",
+    "code": ["LONDON", "CITY"],
+    "surface": "rgba(44, 54, 63, 0.75)",
+    "surface2": "rgba(60, 75, 85, 0.82)",
+    "text": "#fdf5e6",
+    "border": "rgba(111, 168, 220, 0.4)"
+  },
+  {
+    "id": "MOUNTAINS",
+    "name": "Mountain Range",
+    "accent": "#8eb04a",
+    "image": "kalen-emsley-Bkci_8qcdvQ-unsplash (1).jpg",
+    "code": ["MOUNTAINS", "NATURE"],
+    "surface": "rgba(38, 50, 56, 0.72)",
+    "surface2": "rgba(55, 71, 79, 0.78)",
+    "text": "#f0f4f8",
+    "border": "rgba(142, 176, 74, 0.35)"
+  },
+  {
+    "id": "OCEANCAVE",
+    "name": "Ocean Cave",
+    "accent": "#fbc02d",
+    "image": "cave.jpg",
+    "code": ["OCEANCAVE", "WINDOWS10"],
+    "surface": "rgba(46, 33, 12, 0.78)",
+    "surface2": "rgba(63, 46, 18, 0.84)",
+    "text": "#fff9c4",
+    "border": "rgba(251, 192, 45, 0.4)"
+  },
+  {
+    "id": "SKELETON",
+    "name": "Ghost",
+    "accent": "#4caf50",
+    "image": "ghostinthemachine.jpg",
+    "code": ["GHOSTINTHEMACHINE", "PHASMOPHOBIA"],
+    "surface": "rgba(10, 10, 10, 0.85)",
+    "surface2": "rgba(25, 25, 25, 0.9)",
+    "text": "#c8e6c9",
+    "border": "rgba(76, 175, 80, 0.5)"
+  },
+  {
+    "id": "LUIS",
+    "name": "Luisgamercool23",
+    "accent": "#ff5722",
+    "image": "luisgamercool23.jpg",
+    "code": ["LUIS", "FLAMINGO"],
+    "surface": "rgba(255, 255, 255, 0.7)",
+    "surface2": "rgba(240, 240, 240, 0.8)",
+    "text": "#212121",
+    "border": "rgba(255, 87, 34, 0.3)"
+  }
+];
+            const res = { ok: true, json: async () => EMBEDDED_THEMES };
+            // (original fetch kept as fallback comment)
+            // const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/themes.txt');
             if (!res.ok) throw new Error('themes.txt ' + res.status);
             const data = await res.json();
             data.forEach(t => { CUSTOM_THEMES[t.id] = t; });
@@ -1452,7 +2141,7 @@
             root.style.removeProperty('--text');
             root.style.removeProperty('--border');
             // Restore saved accent
-            const savedAccent = localStorage.getItem('power_accent') || '#0066FF';
+            const savedAccent = localStorage.getItem('power_accent') || '#0078D4';
             root.style.setProperty('--accent', savedAccent);
             const picker = document.getElementById('accentPicker');
             if (picker) picker.value = savedAccent;
@@ -1487,7 +2176,7 @@
     }
 
     function resetAccent() {
-        document.getElementById('accentPicker').value = '#0066FF';
+        document.getElementById('accentPicker').value = '#0078D4';
         updateUI();
     }
 
@@ -1502,7 +2191,7 @@
     function loadSettings() {
         const theme      = localStorage.getItem('power_theme')       || 'dark';
         const corners    = localStorage.getItem('power_corners')     || 'rounded';
-        const accent     = localStorage.getItem('power_accent')      || '#0066FF';
+        const accent     = localStorage.getItem('power_accent')      || '#0078D4';
         const font       = localStorage.getItem('power_font')        || 'outfit';
         const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
 
@@ -1746,7 +2435,7 @@
     window.onload = async () => {
         // Load non-theme settings immediately (corners, accent, font, glass)
         const corners    = localStorage.getItem('power_corners')     || 'rounded';
-        const accent     = localStorage.getItem('power_accent')      || '#0066FF';
+        const accent     = localStorage.getItem('power_accent')      || '#0078D4';
         const font       = localStorage.getItem('power_font')        || 'outfit';
         const fontWeight = localStorage.getItem('power_font_weight') || 'regular';
 
