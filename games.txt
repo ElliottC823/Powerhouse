@@ -621,6 +621,15 @@
     "useBlank": false
   },
   {
+    "title": "Uncle Joe's Guardian",
+    "category": "Utility",
+    "desc": "yes.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_0pzThRWrMIXUKiVpEs3EHzxzgpQSsv5qHw&s",
+    "link": "https://uncle-joes-guardian-production.up.railway.app",
+    "verified": true,
+    "useBlank": true
+  },
+  {
     "title": "GeoDuels",
     "category": "Arcade",
     "desc": "Play GeoDuels, a competitive GeoGuessr-style multiplayer geography game with ranked duels, Street View rounds, and singleplayer practice.",
@@ -672,15 +681,6 @@
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmMaiThJHROSKgRaj4GGQdeZ92WB3bLWx3cA&s",
     "link": "https://snek-io.netlify.app/",
     "verified": false,
-    "useBlank": true
-  },
-  {
-    "title": "Uncle Joe's Guardian",
-    "category": "Utility",
-    "desc": "yes.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_0pzThRWrMIXUKiVpEs3EHzxzgpQSsv5qHw&s",
-    "link": "https://uncle-joes-guardian-production.up.railway.app",
-    "verified": true,
     "useBlank": true
   },
   {
