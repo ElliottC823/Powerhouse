@@ -809,7 +809,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.9.4</div>
+                <div class="about-version">V1.9.5</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -1002,6 +1002,8 @@
                 if (aboutEl) aboutEl.innerText = await aboutRes.text();
             }
             updateAboutLogo();
+            // Apply saved default category only on initial load
+            currentFilter = localStorage.getItem('power_default_cat') || 'ALL';
             renderFilters();
             renderGames();
         } catch (e) {
@@ -1013,16 +1015,27 @@
     function renderFilters() {
         const bar = document.getElementById('filterBar');
         const cats = ['ALL', 'UNBLOCKED', ...new Set(games.map(g => g.category.toUpperCase()))];
-        bar.innerHTML = cats.map(c => `
-            <button class="filter-btn ${currentFilter === c ? 'active' : ''}" 
-                    onclick="setFilter('${c}')">${c}</button>
+        bar.innerHTML = cats.map(cat => `
+            <button class="filter-btn ${currentFilter === cat ? 'active' : ''}"
+                    onclick="setFilter('${cat}')">${cat}</button>
         `).join('');
+        // Populate default category dropdown with current categories
+        const sel = document.getElementById('defaultCategorySelect');
+        if (sel) {
+            const saved = localStorage.getItem('power_default_cat') || 'ALL';
+            sel.innerHTML = cats.map(cat =>
+                `<option value="${cat}" ${cat === saved ? 'selected' : ''}>${cat}</option>`
+            ).join('');
+        }
+    }
+
+    function saveDefaultCategory() {
+        const sel = document.getElementById('defaultCategorySelect');
+        if (sel) localStorage.setItem('power_default_cat', sel.value);
     }
 
     function setFilter(cat) {
         currentFilter = cat;
-        const savedCat = localStorage.getItem('power_default_cat') || 'ALL';
-        currentFilter = savedCat;
         renderFilters();
         renderGames();
     }
