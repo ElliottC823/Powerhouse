@@ -680,7 +680,16 @@
     "desc": "yes.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_0pzThRWrMIXUKiVpEs3EHzxzgpQSsv5qHw&s",
     "link": "https://uncle-joes-guardian-production.up.railway.app",
-    "verified": false,
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Gun Spin",
+    "category": "Arcade",
+    "desc": "spin.",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdS20YMopMPcV7xgRlO_4aq33o6XUMavO5Hg&s",
+    "link": "https://learn-duck.firebaseapp.com/class/gun-spin",
+    "verified": true,
     "useBlank": true
   }
 ]
