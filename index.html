@@ -775,6 +775,17 @@
                 <button class="s-btn danger" onclick="clearFavorites()">Clear</button>
             </div>
 
+            <div class="s-section-title">Default Category</div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">Start on category</div>
+                    <div class="s-sublabel">Which filter is active when you open the site</div>
+                </div>
+                <select id="defaultCategorySelect" onchange="saveDefaultCategory()" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-family:inherit;font-size:0.78rem;cursor:pointer;outline:none;">
+                    <option value="ALL">All</option>
+                </select>
+            </div>
+
             <div class="s-section-title">History</div>
             <div class="s-row">
                 <div>
@@ -798,7 +809,7 @@
         <div class="settings-pane" id="pane-about">
             <div class="about-hero">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.9.3</div>
+                <div class="about-version">V1.9.4</div>
             </div>
 
             <div class="s-section-title">About</div>
@@ -854,6 +865,12 @@
 
 <script>
     let games = [];
+    // Safe escape for values used inside onclick="" HTML attributes
+    function esc(str) {
+        return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+
     let currentFilter = 'ALL';
 
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
@@ -1004,6 +1021,8 @@
 
     function setFilter(cat) {
         currentFilter = cat;
+        const savedCat = localStorage.getItem('power_default_cat') || 'ALL';
+        currentFilter = savedCat;
         renderFilters();
         renderGames();
     }
@@ -1119,7 +1138,7 @@
         if (history.length > 0) {
             shelf.style.display = 'block';
             document.getElementById('historyGrid').innerHTML = history.map(g => `
-                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
+                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${esc(g.title)}',${g.useBlank===false?'false':!!g.useBlank},'${esc(g.thumb||'')}',event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy" alt="${g.title}">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -1145,7 +1164,7 @@
             if (picks.length > 0) {
                 recShelf.style.display = 'block';
                 document.getElementById('recommendedGrid').innerHTML = picks.map(g => `
-                    <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\'")}',event)">
+                    <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${esc(g.title)}',${g.useBlank===false?'false':!!g.useBlank},'${esc(g.thumb||'')}',event)">
                         <img src="${g.thumb}" class="shelf-img" loading="lazy" alt="${g.title}">
                         ${g.verified ? '<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">' : ''}
                         <div class="shelf-label">${g.title}</div>
@@ -1159,7 +1178,7 @@
         if (favs.length > 0) {
             favShelf.style.display = 'block';
             document.getElementById('favoritesGrid').innerHTML = favs.map(g => `
-                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\'")}',event)">
+                <a href="${g.link}" class="shelf-item" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${esc(g.title)}',${g.useBlank===false?'false':!!g.useBlank},'${esc(g.thumb||'')}',event)">
                     <img src="${g.thumb}" class="shelf-img" loading="lazy" alt="${g.title}">
                     ${g.verified ? `<img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/verified.svg" class="shelf-verified">` : ''}
                     <div class="shelf-label">${g.title}</div>
@@ -1195,7 +1214,7 @@
 
         grid.innerHTML = '';
         const cardHtmls = filtered.map(g => `
-            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${g.title.replace(/'/g,"\\\\'")}',${g.useBlank===false?'false':!!g.useBlank},'${(g.thumb||'').replace(/'/g,"\\\\'")}',event)">
+            <a href="${g.link}" class="game-card" onclick="trackPlay(${JSON.stringify(g).replace(/"/g,'&quot;')}); openGame('${g.link}',${!!g.verified},'${esc(g.title)}',${g.useBlank===false?'false':!!g.useBlank},'${esc(g.thumb||'')}',event)">
                 <div class="thumb-wrap" style="position:relative;">
                     <img src="${g.thumb}" class="thumb" loading="lazy" alt="${g.title}">
                     <button class="fav-btn ${isFavorited(g.title) ? 'favorited' : ''}"
