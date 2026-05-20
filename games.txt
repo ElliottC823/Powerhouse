@@ -382,9 +382,9 @@
     "category": "Racing",
     "desc": "Extreme driving challenges where every level gets crazier.",
     "thumb": "https://watchdocumentaries.com/wp-content/uploads/drive-mad-game-360x203.jpg",
-    "link": "https://watchdocumentaries.com/drive-mad-game/?p=0",
-    "verified": false,
-    "useBlank": false
+    "link": "https://drivinggames.io/mad-driving",
+    "verified": true,
+    "useBlank": true
   },
   {
     "title": "Slope",
