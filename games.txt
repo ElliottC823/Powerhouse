@@ -691,5 +691,14 @@
     "link": "https://learn-duck.firebaseapp.com/class/gun-spin",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "Jackbox.TV",
+    "category": "Arcade",
+    "desc": "game required.",
+    "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/331670/capsule_616x353.jpg?t=1728584088",
+    "link": "https://jackbox.tv",
+    "verified": false,
+    "useBlank": true
   }
 ]
