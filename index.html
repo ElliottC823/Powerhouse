@@ -802,16 +802,15 @@
             </div>
 
             <div class="s-section-title">About</div>
-            <p id="aboutText" class="about-text">Loading...</p>
+            <p id="aboutText" class="about-text">Powerhouse is a custom-built game hub full of unblocked games, and websites to annoy teachers, and easily get 5 missing ELA assignments.</p>
 
             <div class="s-section-title">Contributors</div>
             <div class="contributor-grid">
                 <div class="contributor-chip">C823<span class="role">Lead Developer</span></div>
-                <div class="contributor-chip">Grandpa/Uncle Joe<span class="role">Senior Developer</span></div>
+                <div class="contributor-chip">Uncle Joe<span class="role">Senior Developer</span></div>
                 <div class="contributor-chip">MonkeyKC<span class="role">Content Provider</span></div>
                 <div class="contributor-chip">TOE<span class="role">Contributor</span></div>
                 <div class="contributor-chip">Stein<span class="role">Contributor</span></div>
-                <div class="contributor-chip">AC<span class="role">Contributor</span></div>
             </div>
 
             <div class="s-section-title">Mirrors</div>
@@ -979,11 +978,8 @@
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             games = await res.json();
 
-            const aboutRes = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/about.txt');
-            if (aboutRes.ok) {
-                const aboutEl = document.getElementById('aboutText');
-                if (aboutEl) aboutEl.innerText = await aboutRes.text();
-            }
+            const aboutEl = document.getElementById('aboutText');
+            if (aboutEl) aboutEl.innerText = 'Powerhouse is a custom-built game hub full of unblocked games, and websites to annoy teachers, and easily get 5 missing ELA assignments.';
             updateAboutLogo();
             renderFilters();
             renderGames();
