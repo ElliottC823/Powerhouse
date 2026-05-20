@@ -700,5 +700,14 @@
     "link": "https://jackbox.tv",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "GrammaCrackers",
+    "category": "Media",
+    "desc": "poor grandma got swatted.",
+    "thumb": "https://d.ibtimes.co.uk/en/full/1784070/gramma-crackers.png?w=736&f=824727b308ecc4ad6d3bd1ab40e0f01e",
+    "link": "https://youtube.com/@grammacrackers",
+    "verified": true,
+    "useBlank": true
   }
 ]
