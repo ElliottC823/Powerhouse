@@ -535,7 +535,7 @@
     "category": "Hub",
     "desc": "Boredflix.com is a website offering free streaming of movies and TV shows without requiring sign-up. Launched in 2025 after two years of development, it quickly received significant user traffic, logging 6.1 million visits in October 2025.",
     "thumb": "https://play-lh.googleusercontent.com/fZNXd1jZWAkZMx10JPYBNnHWVx1eccx66QyU99NWc07LBWR9B6lq1ISnbNxKsEXd030-I1Sh4Tag7TbbeySu=w240-h480-rw",
-    "link": "https://boredflix.com/",
+    "link": "https://boredflix.tv/",
     "verified": false,
     "useBlank": false
   },
@@ -596,7 +596,7 @@
   {
     "title": "Geommetry Dash",
     "category": "Arcade",
-    "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It’s famous for its simple mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
+    "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It\u2019s famous for its simple mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCd8DHW4zOb9QqjJ59t9FpV8LnEeKwIttiaw&s",
     "link": "https://crazygamesunblocked.net/geometry-dash",
     "verified": true,
@@ -707,6 +707,24 @@
     "desc": "poor grandma got swatted.",
     "thumb": "https://d.ibtimes.co.uk/en/full/1784070/gramma-crackers.png?w=736&f=824727b308ecc4ad6d3bd1ab40e0f01e",
     "link": "https://youtube.com/@grammacrackers",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Cobb Can Move",
+    "category": "Puzzle",
+    "desc": "obama",
+    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQe1TlwohdhK6CnjHBDtfe6pMdhhWxzZ57ySg&s",
+    "link": "http://cobb-can-move.com/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "White Lake Bets",
+    "category": "Arcade",
+    "desc": "gambing but here.",
+    "thumb": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/6a/40/75/white-lake-state-park.jpg?w=900&h=500&s=1",
+    "link": "https://whitelakebets.lovable.app/",
     "verified": true,
     "useBlank": true
   }
