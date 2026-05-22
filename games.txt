@@ -718,14 +718,5 @@
     "link": "http://cobb-can-move.com/",
     "verified": true,
     "useBlank": true
-  },
-  {
-    "title": "White Lake Bets",
-    "category": "Arcade",
-    "desc": "gambing but here.",
-    "thumb": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/6a/40/75/white-lake-state-park.jpg?w=900&h=500&s=1",
-    "link": "https://whitelakebets.lovable.app/",
-    "verified": true,
-    "useBlank": true
   }
 ]
