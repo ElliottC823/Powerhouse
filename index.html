@@ -254,6 +254,431 @@
         }
         .shelf-verified { position: absolute; top: 0; right: 8px; width: 13px; height: 13px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
 
+        /* ── ACCOUNT BUTTON ── */
+        .acct-btn {
+            background: transparent; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 5px 8px;
+            color: var(--muted); cursor: pointer; display: flex;
+            align-items: center; gap: 6px;
+            font-family: inherit; font-size: .7rem; font-weight: 600;
+            transition: color .1s, background .1s, border-color .1s;
+            min-width: 32px; min-height: 32px; white-space: nowrap;
+        }
+        .acct-btn:hover { color: var(--text); background: rgba(255,255,255,.06); border-color: var(--accent); }
+        .acct-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+        .acct-btn .acct-avatar {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .68rem; font-weight: 700; flex-shrink: 0;
+        }
+        .acct-backdrop {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.55); z-index: 3000;
+            backdrop-filter: blur(4px); opacity: 0; transition: opacity .15s;
+        }
+        .acct-backdrop.show { display: flex; align-items: center; justify-content: center; opacity: 1; }
+        .acct-modal {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.4);
+            width: min(360px, 92vw); padding: 24px; position: relative;
+            animation: fadeUp .2s ease;
+        }
+        .acct-modal-close {
+            position: absolute; top: 12px; right: 14px;
+            background: none; border: none; color: var(--muted);
+            cursor: pointer; padding: 4px; display: flex; align-items: center;
+        }
+        .acct-modal-close:hover { color: var(--text); }
+        .acct-modal-close svg { width: 16px; height: 16px; }
+        .acct-modal h2 { font-size: .95rem; font-weight: 700; margin-bottom: 4px; }
+        .acct-modal .acct-sub { font-size: .75rem; color: var(--muted); margin-bottom: 20px; }
+        .acct-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .acct-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .78rem; font-weight: 400;
+            padding: 7px 14px 8px; cursor: pointer;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s;
+        }
+        .acct-tab:hover { color: var(--text); }
+        .acct-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .acct-field { margin-bottom: 12px; }
+        .acct-field label { display: block; font-size: .72rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+        .acct-input {
+            width: 100%; padding: 8px 12px;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: 16px; outline: none;
+            transition: border-color .1s;
+        }
+        .acct-input:focus { border-color: var(--accent); }
+        .acct-input::placeholder { color: var(--muted); }
+        .acct-btn-primary {
+            width: 100%; padding: 10px; margin-top: 6px;
+            background: var(--accent); color: #fff; border: none;
+            border-radius: var(--radius-sm); font-family: inherit;
+            font-size: .85rem; font-weight: 700; cursor: pointer;
+            transition: opacity .1s; min-height: 40px;
+        }
+        .acct-btn-primary:hover { opacity: .85; }
+        .acct-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+        .acct-error { font-size: .72rem; color: #c42b1c; margin-top: 8px; min-height: 1em; }
+        .acct-success { font-size: .72rem; color: #107c10; margin-top: 8px; }
+        .acct-loggedin { display: flex; flex-direction: column; gap: 10px; }
+        .acct-profile-row { display: flex; align-items: center; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .acct-big-avatar {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 700; flex-shrink: 0;
+        }
+        .acct-uname { font-size: .95rem; font-weight: 700; }
+        .acct-since { font-size: .68rem; color: var(--muted); margin-top: 2px; }
+        .acct-action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .acct-action-btn {
+            flex: 1; min-width: 100px; padding: 8px 12px;
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .75rem;
+            font-weight: 600; cursor: pointer; transition: background .1s;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .acct-action-btn:hover { background: color-mix(in srgb, var(--text) 10%, transparent); }
+        .acct-action-btn.danger { color: #c42b1c; border-color: rgba(196,43,28,.3); }
+        .acct-action-btn.danger:hover { background: rgba(196,43,28,.08); }
+        .acct-divider { height: 1px; background: var(--border); margin: 6px 0; }
+        .acct-search-wrap { display: flex; gap: 6px; margin-bottom: 8px; }
+        .acct-search-input {
+            flex: 1; padding: 7px 11px;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: 14px; outline: none;
+            transition: border-color .1s;
+        }
+        .acct-search-input:focus { border-color: var(--accent); }
+        .acct-search-input::placeholder { color: var(--muted); }
+        .acct-search-btn {
+            background: var(--accent); color: #fff; border: none;
+            border-radius: var(--radius-sm); padding: 7px 14px;
+            font-family: inherit; font-size: .75rem; font-weight: 700;
+            cursor: pointer; transition: opacity .1s; white-space: nowrap;
+        }
+        .acct-search-btn:hover { opacity: .85; }
+        .acct-search-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .acct-search-results { display: flex; flex-direction: column; gap: 5px; max-height: 180px; overflow-y: auto; }
+        .acct-search-results::-webkit-scrollbar { width: 2px; }
+        .acct-search-results::-webkit-scrollbar-thumb { background: var(--border); }
+        .acct-result-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px; border-radius: var(--radius-sm);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+        }
+        .acct-result-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--surface2); color: var(--text);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .72rem; font-weight: 700; flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        .acct-result-name { font-size: .82rem; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .acct-result-since { font-size: .62rem; color: var(--muted); margin-top: 1px; }
+        .acct-search-empty { font-size: .75rem; color: var(--muted); text-align: center; padding: 12px 0; opacity: .7; }
+
+        /* ── MESSAGING ── */
+        .acct-nav-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+        .acct-nav-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .75rem; font-weight: 400;
+            padding: 8px 14px 9px; cursor: pointer; flex: 1;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s; display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .acct-nav-tab:hover { color: var(--text); }
+        .acct-nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .acct-nav-tab svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .acct-unread-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--accent); flex-shrink: 0; display: none;
+        }
+        .acct-unread-dot.show { display: inline-block; }
+
+        .msg-panel { display: flex; flex-direction: column; gap: 0; min-height: 260px; }
+
+        /* Inbox list */
+        .msg-inbox { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 280px; }
+        .msg-inbox::-webkit-scrollbar { width: 2px; }
+        .msg-inbox::-webkit-scrollbar-thumb { background: var(--border); }
+        .msg-convo-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 10px; border-radius: var(--radius-sm);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border); cursor: pointer;
+            transition: border-color .1s, background .1s;
+        }
+        .msg-convo-row:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, var(--surface2)); }
+        .msg-convo-row.unread { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+        .msg-convo-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--surface2); color: var(--text);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .72rem; font-weight: 700; flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        .msg-convo-info { flex: 1; min-width: 0; }
+        .msg-convo-name { font-size: .8rem; font-weight: 700; }
+        .msg-convo-preview { font-size: .68rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+        .msg-convo-time { font-size: .6rem; color: var(--muted); flex-shrink: 0; }
+        .msg-unread-badge {
+            background: var(--accent); color: #fff;
+            border-radius: 99px; padding: 1px 5px;
+            font-size: .58rem; font-weight: 700; flex-shrink: 0;
+        }
+
+        /* Thread view */
+        .msg-thread-header {
+            display: flex; align-items: center; gap: 8px;
+            padding-bottom: 10px; margin-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .msg-back-btn {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            padding: 3px; display: flex; align-items: center;
+            transition: color .1s;
+        }
+        .msg-back-btn:hover { color: var(--text); }
+        .msg-back-btn svg { width: 16px; height: 16px; }
+        .msg-thread-name { font-size: .88rem; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .msg-thread-actions { display: flex; gap: 5px; }
+        .msg-thread-action-btn {
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--muted); font-family: inherit; font-size: .65rem;
+            font-weight: 600; cursor: pointer; padding: 4px 9px;
+            transition: background .1s, color .1s, border-color .1s;
+            white-space: nowrap;
+        }
+        .msg-thread-action-btn:hover { color: var(--text); background: color-mix(in srgb, var(--text) 10%, transparent); }
+        .msg-thread-action-btn.block-btn { color: #c42b1c; border-color: rgba(196,43,28,.3); }
+        .msg-thread-action-btn.block-btn:hover { background: rgba(196,43,28,.08); }
+        .msg-thread-action-btn.unblock-btn { color: #107c10; border-color: rgba(16,124,16,.3); }
+        .msg-thread-action-btn.unblock-btn:hover { background: rgba(16,124,16,.08); }
+
+        .msg-messages { flex: 1; overflow-y: auto; max-height: 200px; display: flex; flex-direction: column; gap: 6px; padding: 2px 0 8px; }
+        .msg-messages::-webkit-scrollbar { width: 2px; }
+        .msg-messages::-webkit-scrollbar-thumb { background: var(--border); }
+
+        .msg-bubble-wrap { display: flex; flex-direction: column; }
+        .msg-bubble-wrap.mine { align-items: flex-end; }
+        .msg-bubble-wrap.theirs { align-items: flex-start; }
+        .msg-bubble {
+            max-width: 82%; padding: 7px 11px;
+            border-radius: 12px; font-size: .78rem; line-height: 1.45;
+            word-break: break-word;
+        }
+        .msg-bubble-wrap.mine .msg-bubble {
+            background: var(--accent); color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-bubble-wrap.theirs .msg-bubble {
+            background: var(--surface2); color: var(--text);
+            border: 1px solid var(--border); border-bottom-left-radius: 4px;
+        }
+        .msg-bubble-time { font-size: .58rem; color: var(--muted); margin-top: 2px; padding: 0 3px; }
+        .msg-bubble-del {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            font-size: .6rem; opacity: 0; transition: opacity .1s;
+            padding: 0 3px;
+        }
+        .msg-bubble-wrap:hover .msg-bubble-del { opacity: 1; }
+        .msg-bubble-del:hover { color: #c42b1c; }
+
+        .msg-compose { display: flex; gap: 6px; padding-top: 8px; border-top: 1px solid var(--border); margin-top: 2px; }
+        .msg-compose-input {
+            flex: 1; padding: 8px 11px;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: 14px; outline: none;
+            resize: none; transition: border-color .1s; max-height: 80px; overflow-y: auto;
+        }
+        .msg-compose-input:focus { border-color: var(--accent); }
+        .msg-compose-input::placeholder { color: var(--muted); }
+        .msg-send-btn {
+            background: var(--accent); color: #fff; border: none;
+            border-radius: var(--radius-sm); padding: 8px 14px;
+            font-family: inherit; font-size: .75rem; font-weight: 700;
+            cursor: pointer; transition: opacity .1s; align-self: flex-end;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .msg-send-btn:hover { opacity: .85; }
+        .msg-send-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .msg-send-btn svg { width: 13px; height: 13px; }
+        .msg-blocked-notice {
+            text-align: center; font-size: .75rem; color: var(--muted);
+            padding: 10px; background: color-mix(in srgb, var(--text) 4%, transparent);
+            border-radius: var(--radius-sm); border: 1px solid var(--border);
+        }
+
+        /* Compose new message */
+        .msg-new-wrap { display: flex; flex-direction: column; gap: 8px; }
+        .msg-new-label { font-size: .72rem; font-weight: 600; color: var(--muted); }
+        .msg-new-to-row { display: flex; gap: 6px; }
+
+        .msg-empty { font-size: .75rem; color: var(--muted); text-align: center; padding: 28px 0; opacity: .6; }
+        .acct-section-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 6px; }
+
+        /* ── MESSAGING ── */
+        .acct-modal { max-height: 90vh; display: flex; flex-direction: column; }
+        .acct-modal-inner { flex: 1; overflow-y: auto; min-height: 0; }
+        .acct-modal-inner::-webkit-scrollbar { width: 2px; }
+        .acct-modal-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        /* top nav tabs (Account / Messages / Find Users) */
+        .acct-nav { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; flex-shrink: 0; }
+        .acct-nav-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .75rem; font-weight: 400;
+            padding: 8px 14px 9px; cursor: pointer;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s; white-space: nowrap;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .acct-nav-tab:hover { color: var(--text); }
+        .acct-nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .acct-unread-badge {
+            background: var(--accent); color: #fff;
+            font-size: .55rem; font-weight: 700;
+            min-width: 16px; height: 16px; border-radius: 8px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0 4px; line-height: 1;
+        }
+
+        /* inbox */
+        .msg-inbox { display: flex; flex-direction: column; gap: 4px; }
+        .msg-conv-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 10px; border-radius: var(--radius-sm);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border); cursor: pointer;
+            transition: background .1s, border-color .1s;
+        }
+        .msg-conv-row:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+        .msg-conv-row.unread { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+        .msg-conv-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--surface2); color: var(--text);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .75rem; font-weight: 700; flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        .msg-conv-info { flex: 1; min-width: 0; }
+        .msg-conv-name { font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .msg-conv-preview { font-size: .68rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 1px; }
+        .msg-conv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+        .msg-conv-time { font-size: .6rem; color: var(--muted); white-space: nowrap; }
+        .msg-unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+        /* thread */
+        .msg-thread-header {
+            display: flex; align-items: center; gap: 10px;
+            padding-bottom: 10px; margin-bottom: 10px;
+            border-bottom: 1px solid var(--border); flex-shrink: 0;
+        }
+        .msg-back-btn {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            padding: 4px; display: flex; align-items: center;
+            transition: color .1s; flex-shrink: 0;
+        }
+        .msg-back-btn:hover { color: var(--text); }
+        .msg-back-btn svg { width: 18px; height: 18px; }
+        .msg-thread-name { font-size: .9rem; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .msg-thread-actions { display: flex; gap: 4px; flex-shrink: 0; }
+        .msg-icon-btn {
+            background: none; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 4px 8px;
+            color: var(--muted); cursor: pointer; font-size: .65rem;
+            font-family: inherit; font-weight: 600;
+            display: flex; align-items: center; gap: 4px;
+            transition: all .1s; white-space: nowrap;
+        }
+        .msg-icon-btn:hover { color: var(--text); border-color: var(--text); }
+        .msg-icon-btn.danger:hover { color: #c42b1c; border-color: rgba(196,43,28,.4); }
+        .msg-icon-btn svg { width: 12px; height: 12px; }
+        .msg-blocked-banner {
+            background: rgba(196,43,28,.08); border: 1px solid rgba(196,43,28,.25);
+            color: #c42b1c; font-size: .7rem; font-weight: 600;
+            padding: 6px 10px; border-radius: var(--radius-sm);
+            margin-bottom: 8px; text-align: center;
+        }
+        .msg-messages { flex: 1; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; gap: 6px; padding: 2px 0 8px; }
+        .msg-messages::-webkit-scrollbar { width: 2px; }
+        .msg-messages::-webkit-scrollbar-thumb { background: var(--border); }
+        .msg-bubble-wrap { display: flex; flex-direction: column; }
+        .msg-bubble-wrap.mine { align-items: flex-end; }
+        .msg-bubble-wrap.theirs { align-items: flex-start; }
+        .msg-bubble {
+            max-width: 78%; padding: 7px 11px; border-radius: 12px;
+            font-size: .82rem; line-height: 1.45; word-break: break-word;
+            position: relative;
+        }
+        .msg-bubble.mine { background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+        .msg-bubble.theirs { background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+        .msg-bubble-time { font-size: .58rem; opacity: .55; margin-top: 3px; }
+        .msg-bubble-wrap.mine .msg-bubble-time { text-align: right; }
+        .msg-delete-btn {
+            position: absolute; top: -6px; right: -6px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 50%; width: 18px; height: 18px;
+            display: none; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--muted); font-size: .6rem;
+        }
+        .msg-bubble:hover .msg-delete-btn { display: flex; }
+        .msg-delete-btn:hover { color: #c42b1c; border-color: rgba(196,43,28,.4); }
+        .msg-compose { display: flex; gap: 6px; padding-top: 8px; border-top: 1px solid var(--border); flex-shrink: 0; }
+        .msg-compose-input {
+            flex: 1; padding: 8px 11px;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: 14px; outline: none;
+            transition: border-color .1s; resize: none; min-height: 36px; max-height: 100px;
+        }
+        .msg-compose-input:focus { border-color: var(--accent); }
+        .msg-compose-input::placeholder { color: var(--muted); }
+        .msg-send-btn {
+            background: var(--accent); color: #fff; border: none;
+            border-radius: var(--radius-sm); padding: 8px 14px;
+            font-family: inherit; font-size: .75rem; font-weight: 700;
+            cursor: pointer; transition: opacity .1s; align-self: flex-end;
+        }
+        .msg-send-btn:hover { opacity: .85; }
+        .msg-send-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .msg-empty { text-align: center; padding: 24px 0; color: var(--muted); font-size: .78rem; opacity: .6; }
+        .msg-new-btn {
+            width: 100%; padding: 9px; margin-top: 4px;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .78rem;
+            font-weight: 600; cursor: pointer; transition: background .1s;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .msg-new-btn:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--accent); }
+        .msg-new-btn svg { width: 14px; height: 14px; }
+
+        /* compose-new overlay */
+        .msg-new-panel { display: flex; flex-direction: column; gap: 10px; }
+        .msg-new-search-wrap { display: flex; gap: 6px; }
+
+        /* blocked list */
+        .blocked-list { display: flex; flex-direction: column; gap: 4px; }
+        .blocked-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px; border-radius: var(--radius-sm);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+        }
+        .blocked-name { flex: 1; font-size: .82rem; font-weight: 600; }
+
         /* ── GAME OF THE WEEK ── */
         .gotw-container {
             padding: 14px clamp(12px,3%,24px) 4px;
@@ -720,6 +1145,9 @@
     </div>
     <div class="controls">
         <div id="visitor-counter"><span class="vc-dot"></span><span id="vc-count">—</span> views today</div>
+        <button class="acct-btn" id="acctBtn" onclick="toggleAccountModal()" aria-label="Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
         <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/>
         <path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/>
@@ -895,6 +1323,128 @@
 </div><!-- /settingsMenu -->
 
 <!-- Tutorial Overlay -->
+<div class="acct-backdrop" id="acctBackdrop" onclick="closeAccountModal(event)">
+    <div class="acct-modal" id="acctModal">
+        <button class="acct-modal-close" onclick="toggleAccountModal()" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div id="acctAuthPanel">
+            <h2>Powerhouse Account</h2>
+            <p class="acct-sub">Save your settings, history, and favorites across devices.</p>
+            <div class="acct-tabs">
+                <button class="acct-tab active" id="acctTabSignIn" onclick="acctSwitchTab('signin')">Sign In</button>
+                <button class="acct-tab" id="acctTabCreate" onclick="acctSwitchTab('create')">Create Account</button>
+            </div>
+            <div id="acctSignInPane">
+                <div class="acct-field"><label>Username</label><input class="acct-input" id="siUsername" type="text" placeholder="your_username" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+                <div class="acct-field"><label>Password</label><input class="acct-input" id="siPassword" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+                <button class="acct-btn-primary" id="siSubmit" onclick="acctSignIn()">Sign In</button>
+                <div class="acct-error" id="siError"></div>
+            </div>
+            <div id="acctCreatePane" style="display:none">
+                <div class="acct-field"><label>Username <span style="font-weight:400;opacity:.6">(letters, numbers, _ · 3–24 chars)</span></label><input class="acct-input" id="caUsername" type="text" placeholder="cool_username" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+                <div class="acct-field"><label>Password <span style="font-weight:400;opacity:.6">(min 6 characters)</span></label><input class="acct-input" id="caPassword" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+                <div class="acct-field"><label>Confirm Password</label><input class="acct-input" id="caConfirm" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+                <button class="acct-btn-primary" id="caSubmit" onclick="acctCreateAccount()">Create Account</button>
+                <div class="acct-error" id="caError"></div>
+            </div>
+        </div>
+        <div id="acctLoggedInPanel" style="display:none">
+            <!-- Tab nav -->
+            <div class="acct-nav-tabs">
+                <button class="acct-nav-tab active" id="liTabProfile" onclick="liSwitchTab('profile')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
+                </button>
+                <button class="acct-nav-tab" id="liTabMessages" onclick="liSwitchTab('messages')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages
+                    <span class="acct-unread-dot" id="msgUnreadDot"></span>
+                </button>
+                <button class="acct-nav-tab" id="liTabUsers" onclick="liSwitchTab('users')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Users
+                </button>
+            </div>
+
+            <!-- Profile pane -->
+            <div id="liPaneProfile" class="acct-loggedin">
+                <div class="acct-profile-row">
+                    <div class="acct-big-avatar" id="acctBigAvatar"></div>
+                    <div>
+                        <div class="acct-uname" id="acctDisplayName"></div>
+                        <div class="acct-since" id="acctSyncStatus">Not synced yet</div>
+                    </div>
+                </div>
+                <div class="acct-action-row">
+                    <button class="acct-action-btn" id="acctSyncBtn" onclick="acctSyncNow()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Sync Now
+                    </button>
+                    <button class="acct-action-btn" onclick="acctSignOut()">Sign Out</button>
+                </div>
+                <button class="acct-action-btn danger" onclick="acctDeleteAccount()">Delete Account</button>
+            </div>
+
+            <!-- Messages pane -->
+            <div id="liPaneMessages" style="display:none" class="msg-panel">
+                <div id="msgInboxView">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                        <div class="acct-section-label" style="margin:0">Conversations</div>
+                        <button class="acct-search-btn" style="padding:4px 10px;font-size:.68rem" onclick="msgShowCompose()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:12px;height:12px;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New
+                        </button>
+                    </div>
+                    <div class="msg-inbox" id="msgInboxList"></div>
+                </div>
+                <div id="msgComposeView" style="display:none" class="msg-new-wrap">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <button class="msg-back-btn" onclick="msgShowInbox()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <div class="acct-section-label" style="margin:0">New Message</div>
+                    </div>
+                    <div class="msg-new-label">To</div>
+                    <div class="msg-new-to-row">
+                        <input class="acct-search-input" id="msgToInput" type="text" placeholder="Username…" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex:1">
+                    </div>
+                    <div class="msg-new-label" style="margin-top:4px">Message</div>
+                    <textarea class="msg-compose-input" id="msgNewBody" placeholder="Write a message…" rows="3" style="resize:none;width:100%"></textarea>
+                    <button class="acct-btn-primary" style="margin-top:2px" onclick="msgSendNew()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;margin-right:6px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send Message
+                    </button>
+                    <div class="acct-error" id="msgNewError"></div>
+                </div>
+                <div id="msgThreadView" style="display:none">
+                    <div class="msg-thread-header">
+                        <button class="msg-back-btn" onclick="msgShowInbox()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <div class="msg-thread-name" id="msgThreadName"></div>
+                        <div class="msg-thread-actions">
+                            <button class="msg-thread-action-btn" id="msgBlockBtn" onclick="msgToggleBlock()">Block</button>
+                        </div>
+                    </div>
+                    <div class="msg-messages" id="msgMessagesList"></div>
+                    <div id="msgBlockedNotice" class="msg-blocked-notice" style="display:none">You have blocked this user. <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-weight:700;font-size:.75rem" onclick="msgToggleBlock()">Unblock</button> to send messages.</div>
+                    <div class="msg-compose" id="msgComposeBar">
+                        <textarea class="msg-compose-input" id="msgReplyInput" placeholder="Message…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();msgSendReply();}"></textarea>
+                        <button class="msg-send-btn" onclick="msgSendReply()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users / Search pane -->
+            <div id="liPaneUsers" style="display:none">
+                <div class="acct-section-label">Find Users</div>
+                <div class="acct-search-wrap">
+                    <input class="acct-search-input" id="acctSearchInput" type="text" placeholder="Search by username…" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')acctSearch()">
+                    <button class="acct-search-btn" id="acctSearchBtn" onclick="acctSearch()">Search</button>
+                </div>
+                <div class="acct-search-results" id="acctSearchResults"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="tutorial-overlay" id="tutorialOverlay">
     <div class="tutorial-backdrop"></div>
     <div class="tutorial-highlight" id="tutorialHighlight"></div>
@@ -939,6 +1489,746 @@
         window._phGames['gotw'] = pick;
         document.getElementById('gotwCard').onclick = (e) => _phClick('gotw', e);
     }
+
+    // ── ACCOUNT SYSTEM ───────────────────────────────────────────────────────
+    const API_BASE = 'https://powerhouse-api.c823.workers.dev';
+    let _acctToken    = localStorage.getItem('ph_token')    || null;
+    let _acctUsername = localStorage.getItem('ph_username') || null;
+    let _acctSaving   = false;
+
+    function updateAccountBtn() {
+        const btn = document.getElementById('acctBtn');
+        if (!btn) return;
+        if (_acctUsername) {
+            const initials = _acctUsername.slice(0,2).toUpperCase();
+            btn.innerHTML = `<span class="acct-avatar">${initials}</span><span style="max-width:72px;overflow:hidden;text-overflow:ellipsis">${_acctUsername}</span>`;
+        } else {
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+        }
+    }
+
+    function toggleAccountModal() {
+        const bd = document.getElementById('acctBackdrop');
+        if (bd.classList.contains('show')) {
+            bd.classList.remove('show');
+            clearInterval(_msgPollTimer);
+        } else {
+            refreshAccountModal();
+            bd.classList.add('show');
+        }
+    }
+
+    function closeAccountModal(e) {
+        if (e.target === document.getElementById('acctBackdrop')) toggleAccountModal();
+    }
+
+    function refreshAccountModal() {
+        const authPanel = document.getElementById('acctAuthPanel');
+        const liPanel   = document.getElementById('acctLoggedInPanel');
+        if (_acctUsername && _acctToken) {
+            authPanel.style.display = 'none';
+            liPanel.style.display   = 'block';
+            document.getElementById('acctBigAvatar').textContent   = _acctUsername.slice(0,2).toUpperCase();
+            document.getElementById('acctDisplayName').textContent = _acctUsername;
+            // Load block list in background
+            fetch(`${API_BASE}/social/blocked`, { headers: { Authorization: `Bearer ${_acctToken}` } })
+                .then(r => r.json()).then(d => { if (d.blocked) _msgBlockedList = d.blocked; }).catch(() => {});
+        } else {
+            authPanel.style.display = 'block';
+            liPanel.style.display   = 'none';
+        }
+    }
+
+    function acctSwitchTab(tab) {
+        document.getElementById('acctSignInPane').style.display = tab === 'signin' ? 'block' : 'none';
+        document.getElementById('acctCreatePane').style.display = tab === 'create' ? 'block' : 'none';
+        document.getElementById('acctTabSignIn').classList.toggle('active', tab === 'signin');
+        document.getElementById('acctTabCreate').classList.toggle('active', tab === 'create');
+        document.getElementById('siError').textContent = '';
+        document.getElementById('caError').textContent = '';
+    }
+
+    async function acctSignIn() {
+        const btn  = document.getElementById('siSubmit');
+        const err  = document.getElementById('siError');
+        const user = document.getElementById('siUsername').value.trim();
+        const pass = document.getElementById('siPassword').value;
+        if (!user || !pass) { err.textContent = 'Please fill in all fields.'; return; }
+        btn.disabled = true; btn.textContent = 'Signing in…'; err.textContent = '';
+        try {
+            const r    = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: user, password: pass})
+            });
+            const data = await r.json();
+            if (!r.ok) { err.textContent = data.error || 'Sign-in failed.'; return; }
+            _acctToken = data.token; _acctUsername = data.username;
+            localStorage.setItem('ph_token', _acctToken);
+            localStorage.setItem('ph_username', _acctUsername);
+            updateAccountBtn();
+            await acctLoadData();
+            refreshAccountModal();
+        } catch(e) { err.textContent = 'Network error. Try again.'; }
+        finally { btn.disabled = false; btn.textContent = 'Sign In'; }
+    }
+
+    async function acctCreateAccount() {
+        const btn  = document.getElementById('caSubmit');
+        const err  = document.getElementById('caError');
+        const user = document.getElementById('caUsername').value.trim();
+        const pass = document.getElementById('caPassword').value;
+        const conf = document.getElementById('caConfirm').value;
+        if (!user || !pass || !conf) { err.textContent = 'Please fill in all fields.'; return; }
+        if (pass !== conf) { err.textContent = 'Passwords do not match.'; return; }
+        if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; return; }
+        btn.disabled = true; btn.textContent = 'Creating account…'; err.textContent = '';
+        try {
+            const r    = await fetch(`${API_BASE}/auth/register`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: user, password: pass})
+            });
+            const data = await r.json();
+            if (!r.ok) { err.textContent = data.error || 'Registration failed.'; return; }
+            _acctToken = data.token; _acctUsername = data.username;
+            localStorage.setItem('ph_token', _acctToken);
+            localStorage.setItem('ph_username', _acctUsername);
+            updateAccountBtn();
+            await acctSaveData();
+            refreshAccountModal();
+        } catch(e) { err.textContent = 'Network error. Try again.'; }
+        finally { btn.disabled = false; btn.textContent = 'Create Account'; }
+    }
+
+    async function acctLoadData() {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/auth/load`, {
+                headers: {'Authorization': `Bearer ${_acctToken}`}
+            });
+            if (r.status === 401) { acctHandleExpired(); return; }
+            const {data} = await r.json();
+            if (!data) return;
+            if (data.settings) {
+                const s = data.settings;
+                if (s.theme)          localStorage.setItem('power_theme',            s.theme);
+                if (s.accent)         localStorage.setItem('power_accent',           s.accent);
+                if (s.font)           localStorage.setItem('power_font',             s.font);
+                if (s.corners)        localStorage.setItem('power_corners',          s.corners);
+                if (s.fontWeight)     localStorage.setItem('power_font_weight',      s.fontWeight);
+                if (s.unlockedThemes) localStorage.setItem('power_unlocked_themes',  s.unlockedThemes);
+            }
+            if (data.history   && data.history.length)   localStorage.setItem('power_history',   JSON.stringify(data.history));
+            if (data.favorites && data.favorites.length) localStorage.setItem('power_favorites', JSON.stringify(data.favorites));
+            loadSettings();
+            renderGames();
+            const st = document.getElementById('acctSyncStatus');
+            if (st && data.savedAt) st.textContent = 'Synced ' + new Date(data.savedAt).toLocaleString();
+        } catch(e) { console.warn('acctLoadData', e); }
+    }
+
+    async function acctSaveData() {
+        if (!_acctToken || _acctSaving) return;
+        _acctSaving = true;
+        try {
+            const settings = {
+                theme:          localStorage.getItem('power_theme')           || 'system',
+                accent:         localStorage.getItem('power_accent')          || '#0078D4',
+                font:           localStorage.getItem('power_font')            || 'outfit',
+                corners:        localStorage.getItem('power_corners')         || 'rounded',
+                fontWeight:     localStorage.getItem('power_font_weight')     || 'regular',
+                unlockedThemes: localStorage.getItem('power_unlocked_themes') || '',
+            };
+            const history   = JSON.parse(localStorage.getItem('power_history')   || '[]');
+            const favorites = JSON.parse(localStorage.getItem('power_favorites') || '[]');
+            const r = await fetch(`${API_BASE}/auth/save`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${_acctToken}`},
+                body: JSON.stringify({settings, history, favorites})
+            });
+            if (r.status === 401) { acctHandleExpired(); return; }
+            const st = document.getElementById('acctSyncStatus');
+            if (st && r.ok) st.textContent = 'Synced ' + new Date().toLocaleString();
+        } catch(e) { console.warn('acctSaveData', e); }
+        finally { _acctSaving = false; }
+    }
+
+    async function acctSyncNow() {
+        const btn = document.getElementById('acctSyncBtn');
+        if (btn) { btn.disabled = true; btn.textContent = 'Syncing…'; }
+        await acctSaveData();
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Sync Now';
+        }
+    }
+
+    function acctSignOut() {
+        _acctToken = null; _acctUsername = null;
+        localStorage.removeItem('ph_token');
+        localStorage.removeItem('ph_username');
+        updateAccountBtn();
+        const bd = document.getElementById('acctBackdrop');
+        if (bd) bd.classList.remove('show');
+    }
+
+    async function acctDeleteAccount() {
+        if (!confirm('Delete your Powerhouse account and all saved data? This cannot be undone.')) return;
+        try {
+            const r = await fetch(`${API_BASE}/auth/account`, {
+                method: 'DELETE',
+                headers: {'Authorization': `Bearer ${_acctToken}`}
+            });
+            if (r.ok || r.status === 401) acctSignOut();
+        } catch(e) { alert('Failed to delete account. Try again.'); }
+    }
+
+    async function acctSearch() {
+        const input = document.getElementById('acctSearchInput');
+        const btn   = document.getElementById('acctSearchBtn');
+        const res   = document.getElementById('acctSearchResults');
+        const q     = (input ? input.value : '').trim();
+        if (!q) { if (res) res.innerHTML = '<div class="acct-search-empty">Enter a username to search.</div>'; return; }
+        if (btn) { btn.disabled = true; btn.textContent = 'Searching…'; }
+        if (res) res.innerHTML = '';
+        try {
+            const r    = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`);
+            const data = await r.json();
+            if (!r.ok || !data.results) { if (res) res.innerHTML = '<div class="acct-search-empty">Search failed. Try again.</div>'; return; }
+            if (data.results.length === 0) {
+                if (res) res.innerHTML = '<div class="acct-search-empty">No accounts found.</div>';
+            } else {
+                if (res) res.innerHTML = data.results.map(u => {
+                    if (u.username.toLowerCase() === (_acctUsername || '').toLowerCase()) return '';
+                    const isBlocked = _msgBlockedList.includes(u.username.toLowerCase());
+                    return `<div class="acct-result-row">
+                        <div class="acct-result-avatar">${u.username.slice(0,2).toUpperCase()}</div>
+                        <div class="acct-result-info" style="flex:1;min-width:0">
+                            <div class="acct-result-name">${escHtmlAcct(u.username)}</div>
+                            <div class="acct-result-since">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
+                        </div>
+                        ${_acctToken ? `<div style="display:flex;gap:5px;flex-shrink:0">
+                            <button class="msg-thread-action-btn" style="font-size:.62rem" onclick="liSwitchTab('messages');msgShowCompose();setTimeout(()=>{const i=document.getElementById('msgToInput');if(i)i.value='${escHtmlAcct(u.username)}';})" title="Message">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:11px;height:11px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </button>
+                            <button class="msg-thread-action-btn ${isBlocked ? 'unblock-btn' : 'block-btn'}" style="font-size:.62rem" onclick="acctSearchBlockToggle('${escHtmlAcct(u.username)}',this)">${isBlocked ? 'Unblock' : 'Block'}</button>
+                        </div>` : ''}
+                    </div>`;
+                }).join('');
+            }
+        } catch(e) { if (res) res.innerHTML = '<div class="acct-search-empty">Network error. Try again.</div>'; }
+        finally { if (btn) { btn.disabled = false; btn.textContent = 'Search'; } }
+    }
+
+    function escHtmlAcct(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    // ── TAB NAVIGATION (logged-in panel) ─────────────────────────────────────
+    function liSwitchTab(tab) {
+        ['profile','messages','users'].forEach(t => {
+            document.getElementById('liPane' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? (t === 'profile' ? 'flex' : 'block') : 'none';
+            document.getElementById('liTab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+        });
+        if (tab === 'messages') msgLoadInbox();
+    }
+
+    // ── MESSAGING STATE ───────────────────────────────────────────────────────
+    let _msgCurrentThread = null; // username of open thread
+    let _msgBlockedList   = [];   // array of usernames I've blocked
+
+    // ── INBOX ─────────────────────────────────────────────────────────────────
+    async function msgLoadInbox() {
+        const list = document.getElementById('msgInboxList');
+        if (list) list.innerHTML = '<div class="msg-empty">Loading…</div>';
+        msgShowInbox();
+        try {
+            const [inboxR, blockR] = await Promise.all([
+                fetch(`${API_BASE}/msg/inbox`,     { headers: { Authorization: `Bearer ${_acctToken}` } }),
+                fetch(`${API_BASE}/social/blocked`, { headers: { Authorization: `Bearer ${_acctToken}` } }),
+            ]);
+            if (inboxR.status === 401 || blockR.status === 401) { acctHandleExpired(); return; }
+            const { conversations } = await inboxR.json();
+            const { blocked }       = await blockR.json();
+            _msgBlockedList = blocked || [];
+            if (!conversations || conversations.length === 0) {
+                if (list) list.innerHTML = '<div class="msg-empty">No messages yet. Start a conversation!</div>';
+                return;
+            }
+            let unreadTotal = 0;
+            if (list) list.innerHTML = conversations.map(c => {
+                if (c.unread > 0) unreadTotal++;
+                return `<div class="msg-convo-row${c.unread > 0 ? ' unread' : ''}" onclick="msgOpenThread('${escHtmlAcct(c.with)}')">
+                    <div class="msg-convo-avatar">${c.with.slice(0,2).toUpperCase()}</div>
+                    <div class="msg-convo-info">
+                        <div class="msg-convo-name">${escHtmlAcct(c.with)}</div>
+                        <div class="msg-convo-preview">${escHtmlAcct(c.lastMsg || '')}</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
+                        <div class="msg-convo-time">${msgFmtTime(c.lastAt)}</div>
+                        ${c.unread > 0 ? `<div class="msg-unread-badge">${c.unread}</div>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+            const dot = document.getElementById('msgUnreadDot');
+            if (dot) dot.classList.toggle('show', unreadTotal > 0);
+        } catch(e) { if (list) list.innerHTML = '<div class="msg-empty">Failed to load. Try again.</div>'; }
+    }
+
+    function msgShowInbox() {
+        document.getElementById('msgInboxView').style.display    = 'block';
+        document.getElementById('msgComposeView').style.display  = 'none';
+        document.getElementById('msgThreadView').style.display   = 'none';
+        _msgCurrentThread = null;
+    }
+
+    function msgShowCompose() {
+        document.getElementById('msgInboxView').style.display    = 'none';
+        document.getElementById('msgComposeView').style.display  = 'block';
+        document.getElementById('msgThreadView').style.display   = 'none';
+        const inp = document.getElementById('msgToInput');
+        if (inp) { inp.value = ''; inp.focus(); }
+        const body = document.getElementById('msgNewBody');
+        if (body) body.value = '';
+        const err = document.getElementById('msgNewError');
+        if (err) err.textContent = '';
+    }
+
+    // ── THREAD ────────────────────────────────────────────────────────────────
+    async function msgOpenThread(withUser) {
+        _msgCurrentThread = withUser;
+        document.getElementById('msgInboxView').style.display   = 'none';
+        document.getElementById('msgComposeView').style.display = 'none';
+        document.getElementById('msgThreadView').style.display  = 'block';
+        document.getElementById('msgThreadName').textContent    = withUser;
+
+        const isBlocked = _msgBlockedList.includes(withUser.toLowerCase());
+        const blockBtn  = document.getElementById('msgBlockBtn');
+        if (blockBtn) {
+            blockBtn.textContent = isBlocked ? 'Unblock' : 'Block';
+            blockBtn.className   = 'msg-thread-action-btn ' + (isBlocked ? 'unblock-btn' : 'block-btn');
+        }
+        document.getElementById('msgBlockedNotice').style.display = isBlocked ? 'block' : 'none';
+        document.getElementById('msgComposeBar').style.display    = isBlocked ? 'none'  : 'flex';
+
+        const list = document.getElementById('msgMessagesList');
+        if (list) list.innerHTML = '<div class="msg-empty">Loading…</div>';
+
+        try {
+            const r = await fetch(`${API_BASE}/msg/thread?with=${encodeURIComponent(withUser)}`, {
+                headers: { Authorization: `Bearer ${_acctToken}` }
+            });
+            if (r.status === 401) { acctHandleExpired(); return; }
+            const { messages } = await r.json();
+            if (!messages || messages.length === 0) {
+                if (list) list.innerHTML = '<div class="msg-empty">No messages yet. Say hi!</div>';
+            } else {
+                if (list) list.innerHTML = messages.map(m => {
+                    const mine = m.from === _acctUsername.toLowerCase();
+                    return `<div class="msg-bubble-wrap ${mine ? 'mine' : 'theirs'}">
+                        <div class="msg-bubble">${escHtmlAcct(m.body)}</div>
+                        <div style="display:flex;align-items:center;gap:4px">
+                            <div class="msg-bubble-time">${msgFmtTime(m.sentAt)}</div>
+                            ${mine ? `<button class="msg-bubble-del" onclick="msgDelete('${escHtmlAcct(m.id)}')" title="Delete">✕</button>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+                list.scrollTop = list.scrollHeight;
+            }
+        } catch(e) { if (list) list.innerHTML = '<div class="msg-empty">Failed to load.</div>'; }
+    }
+
+    // ── SEND ──────────────────────────────────────────────────────────────────
+    async function msgSendNew() {
+        const toInput   = document.getElementById('msgToInput');
+        const bodyInput = document.getElementById('msgNewBody');
+        const err       = document.getElementById('msgNewError');
+        const to   = (toInput   ? toInput.value.trim()   : '');
+        const body = (bodyInput ? bodyInput.value.trim() : '');
+        if (!to)   { if (err) err.textContent = 'Enter a username.'; return; }
+        if (!body) { if (err) err.textContent = 'Write a message first.'; return; }
+        if (to.toLowerCase() === _acctUsername.toLowerCase()) { if (err) err.textContent = "You can't message yourself."; return; }
+        if (err) err.textContent = '';
+        try {
+            const r    = await fetch(`${API_BASE}/msg/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ to, body })
+            });
+            const data = await r.json();
+            if (!r.ok) { if (err) err.textContent = data.error || 'Send failed.'; return; }
+            if (bodyInput) bodyInput.value = '';
+            msgOpenThread(to);
+        } catch(e) { if (err) err.textContent = 'Network error.'; }
+    }
+
+    async function msgSendReply() {
+        if (!_msgCurrentThread) return;
+        const inp  = document.getElementById('msgReplyInput');
+        const body = inp ? inp.value.trim() : '';
+        if (!body) return;
+        const btn  = document.querySelector('#msgComposeBar .msg-send-btn');
+        if (btn) btn.disabled = true;
+        try {
+            const r = await fetch(`${API_BASE}/msg/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ to: _msgCurrentThread, body })
+            });
+            if (r.status === 401) { acctHandleExpired(); return; }
+            if (r.ok) {
+                if (inp) inp.value = '';
+                msgOpenThread(_msgCurrentThread);
+            }
+        } catch(e) { /* silent */ }
+        finally { if (btn) btn.disabled = false; }
+    }
+
+    async function msgDelete(id) {
+        if (!confirm('Delete this message?')) return;
+        try {
+            const r = await fetch(`${API_BASE}/msg/message?id=${encodeURIComponent(id)}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${_acctToken}` }
+            });
+            if (r.ok && _msgCurrentThread) msgOpenThread(_msgCurrentThread);
+        } catch(e) { /* silent */ }
+    }
+
+    // ── BLOCK / UNBLOCK ───────────────────────────────────────────────────────
+    async function msgToggleBlock() {
+        if (!_msgCurrentThread) return;
+        const target    = _msgCurrentThread;
+        const isBlocked = _msgBlockedList.includes(target.toLowerCase());
+        const endpoint  = isBlocked ? '/social/unblock' : '/social/block';
+        try {
+            const r = await fetch(`${API_BASE}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ target })
+            });
+            if (r.status === 401) { acctHandleExpired(); return; }
+            if (r.ok) {
+                if (isBlocked) {
+                    _msgBlockedList = _msgBlockedList.filter(u => u !== target.toLowerCase());
+                } else {
+                    _msgBlockedList.push(target.toLowerCase());
+                }
+                msgOpenThread(target); // refresh thread view
+            }
+        } catch(e) { /* silent */ }
+    }
+
+    async function acctSearchBlockToggle(target, btn) {
+        const isBlocked = _msgBlockedList.includes(target.toLowerCase());
+        const endpoint  = isBlocked ? '/social/unblock' : '/social/block';
+        btn.disabled    = true;
+        try {
+            const r = await fetch(`${API_BASE}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ target })
+            });
+            if (r.ok) {
+                if (isBlocked) {
+                    _msgBlockedList = _msgBlockedList.filter(u => u !== target.toLowerCase());
+                    btn.textContent = 'Block';
+                    btn.style.color = '#c42b1c';
+                } else {
+                    _msgBlockedList.push(target.toLowerCase());
+                    btn.textContent = 'Unblock';
+                    btn.style.color = '#107c10';
+                }
+            }
+        } catch(e) { /* silent */ }
+        finally { btn.disabled = false; }
+    }
+
+    function msgFmtTime(iso) {
+        if (!iso) return '';
+        const d   = new Date(iso);
+        const now = new Date();
+        const diff = now - d;
+        if (diff < 60000)     return 'just now';
+        if (diff < 3600000)   return Math.floor(diff/60000) + 'm ago';
+        if (diff < 86400000)  return Math.floor(diff/3600000) + 'h ago';
+        if (diff < 604800000) return Math.floor(diff/86400000) + 'd ago';
+        return d.toLocaleDateString();
+    }
+
+    // ── NAV TABS ──────────────────────────────────────────────────────────────
+    function acctNavSwitch(tab) {
+        ['account','messages','find'].forEach(t => {
+            document.getElementById('navPane'+t.charAt(0).toUpperCase()+t.slice(1)).style.display = t===tab?'block':'none';
+            document.getElementById('navTab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tab);
+        });
+        if (tab === 'messages') { msgLoadInbox(); }
+        if (tab === 'find') { document.getElementById('acctSearchResults').innerHTML=''; }
+    }
+
+    // ── MESSAGING STATE ────────────────────────────────────────────────────────
+    let _msgWith       = null;   // username of open thread
+    let _msgBlocked    = [];     // usernames I have blocked
+    let _msgBlockedBy  = [];     // (not fetched — server enforces)
+    let _msgPollTimer  = null;
+
+    // ── INBOX ──────────────────────────────────────────────────────────────────
+    async function msgLoadInbox() {
+        if (!_acctToken) return;
+        try {
+            const r    = await fetch(`${API_BASE}/msg/inbox`, {headers:{'Authorization':`Bearer ${_acctToken}`}});
+            if (r.status===401){acctHandleExpired();return;}
+            const data = await r.json();
+            const convs = data.conversations || [];
+            const inbox  = document.getElementById('msgInbox');
+            const badge  = document.getElementById('msgUnreadBadge');
+            const totalUnread = convs.reduce((a,c)=>a+(c.unread||0),0);
+            if (badge) { badge.style.display = totalUnread>0?'inline-flex':'none'; badge.textContent=totalUnread>9?'9+':totalUnread; }
+            if (!inbox) return;
+            if (convs.length===0){inbox.innerHTML='<div class="msg-empty">No conversations yet.</div>';return;}
+            inbox.innerHTML = convs.map(c=>`
+                <div class="msg-conv-row${c.unread?'unread':''}" onclick="msgOpenThread('${escHtmlAcct(c.with)}')">
+                    <div class="msg-conv-avatar">${c.with.slice(0,2).toUpperCase()}</div>
+                    <div class="msg-conv-info">
+                        <div class="msg-conv-name">${escHtmlAcct(c.with)}${c.unread?`<span class="msg-unread-dot"></span>`:''}</div>
+                        <div class="msg-conv-preview">${escHtmlAcct(c.lastMsg||'')}</div>
+                    </div>
+                    <div class="msg-conv-meta">
+                        <div class="msg-conv-time">${msgFmtTime(c.lastAt)}</div>
+                    </div>
+                </div>`).join('');
+        } catch(e){console.warn('msgLoadInbox',e);}
+    }
+
+    // ── THREAD ─────────────────────────────────────────────────────────────────
+    async function msgOpenThread(username) {
+        _msgWith = username;
+        document.getElementById('msgInboxView').style.display  = 'none';
+        document.getElementById('msgNewPanel').style.display   = 'none';
+        const tv = document.getElementById('msgThreadView');
+        tv.style.display = 'flex';
+        document.getElementById('msgThreadName').textContent   = username;
+        await msgLoadBlocked();
+        msgUpdateBlockUI();
+        await msgLoadThread();
+        clearInterval(_msgPollTimer);
+        _msgPollTimer = setInterval(msgLoadThread, 8000);
+    }
+
+    async function msgLoadThread() {
+        if (!_acctToken || !_msgWith) return;
+        try {
+            const r    = await fetch(`${API_BASE}/msg/thread?with=${encodeURIComponent(_msgWith)}`,{headers:{'Authorization':`Bearer ${_acctToken}`}});
+            if (r.status===401){acctHandleExpired();return;}
+            const data = await r.json();
+            const msgs  = data.messages || [];
+            const box   = document.getElementById('msgMessages');
+            if (!box) return;
+            const wasAtBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 40;
+            box.innerHTML = msgs.length===0 ? '<div class="msg-empty">No messages yet. Say hi!</div>' :
+                msgs.map(m=>`
+                <div class="msg-bubble-wrap ${m.from===_acctUsername?'mine':'theirs'}">
+                    <div class="msg-bubble ${m.from===_acctUsername?'mine':'theirs'}">
+                        ${escHtmlAcct(m.body)}
+                        ${m.from===_acctUsername?`<button class="msg-delete-btn" onclick="msgDelete('${m.id}')" title="Delete">✕</button>`:''}
+                    </div>
+                    <div class="msg-bubble-time">${msgFmtTime(m.sentAt)}</div>
+                </div>`).join('');
+            if (wasAtBottom || msgs.length <= 5) box.scrollTop = box.scrollHeight;
+        } catch(e){console.warn('msgLoadThread',e);}
+    }
+
+    async function msgSend() {
+        if (!_acctToken || !_msgWith) return;
+        if (_msgBlocked.includes(_msgWith.toLowerCase())) return;
+        const inp  = document.getElementById('msgInput');
+        const btn  = document.getElementById('msgSendBtn');
+        const body = (inp ? inp.value : '').trim();
+        if (!body) return;
+        btn.disabled = true;
+        try {
+            const r = await fetch(`${API_BASE}/msg/send`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','Authorization':`Bearer ${_acctToken}`},
+                body: JSON.stringify({to:_msgWith, body})
+            });
+            if (r.status===401){acctHandleExpired();return;}
+            if (r.ok){ inp.value=''; await msgLoadThread(); }
+            else { const d=await r.json(); alert(d.error||'Send failed.'); }
+        } catch(e){alert('Network error.');}
+        finally {btn.disabled=false;}
+    }
+
+    async function msgDelete(id) {
+        if (!_acctToken) return;
+        if (!confirm('Delete this message?')) return;
+        try {
+            const r = await fetch(`${API_BASE}/msg/message?id=${encodeURIComponent(id)}`,{
+                method:'DELETE', headers:{'Authorization':`Bearer ${_acctToken}`}
+            });
+            if (r.ok) msgLoadThread();
+        } catch(e){}
+    }
+
+    function msgShowInbox() {
+        clearInterval(_msgPollTimer); _msgWith=null;
+        document.getElementById('msgThreadView').style.display = 'none';
+        document.getElementById('msgNewPanel').style.display   = 'none';
+        document.getElementById('msgInboxView').style.display  = 'block';
+        msgLoadInbox();
+    }
+
+    function msgShowNewPanel() {
+        document.getElementById('msgInboxView').style.display  = 'none';
+        document.getElementById('msgNewPanel').style.display   = 'block';
+        document.getElementById('msgNewSearchResults').innerHTML = '';
+        document.getElementById('msgNewSearchInput').value = '';
+    }
+
+    function msgHideNewPanel() {
+        document.getElementById('msgNewPanel').style.display  = 'none';
+        document.getElementById('msgInboxView').style.display = 'block';
+    }
+
+    async function msgNewSearch() {
+        const inp = document.getElementById('msgNewSearchInput');
+        const res = document.getElementById('msgNewSearchResults');
+        const q   = inp ? inp.value.trim() : '';
+        if (!q) return;
+        res.innerHTML = '';
+        try {
+            const r    = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`);
+            const data = await r.json();
+            const list  = (data.results||[]).filter(u=>u.username.toLowerCase()!==_acctUsername.toLowerCase());
+            if (list.length===0){res.innerHTML='<div class="msg-empty">No users found.</div>';return;}
+            res.innerHTML = list.map(u=>`
+                <div class="acct-result-row">
+                    <div class="acct-result-avatar">${u.username.slice(0,2).toUpperCase()}</div>
+                    <div style="flex:1;min-width:0">
+                        <div class="acct-result-name">${escHtmlAcct(u.username)}</div>
+                        <div class="acct-result-since">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <button class="msg-icon-btn" onclick="msgOpenThread('${escHtmlAcct(u.username)}');acctNavSwitch('messages')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message
+                    </button>
+                </div>`).join('');
+        } catch(e){res.innerHTML='<div class="msg-empty">Network error.</div>';}
+    }
+
+    // ── BLOCK / UNBLOCK ────────────────────────────────────────────────────────
+    async function msgLoadBlocked() {
+        if (!_acctToken) return;
+        try {
+            const r    = await fetch(`${API_BASE}/social/blocked`,{headers:{'Authorization':`Bearer ${_acctToken}`}});
+            if (r.status===401){acctHandleExpired();return;}
+            const data = await r.json();
+            _msgBlocked = (data.blocked||[]).map(u=>u.toLowerCase());
+            renderBlockedList();
+        } catch(e){}
+    }
+
+    function renderBlockedList() {
+        const el = document.getElementById('blockedList');
+        if (!el) return;
+        if (_msgBlocked.length===0){el.innerHTML='<div class="msg-empty" style="padding:8px 0">No blocked users.</div>';return;}
+        el.innerHTML = _msgBlocked.map(u=>`
+            <div class="blocked-row">
+                <div class="msg-conv-avatar" style="width:28px;height:28px;font-size:.68rem">${u.slice(0,2).toUpperCase()}</div>
+                <div class="blocked-name">${escHtmlAcct(u)}</div>
+                <button class="msg-icon-btn" onclick="msgUnblockUser('${escHtmlAcct(u)}')">Unblock</button>
+            </div>`).join('');
+    }
+
+    function msgUpdateBlockUI() {
+        if (!_msgWith) return;
+        const isBlocked = _msgBlocked.includes(_msgWith.toLowerCase());
+        const banner = document.getElementById('msgBlockedBanner');
+        const compose = document.getElementById('msgCompose');
+        const blockBtn = document.getElementById('msgBlockBtn');
+        const blockLabel = document.getElementById('msgBlockLabel');
+        if (banner)  banner.style.display  = isBlocked ? 'block' : 'none';
+        if (compose) compose.style.display = isBlocked ? 'none'  : 'flex';
+        if (blockLabel) blockLabel.textContent = isBlocked ? 'Unblock' : 'Block';
+        if (blockBtn) blockBtn.classList.toggle('danger', !isBlocked);
+    }
+
+    async function msgToggleBlock() {
+        if (!_acctToken || !_msgWith) return;
+        const isBlocked = _msgBlocked.includes(_msgWith.toLowerCase());
+        const endpoint  = isBlocked ? '/social/unblock' : '/social/block';
+        if (!isBlocked && !confirm(`Block ${_msgWith}? They won't be able to message you.`)) return;
+        try {
+            const r = await fetch(`${API_BASE}${endpoint}`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','Authorization':`Bearer ${_acctToken}`},
+                body: JSON.stringify({username:_msgWith})
+            });
+            if (r.ok){ await msgLoadBlocked(); msgUpdateBlockUI(); }
+        } catch(e){alert('Network error.');}
+    }
+
+    async function msgUnblockUser(username) {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/social/unblock`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','Authorization':`Bearer ${_acctToken}`},
+                body: JSON.stringify({username})
+            });
+            if (r.ok){ await msgLoadBlocked(); msgUpdateBlockUI(); }
+        } catch(e){}
+    }
+
+    // ── SEARCH results update (add Message button) ─────────────────────────────
+    const _origAcctSearch = acctSearch;
+    acctSearch = async function() {
+        await _origAcctSearch();
+        // Patch search results to add Message buttons
+        const res = document.getElementById('acctSearchResults');
+        if (!res || !_acctToken) return;
+        const rows = res.querySelectorAll('.acct-result-row');
+        rows.forEach(row => {
+            const nameEl = row.querySelector('.acct-result-name');
+            if (!nameEl) return;
+            const uname = nameEl.textContent.trim();
+            if (uname.toLowerCase() === _acctUsername.toLowerCase()) return;
+            if (!row.querySelector('.msg-icon-btn')) {
+                const btn = document.createElement('button');
+                btn.className = 'msg-icon-btn';
+                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Msg';
+                btn.onclick = () => { acctNavSwitch('messages'); msgOpenThread(uname); };
+                row.appendChild(btn);
+            }
+        });
+    };
+
+    // ── HELPERS ────────────────────────────────────────────────────────────────
+    function msgFmtTime(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        const now = new Date();
+        const diff = now - d;
+        if (diff < 60000)     return 'just now';
+        if (diff < 3600000)   return Math.floor(diff/60000)+'m ago';
+        if (diff < 86400000)  return Math.floor(diff/3600000)+'h ago';
+        if (diff < 604800000) return Math.floor(diff/86400000)+'d ago';
+        return d.toLocaleDateString();
+    }
+
+    function acctHandleExpired() {
+        _acctToken = null;
+        localStorage.removeItem('ph_token');
+        _acctUsername = null;
+        localStorage.removeItem('ph_username');
+        updateAccountBtn();
+    }
+
+    // Auto-save 2 s after any settings/history/favorites change
+    const _origSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function(key, value) {
+        _origSetItem(key, value);
+        if (_acctToken && key.startsWith('power_') && key !== 'power_tutorial_done') {
+            clearTimeout(localStorage._acctSaveTimer);
+            localStorage._acctSaveTimer = setTimeout(acctSaveData, 2000);
+        }
+    };
 
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
     function debounce(fn, delay) {
@@ -1655,6 +2945,11 @@
             target: '.settings-btn', position: 'below-left'
         },
         {
+            title: "Save your progress",
+            body: "Create a free Powerhouse account to save your settings, history, and favorites across any device.",
+            target: '#acctBtn', position: 'below-left', isAccountStep: true
+        },
+        {
             title: "You're all set",
             body: "Enjoy Powerhouse! Tap REDO in Settings anytime to see this tour again.",
             target: null, position: 'center'
@@ -1701,6 +2996,9 @@
 
         // Theme picker step
         const bodyEl = document.getElementById('tutorialBody');
+        if (step.isAccountStep) {
+            body.innerHTML += '<br><button class="tutorial-btn" style="margin-top:10px" onclick="endTutorial();toggleAccountModal()">Create Account</button>';
+        }
         if (step.isThemePicker) {
             const currentTheme = localStorage.getItem('power_theme') || 'system';
             bodyEl.innerHTML = step.body + `
@@ -1883,6 +3181,8 @@
         fetchData().then(() => {
             if (!localStorage.getItem('power_tutorial_done')) setTimeout(startTutorial, 800);
         });
+        updateAccountBtn();
+        if (_acctToken) acctLoadData();
         loadBanner();
         trackVisit();
     };
