@@ -713,9 +713,27 @@
   {
     "title": "Cobb Can Move",
     "category": "Puzzle",
-    "desc": "obama",
+    "desc": "C",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQe1TlwohdhK6CnjHBDtfe6pMdhhWxzZ57ySg&s",
     "link": "http://cobb-can-move.com/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "White Lake Bets",
+    "category": "Arcade",
+    "desc": "Every bet plays out live — watch it happen.",
+    "thumb": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/6a/40/75/white-lake-state-park.jpg?w=900&h=500&s=1",
+    "link": "https://wlbets.lovable.app/",
+    "verified": true,
+    "useBlank": true
+  },
+  {
+    "title": "Uncle's AI",
+    "category": "Utility",
+    "desc": "Every AI combined into one.",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Artificial_Intelligence_%26_AI_%26_Machine_Learning_-_30212411048.jpg/1280px-Artificial_Intelligence_%26_AI_%26_Machine_Learning_-_30212411048.jpg?utm_source=en.wikiversity.org&utm_campaign=index&utm_content=thumbnail",
+    "link": "https://unclesai.lovable.app/",
     "verified": true,
     "useBlank": true
   }
