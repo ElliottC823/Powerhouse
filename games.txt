@@ -721,7 +721,7 @@
   },
   {
     "title": "White Lake Bets",
-    "category": "Arcade",
+    "category": "Simulator",
     "desc": "Every bet plays out live — watch it happen.",
     "thumb": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/26/6a/40/75/white-lake-state-park.jpg?w=900&h=500&s=1",
     "link": "https://wlbets.lovable.app/",
