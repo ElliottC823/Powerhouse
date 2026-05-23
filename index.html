@@ -454,6 +454,15 @@
         .admin-badge-sm { width: 12px; height: 12px; flex-shrink: 0; vertical-align: -2px; margin-left: 2px; }
         .admin-badge-lg { width: 18px; height: 18px; flex-shrink: 0; vertical-align: -3px; margin-left: 3px; }
 
+        #visitor-counter {
+            display: flex; align-items: center; gap: 6px;
+            font-size: .7rem; font-weight: 600; color: var(--muted); white-space: nowrap;
+        }
+        .vc-dot {
+            width: 7px; height: 7px; border-radius: 50%; background: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76,175,80,.25); flex-shrink: 0;
+        }
+
         /* ── BLOG BUTTON ── */
         .blog-btn {
             background: transparent; border: 1px solid var(--border);
@@ -1040,82 +1049,6 @@
         .redeem-msg.success { color: #107c10; }
         .redeem-msg.info    { color: var(--accent); }
 
-        /* Tutorial theme picker */
-        .tutorial-theme-picker { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 0 4px; }
-        .tutorial-theme-swatch {
-            width: 36px; height: 36px; border-radius: 6px;
-            border: 2px solid transparent; cursor: pointer;
-            transition: border-color 0.1s, transform 0.1s; position: relative;
-        }
-        .tutorial-theme-swatch:hover { transform: scale(1.08); }
-        .tutorial-theme-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-
-        /* ── ANNOUNCEMENT BANNER ── */
-        #site-banner {
-            display: none; width: 100%;
-            padding: 7px clamp(12px,3%,24px);
-            font-size: 0.78rem; font-weight: 400; text-align: center;
-            letter-spacing: 0.01em; position: relative; z-index: 999;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        #site-banner a { color: inherit; text-decoration: underline; }
-        #site-banner-close {
-            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; color: inherit; cursor: pointer;
-            opacity: 0.5; font-size: 0.9rem; line-height: 1; padding: 4px;
-        }
-        #site-banner-close:hover { opacity: 1; }
-
-        /* ── VISITOR COUNTER ── */
-        #visitor-counter {
-            display: none; align-items: center; gap: 5px;
-            font-size: 0.68rem; font-weight: 400; opacity: 0.45;
-            white-space: nowrap; flex-shrink: 0;
-        }
-        #visitor-counter .vc-dot {
-            width: 5px; height: 5px; border-radius: 50%;
-            background: #107c10; box-shadow: 0 0 4px #107c10; flex-shrink: 0;
-        }
-
-        /* ── FONT WEIGHT OVERRIDES ── */
-        [data-font-weight="light"]   body { --font-weight-normal:300; --font-weight-bold:400; --font-weight-black:600; }
-        [data-font-weight="regular"] body { --font-weight-normal:400; --font-weight-bold:600; --font-weight-black:700; }
-        [data-font-weight="bold"]    body { --font-weight-normal:500; --font-weight-bold:700; --font-weight-black:800; }
-        body { font-weight: var(--font-weight-normal); }
-        .game-title, .shelf-label, .s-label, .shelf-title, .filter-btn, .settings-tab { font-weight: var(--font-weight-bold) !important; }
-        .game-title, .shelf-title, .settings-title, h4 { font-weight: var(--font-weight-black) !important; }
-
-        /* Font weight selector */
-        .weight-pills { display: flex; gap: 5px; margin-top: 4px; }
-        .weight-pill {
-            flex: 1; padding: 6px 4px; border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: color-mix(in srgb, var(--text) 4%, transparent);
-            cursor: pointer; font-family: inherit; font-size: 0.73rem;
-            color: var(--text); transition: border-color 0.1s, background 0.1s;
-            text-align: center; font-weight: 400;
-        }
-        .weight-pill:hover { border-color: var(--accent); }
-        .weight-pill.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface2)); color: var(--accent); }
-
-        /* Tutorial overlay */
-        .tutorial-overlay { display:none; position:fixed; inset:0; z-index:9000; pointer-events:none; }
-        .tutorial-overlay.active { display:block; }
-        .tutorial-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.6); pointer-events:all; }
-        .tutorial-highlight { position:absolute; border-radius:var(--radius); box-shadow:0 0 0 9999px rgba(0,0,0,0.6), 0 0 0 2px var(--accent); pointer-events:none; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); z-index:9001; opacity:0; }
-        .tutorial-card { position:absolute; background:var(--surface); border:1px solid var(--accent); border-radius:var(--radius); padding:16px 18px; width:min(280px,88vw); z-index:9002; pointer-events:all; box-shadow:0 8px 32px rgba(0,0,0,0.35); backdrop-filter:blur(20px); }
-        .tutorial-step-label { font-size:0.6rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; letter-spacing:1px; }
-        .tutorial-title { font-size:0.95rem; font-weight:600; margin-bottom:6px; }
-        .tutorial-body { font-size:0.8rem; line-height:1.55; opacity:0.75; margin-bottom:12px; font-weight:400; }
-        .tutorial-actions { display:flex; justify-content:space-between; align-items:center; gap:10px; }
-        .tutorial-dots { display:flex; gap:4px; align-items:center; }
-        .tutorial-dot { width:5px; height:5px; border-radius:50%; background:var(--border); transition:background 0.15s,transform 0.15s; }
-        .tutorial-dot.active { background:var(--accent); transform:scale(1.3); }
-        .tutorial-btn-row { display:flex; gap:6px; }
-        .tutorial-btn { background:var(--accent); color:#fff; border:none; border-radius:var(--radius-sm); padding:6px 14px; font-weight:600; font-size:0.78rem; font-family:inherit; cursor:pointer; min-height:30px; transition:background 0.1s; }
-        .tutorial-btn:hover { background:var(--accent2); }
-        .tutorial-btn.secondary { background:transparent; color:var(--text); border:1px solid var(--border); opacity:0.7; }
-        .tutorial-btn:active { opacity:0.7; }
     </style>
 </head>
 <body data-theme="system">
@@ -1123,7 +1056,7 @@
 <!-- Settings backdrop -->
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
 
-<div id="site-banner">
+<div id="site-banner" style="display:none">
     <span id="site-banner-msg"></span>
     <button id="site-banner-close" onclick="document.getElementById('site-banner').style.display='none'" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
 </div>
@@ -1263,22 +1196,6 @@
                 <button class="s-btn danger" onclick="clearHistory()">Clear</button>
             </div>
 
-            <div class="s-section-title" style="margin-top:18px;">Tutorial</div>
-            <div class="s-row">
-                <div>
-                    <div class="s-label">Redo Tutorial</div>
-                    <div class="s-sublabel">Walk through the onboarding again</div>
-                </div>
-                <button class="s-btn primary" onclick="closeSettings();startTutorial()">Redo</button>
-            </div>
-        </div>
-
-        <!-- ── ABOUT TAB ── -->
-        <div class="settings-pane" id="pane-about">
-            <div class="about-hero">
-                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse">
-                <div class="about-version">V1.9.3</div>
-            </div>
 
             <div class="s-section-title">About</div>
             <p id="aboutText" class="about-text">Powerhouse is a custom-built game hub full of unblocked games, and websites to annoy teachers, and easily get 5 missing ELA assignments.</p>
@@ -1488,22 +1405,6 @@
     </div>
 </div>
 
-<div class="tutorial-overlay" id="tutorialOverlay">
-    <div class="tutorial-backdrop"></div>
-    <div class="tutorial-highlight" id="tutorialHighlight"></div>
-    <div class="tutorial-card" id="tutorialCard">
-        <div class="tutorial-step-label" id="tutorialStepLabel"></div>
-        <div class="tutorial-title" id="tutorialTitle"></div>
-        <div class="tutorial-body" id="tutorialBody"></div>
-        <div class="tutorial-actions">
-            <div class="tutorial-dots" id="tutorialDots"></div>
-            <div class="tutorial-btn-row">
-                <button class="tutorial-btn secondary" onclick="endTutorial()">Skip</button>
-                <button class="tutorial-btn" id="tutorialNext" onclick="tutorialNext()">Next</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     let games = [];
@@ -1611,6 +1512,7 @@
     let _acctToken    = localStorage.getItem('ph_token')    || null;
     let _acctUsername = localStorage.getItem('ph_username') || null;
     let _acctSaving   = false;
+    let _acctInitDone = false;  // prevents auto-save during page load
 
     function updateAccountBtn() {
         const btn = document.getElementById('acctBtn');
@@ -1870,7 +1772,7 @@
     const _origSetItem = localStorage.setItem.bind(localStorage);
     localStorage.setItem = function(key, value) {
         _origSetItem(key, value);
-        if (_acctToken && key.startsWith('power_') && key !== 'power_tutorial_done') {
+        if (_acctToken && _acctInitDone && key.startsWith('power_')) {
             clearTimeout(localStorage._acctSaveTimer);
             localStorage._acctSaveTimer = setTimeout(acctSaveData, 2000);
         }
@@ -2847,160 +2749,16 @@
         renderFontList();
     }
 
-    // ── TUTORIAL ──────────────────────────────────────────────────────────
-    const TUTORIAL_STEPS = [
-        {
-            title: "Welcome to Powerhouse",
-            body: "This quick tour will show you the ropes. Tap Next to continue, or Skip to dive straight in.",
-            target: null, position: 'center'
-        },
-        {
-            title: "Pick your theme",
-            body: "Choose a look that feels right for you. You can change this anytime in Settings.",
-            target: null, position: 'center', isThemePicker: true
-        },
-        {
-            title: "Search Games",
-            body: "Type any game name here to instantly filter the library.",
-            target: '#searchInput', position: 'below'
-        },
-        {
-            title: "Filter by Category",
-            body: "Browse by type — Arcade, Puzzle, Media, and more. UNBLOCKED shows only verified games.",
-            target: '#filterBar', position: 'below'
-        },
-        {
-            title: "Game Cards",
-            body: "Click any card to launch the game. Verified games (badge) are confirmed unblocked.",
-            target: '#game-grid', position: 'above'
-        },
-        {
-            title: "Settings",
-            body: "Change your theme, toggle rounded corners, pick an accent color, and more.",
-            target: '.settings-btn', position: 'below-left'
-        },
-        {
-            title: "Save your progress",
-            body: "Create a free Powerhouse account to save your settings, history, and favorites across any device.",
-            target: '#acctBtn', position: 'below-left', isAccountStep: true
-        },
-        {
-            title: "You're all set",
-            body: "Enjoy Powerhouse! Tap REDO in Settings anytime to see this tour again.",
-            target: null, position: 'center'
-        }
-    ];
 
-    let tutorialStep = 0;
 
-    function startTutorial() {
-        tutorialStep = 0;
-        document.getElementById('tutorialOverlay').classList.add('active');
-        renderTutorialStep();
-    }
 
-    function endTutorial() {
-        document.getElementById('tutorialOverlay').classList.remove('active');
-        clearHighlight();
-        localStorage.setItem('power_tutorial_done', 'true');
-    }
 
-    function tutorialNext() {
-        tutorialStep++;
-        if (tutorialStep >= TUTORIAL_STEPS.length) { endTutorial(); return; }
-        renderTutorialStep();
-    }
 
-    function clearHighlight() {
-        const hl = document.getElementById('tutorialHighlight');
-        hl.style.opacity = '0'; hl.style.width = '0'; hl.style.height = '0';
-    }
-
-    function renderTutorialStep() {
-        const step  = TUTORIAL_STEPS[tutorialStep];
-        const isLast = tutorialStep === TUTORIAL_STEPS.length - 1;
-
-        document.getElementById('tutorialStepLabel').textContent = `Step ${tutorialStep + 1} of ${TUTORIAL_STEPS.length}`;
-        document.getElementById('tutorialTitle').textContent = step.title;
-        document.getElementById('tutorialNext').textContent  = isLast ? 'Finish' : 'Next';
-
-        // Dots
-        document.getElementById('tutorialDots').innerHTML = TUTORIAL_STEPS.map((_, i) =>
-            `<div class="tutorial-dot ${i === tutorialStep ? 'active' : ''}"></div>`
-        ).join('');
-
-        // Theme picker step
-        const bodyEl = document.getElementById('tutorialBody');
-        if (step.isAccountStep) {
-            body.innerHTML += '<br><button class="tutorial-btn" style="margin-top:10px" onclick="endTutorial();toggleAccountModal()">Create Account</button>';
-        }
-        if (step.isThemePicker) {
-            const currentTheme = localStorage.getItem('power_theme') || 'system';
-            bodyEl.innerHTML = step.body + `
-                <div class="tutorial-theme-picker">
-                    ${THEMES.map(t => `
-                        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
-                            <button class="tutorial-theme-swatch swatch-${t} ${t === currentTheme ? 'active' : ''}"
-                                    onclick="setTheme('${t}'); document.querySelectorAll('.tutorial-theme-swatch').forEach(s=>s.classList.remove('active')); this.classList.add('active');"
-                                    title="${t}">
-                            </button>
-                            <span style="font-size:0.6rem;font-weight:900;opacity:0.6;text-transform:uppercase;">${t}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        } else {
-            bodyEl.textContent = step.body;
-        }
-
-        // Highlight
-        const hl = document.getElementById('tutorialHighlight');
-        if (step.target) {
-            const el = document.querySelector(step.target);
-            if (el) {
-                const r = el.getBoundingClientRect(), pad = 6;
-                hl.style.opacity = '1';
-                hl.style.left   = (r.left - pad) + 'px';
-                hl.style.top    = (r.top  - pad) + 'px';
-                hl.style.width  = (r.width  + pad * 2) + 'px';
-                hl.style.height = (r.height + pad * 2) + 'px';
-                positionCard(el, step.position);
-            } else { clearHighlight(); positionCard(null, step.position); }
-        } else { clearHighlight(); positionCard(null, step.position); }
-    }
-
-    function positionCard(targetEl, position) {
-        const card = document.getElementById('tutorialCard');
-        const cardW = 300, cardH = 220;
-        const vw = window.innerWidth, vh = window.innerHeight, margin = 16;
-        if (!targetEl || position === 'center') {
-            card.style.left   = Math.max(margin, (vw - cardW) / 2) + 'px';
-            card.style.top    = Math.max(margin, (vh - cardH) / 2) + 'px';
-            card.style.bottom = 'auto';
-            return;
-        }
-        const r = targetEl.getBoundingClientRect();
-        if (position === 'below' || position === 'below-left') {
-            let top  = r.bottom + 16;
-            if (top + cardH > vh - margin) top = r.top - cardH - 16;
-            card.style.top    = Math.max(margin, top) + 'px';
-            card.style.bottom = 'auto';
-            let left = position === 'below-left' ? r.right - cardW : r.left;
-            card.style.left = Math.max(margin, Math.min(left, vw - cardW - margin)) + 'px';
-        } else if (position === 'above') {
-            let top = r.top - cardH - 16;
-            if (top < margin) top = r.bottom + 16;
-            card.style.top    = Math.max(margin, top) + 'px';
-            card.style.bottom = 'auto';
-            card.style.left   = Math.max(margin, Math.min(r.left, vw - cardW - margin)) + 'px';
-        }
-    }
 
     // Close settings on outside click (desktop only)
     // Use addEventListener so we don't stomp other onclick handlers
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('settingsMenu');
-        const tutorialActive = document.getElementById('tutorialOverlay').classList.contains('active');
-        if (tutorialActive) return; // don't close settings during tutorial
         if (menu.classList.contains('show') &&
             !e.target.closest('.settings-menu') &&
             !e.target.closest('.settings-btn') &&
@@ -3080,8 +2838,6 @@
 
     // Re-position tutorial highlight on resize so it tracks its target
     window.addEventListener('resize', () => {
-        const overlay = document.getElementById('tutorialOverlay');
-        if (overlay.classList.contains('active')) renderTutorialStep();
     });
 
     // Listen for OS theme change when system theme is active
@@ -3100,7 +2856,6 @@
         document.getElementById('accentPicker').value   = accent;
         setFont(font);
         setFontWeight(fontWeight);
-        updateUI();
         renderFontList();
 
         // Load custom themes FIRST — then apply the saved theme so custom
@@ -3109,15 +2864,16 @@
 
         const theme = localStorage.getItem('power_theme') || 'system';
         setTheme(theme);
+        updateUI();
 
         fetchData().then(() => {
-            if (!localStorage.getItem('power_tutorial_done')) setTimeout(startTutorial, 800);
         });
         updateAccountBtn();
         if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); }));
         blogInit();
         loadBanner();
         trackVisit();
+        setTimeout(() => { _acctInitDone = true; }, 3000); // allow loads to settle first
     };
 </script>
 </body>
