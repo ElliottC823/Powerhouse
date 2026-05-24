@@ -736,5 +736,14 @@
     "link": "https://unclesai.lovable.app/",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "VirusTotal",
+    "category": "Utility",
+    "desc": "Scan files for viruses.",
+    "thumb": "https://images.contentstack.io/v3/assets/blt38f1f401b66100ad/bltad293621115db1a4/690b50abdfd10011073354da/vt-1200.png",
+    "link": "https://virustotal.com/",
+    "verified": true,
+    "useBlank": true
   }
 ]
