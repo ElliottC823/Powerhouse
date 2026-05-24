@@ -309,7 +309,115 @@
             z-index: 0;
         }
 
-        /* ── HEADER — W11 title bar style with acrylic ── */
+        /* ══ SIDEBAR LAYOUT ══════════════════════════════════════════════════ */
+        :root { --sidebar-width: 220px; }
+
+        /* ── Sidebar (fixed left) ── */
+        #sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--header-gradient);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 900;
+            overflow: hidden;
+        }
+        .sidebar-brand {
+            padding: 28px 16px 22px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .sidebar-logo { height: 32px; object-fit: contain; display: block; max-width: 80%; }
+
+        .sidebar-nav { padding: 10px 10px; flex-shrink: 0; }
+        .sidebar-nav-btn {
+            display: flex; align-items: center; gap: 10px;
+            width: 100%; padding: 9px 12px;
+            background: none; border: none; border-radius: var(--radius-sm);
+            color: var(--text-muted); font-family: inherit;
+            font-size: 0.82rem; font-weight: 500;
+            cursor: pointer; text-align: left;
+            transition: background 0.1s, color 0.1s;
+        }
+        .sidebar-nav-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .sidebar-nav-btn:hover { background: color-mix(in srgb, var(--text) 7%, transparent); color: var(--text); }
+        .sidebar-nav-btn.active { background: var(--accent-light,rgba(0,120,212,0.12)); color: var(--accent); font-weight: 600; }
+        .nav-notif {
+            margin-left: auto; background: var(--accent); color: #fff;
+            font-size: 0.55rem; font-weight: 700; min-width: 16px; height: 16px;
+            border-radius: 8px; display: inline-flex; align-items: center;
+            justify-content: center; padding: 0 4px;
+        }
+
+        .sidebar-spacer { flex: 1; }
+
+        .sidebar-bottom { padding: 12px 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+        .sidebar-acct-btn {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 10px 12px;
+            background: none; border: none; border-radius: var(--radius-sm);
+            color: var(--text-muted); font-family: inherit;
+            font-size: 0.88rem; font-weight: 600;
+            cursor: pointer; text-align: left;
+            transition: background 0.1s, color 0.1s;
+        }
+        .sidebar-acct-btn:hover { background: color-mix(in srgb, var(--text) 7%, transparent); color: var(--text); }
+        .sidebar-acct-avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 700; flex-shrink: 0; overflow: hidden;
+        }
+        .sidebar-acct-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .sidebar-acct-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* ── Main content (offset by sidebar) ── */
+        #main-content {
+            margin-left: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── Top search bar ── */
+        #topbar {
+            background: color-mix(in srgb, var(--bg) 80%, transparent);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border-bottom: 1px solid var(--border);
+            padding: calc(10px + var(--safe-top)) clamp(14px,3%,28px) 10px;
+            position: sticky; top: 0; z-index: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        #topbar .search-container { flex: 1; max-width: 600px; }
+
+        /* Center game content */
+        #main-content > .shelf-container,
+        #main-content > .gotw-container,
+        #main-content > nav.filter-bar,
+        #main-content > main#game-grid {
+            max-width: 1280px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+
+
+
+        /* ── Mobile: hide sidebar, show header ── */
+        @media (max-width: 680px) {
+            #sidebar { display: none; }
+            #main-content { margin-left: 0; }
+            #topbar { display: none; }
+            #mobileHeader { display: flex !important; }
+        }
+
+        /* ── HEADER — W11 title bar style with acrylic (mobile fallback only) ── */
         header {
             background: var(--header-gradient);
             backdrop-filter: blur(40px) saturate(180%);
@@ -417,11 +525,29 @@
             backdrop-filter: blur(4px); opacity: 0; transition: opacity .15s;
         }
         .acct-backdrop.show { display: flex; align-items: center; justify-content: center; opacity: 1; }
+        @media (min-width: 681px) {
+            .acct-backdrop.show { padding-left: var(--sidebar-width); }
+            .welcome-backdrop.show { padding-left: var(--sidebar-width); }
+        }
         .acct-modal {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.4);
-            width: min(360px, 92vw); padding: 24px; position: relative;
+            width: min(460px, 94vw);
+            max-height: 90vh;
+            display: flex; flex-direction: column;
+            position: relative;
             animation: fadeUp .2s ease;
+        }
+        .acct-modal-scrollable {
+            overflow-y: auto;
+            padding: 0 24px 24px;
+            flex: 1; min-height: 0;
+        }
+        .acct-modal-scrollable::-webkit-scrollbar { width: 2px; }
+        .acct-modal-scrollable::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .acct-modal-header {
+            padding: 24px 24px 0;
+            flex-shrink: 0;
         }
         .acct-modal-close {
             position: absolute; top: 12px; right: 14px;
@@ -442,7 +568,7 @@
         }
         .acct-tab:hover { color: var(--text); }
         .acct-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
-        .acct-field { margin-bottom: 12px; }
+        .acct-field { margin-bottom: 9px; }
         .acct-field label { display: block; font-size: .72rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
         .acct-input {
             width: 100%; padding: 8px 12px;
@@ -497,7 +623,7 @@
         .pfp-picker-wrap { margin-top: 10px; }
         .pfp-picker-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
         .pfp-picker-grid {
-            display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px;
+            display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
         }
         .pfp-option {
             width: 100%; aspect-ratio: 1; border-radius: 50%; object-fit: cover;
@@ -665,6 +791,23 @@
         }
         .welcome-skip:hover { color: var(--text); }
 
+        #site-banner {
+            padding: 8px 40px;
+            font-size: 0.82rem; font-weight: 600;
+            text-align: center;
+            position: relative; flex-shrink: 0;
+        }
+        #site-banner-msg {
+            display: block; width: 100%; text-align: center;
+        }
+        #site-banner-close {
+            background: none; border: none; cursor: pointer;
+            color: inherit; opacity: 0.7; padding: 4px;
+            display: flex; align-items: center; justify-content: center;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+        }
+        #site-banner-close:hover { opacity: 1; }
+
         /* ── BLOG BUTTON ── */
         .blog-btn {
             background: transparent; border: 1px solid var(--border);
@@ -697,6 +840,9 @@
             width: 100%; max-width: 680px; min-height: 200px;
             display: flex; flex-direction: column; position: relative;
             animation: fadeUp .2s ease; margin: auto;
+        }
+        @media (min-width: 681px) {
+            .blog-backdrop { padding-left: calc(var(--sidebar-width) + 20px); }
         }
         .blog-panel-header {
             display: flex; align-items: center; gap: 10px;
@@ -880,7 +1026,7 @@
         }
         .blog-admin-edit:hover { color: var(--text); border-color: var(--text); }
 
-        /* ── GAME OF THE WEEK ── */
+        /* ── GAME OF THE DAY ── */
         .gotw-container {
             padding: 14px clamp(12px,3%,24px) 4px;
         }
@@ -979,6 +1125,20 @@
         .filter-btn:active { opacity: 0.7; }
 
         /* ── GAME GRID — W11 card style ── */
+        /* Center content in main-content area */
+        #main-content > .shelf-container,
+        #main-content > .gotw-container,
+        #main-content > nav.filter-bar,
+        #main-content > main#game-grid {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+        #topbar .search-container {
+            max-width: 600px;
+        }
+
         #game-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1056,17 +1216,14 @@
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.4); z-index: 1999;
             opacity: 0; transition: opacity 0.15s;
-            backdrop-filter: blur(2px);
         }
         .settings-backdrop.show { display: block; opacity: 1; }
+        @media (min-width: 600px) {
+            /* Don't cover the sidebar so its buttons stay clickable */
+            .settings-backdrop { left: var(--sidebar-width); }
+        }
 
         /* ══ SETTINGS PANEL ══════════════════════════════════════════════════ */
-        .settings-backdrop {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.3); z-index: 1999;
-            opacity: 0; transition: opacity 0.2s;
-        }
-        .settings-backdrop.show { display: block; opacity: 1; }
 
         .settings-menu {
             display: none; position: fixed;
@@ -1084,25 +1241,39 @@
         }
         .settings-menu.show { display: flex; transform: translateY(0); }
 
-        @media (min-width: 600px) {
+        @media (min-width: 681px) {
             .settings-menu {
-                bottom: auto; left: auto;
-                top: calc(var(--header-height) + var(--safe-top) + 8px);
-                right: clamp(12px,3%,24px);
-                width: 360px; max-height: 84vh; min-height: 420px;
-                border-radius: 12px; border: 1px solid var(--border);
-                transform: translateY(-6px) scale(0.98);
-                opacity: 0; pointer-events: none;
-                transition: transform 0.15s ease, opacity 0.15s ease;
+                display: flex;
+                bottom: auto;
+                left: var(--sidebar-width);
+                top: 0; right: auto;
+                width: 340px;
+                max-height: 100vh; min-height: 100vh;
+                border-radius: 0;
+                border: none;
+                border-right: 1px solid var(--border);
+                transform: translateX(-100%);
+                opacity: 0;
+                pointer-events: none;
+                visibility: hidden;
+                transition: transform 0.22s cubic-bezier(0.32,0.72,0,1), opacity 0.22s ease, visibility 0s linear 0.22s;
+                box-shadow: 4px 0 32px rgba(0,0,0,0.35);
+                z-index: 2000;
             }
-            .settings-menu.show { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+            .settings-menu.show {
+                transform: translateX(0);
+                opacity: 1;
+                pointer-events: all;
+                visibility: visible;
+                transition: transform 0.22s cubic-bezier(0.32,0.72,0,1), opacity 0.22s ease;
+            }
         }
 
         .sheet-handle {
             width: 32px; height: 4px; background: var(--border);
             border-radius: 2px; margin: 10px auto 0; flex-shrink: 0; display: block;
         }
-        @media (min-width: 600px) { .sheet-handle { display: none; } }
+        @media (min-width: 681px) { .sheet-handle { display: none; } }
 
         .settings-header { padding: 14px 18px 0; flex-shrink: 0; }
         .settings-title {
@@ -1247,30 +1418,73 @@
 <!-- Settings backdrop -->
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
 
+
+
+<!-- ══ MOBILE HEADER (≤680px only) ══════════════════════════════════ -->
+<header id="mobileHeader" style="display:none">
+    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
+    <div class="search-container" style="flex:1;max-width:none">
+        <input type="text" id="searchInputMobile" placeholder="Search games..." oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="controls">
+        <button class="blog-btn" onclick="toggleBlog()" aria-label="Blog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </button>
+        <button class="acct-btn" onclick="toggleAccountModal()" aria-label="Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/><path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg></button>
+    </div>
+</header>
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════════════ -->
+<div id="sidebar">
+    <div class="sidebar-brand">
+        <img id="sidebarMainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="sidebar-logo">
+    </div>
+
+    <nav class="sidebar-nav">
+        <button class="sidebar-nav-btn active" id="sideNavHome" onclick="sideNavSwitch('home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+        </button>
+        <button class="sidebar-nav-btn" id="sideNavBlog" onclick="sideNavSwitch('blog')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Blog
+            <span class="nav-notif" id="blogNotif" style="display:none"></span>
+        </button>
+        <button class="sidebar-nav-btn" id="sideNavSettings" onclick="sideNavSwitch('settings')">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/><path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+            Settings
+        </button>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-bottom">
+        <button class="sidebar-acct-btn" id="acctBtn" onclick="toggleAccountModal()">
+            <div class="sidebar-acct-avatar" id="sidebarAvatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span class="sidebar-acct-name" id="sidebarAcctName">Sign In</span>
+        </button>
+    </div>
+</div>
+
+<!-- ══ MAIN CONTENT ═════════════════════════════════════════════════════ -->
+<div id="main-content">
+
+<!-- Top search bar -->
+<div id="topbar">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search games..." oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    </div>
+</div>
+
 <div id="site-banner" style="display:none">
     <span id="site-banner-msg"></span>
     <button id="site-banner-close" onclick="document.getElementById('site-banner').style.display='none'" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
 </div>
-
-<header>
-    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search games..." oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-    </div>
-    <div class="controls">
-        <button class="blog-btn" id="blogBtn" onclick="toggleBlog()" aria-label="Blog">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            Blog<span class="blog-notif" id="blogNotif" style="display:none"></span>
-        </button>
-        <button class="acct-btn" id="acctBtn" onclick="toggleAccountModal()" aria-label="Account">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </button>
-        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/>
-        <path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/>
-        </svg></button>
-    </div>
-</header>
 
 <div class="shelf-container" id="historyShelf">
     <div class="shelf-title">Continue playing</div>
@@ -1288,12 +1502,12 @@
 </div>
 
 <div class="gotw-container" id="gotwContainer" style="display:none">
-    <div class="gotw-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;color:var(--accent)"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 3h16"/><path d="M9 21h6"/><path d="M12 17v4"/><path d="M6 9a6 6 0 0 0 12 0V3H6z"/></svg> Game of the Week</div>
+    <div class="gotw-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;color:var(--accent)"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 3h16"/><path d="M9 21h6"/><path d="M12 17v4"/><path d="M6 9a6 6 0 0 0 12 0V3H6z"/></svg> Game of the Day</div>
     <a href="javascript:void(0)" class="gotw-card" id="gotwCard">
-        <img class="gotw-thumb" id="gotwThumb" alt="Game of the Week">
+        <img class="gotw-thumb" id="gotwThumb" alt="Game of the Day">
         <div class="gotw-info">
             <div>
-                <div class="gotw-badge"><svg viewBox="0 0 24 24" fill="currentColor" style="width:9px;height:9px;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> This Week</div>
+                <div class="gotw-badge"><svg viewBox="0 0 24 24" fill="currentColor" style="width:9px;height:9px;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Today</div>
                 <div class="gotw-name" id="gotwName"></div>
                 <div class="gotw-desc" id="gotwDesc"></div>
             </div>
@@ -1303,6 +1517,8 @@
 </div>
 <nav class="filter-bar" id="filterBar"></nav>
 <main id="game-grid"></main>
+
+</div><!-- /main-content -->
 
 <!-- ── SETTINGS PANEL ── -->
 <div id="settingsMenu" class="settings-menu" role="dialog" aria-modal="true" aria-label="Settings">
@@ -1380,6 +1596,15 @@
                     <div class="s-sublabel">Continue Playing &amp; Recommended shelves</div>
                 </div>
                 <button class="s-btn danger" onclick="clearHistory()">Clear</button>
+            </div>
+
+            <div class="s-section-title">Account</div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">Dynamic Welcome</div>
+                    <div class="s-sublabel">Show time-based greeting instead of just your name</div>
+                </div>
+                <input type="checkbox" id="dynamicWelcomeToggle" checked onchange="updateDynamicWelcome()">
             </div>
         </div>
 
@@ -1467,9 +1692,12 @@
 <!-- Tutorial Overlay -->
 <div class="acct-backdrop" id="acctBackdrop" onclick="closeAccountModal(event)">
     <div class="acct-modal" id="acctModal">
-        <button class="acct-modal-close" onclick="toggleAccountModal()" aria-label="Close">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <div class="acct-modal-header">
+            <button class="acct-modal-close" onclick="toggleAccountModal()" aria-label="Close" style="position:absolute;top:12px;right:14px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="acct-modal-scrollable">
         <div id="acctAuthPanel">
             <h2>Powerhouse Account</h2>
             <p class="acct-sub">Save your settings, history, and favorites across devices.</p>
@@ -1478,15 +1706,15 @@
                 <button class="acct-tab" id="acctTabCreate" onclick="acctSwitchTab('create')">Create Account</button>
             </div>
             <div id="acctSignInPane">
-                <div class="acct-field"><label>Username</label><input class="acct-input" id="siUsername" type="text" placeholder="your_username" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
-                <div class="acct-field"><label>Password</label><input class="acct-input" id="siPassword" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+                <div class="acct-field"><label>Username</label><input class="acct-input" id="siUsername" type="text" placeholder="your_username" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')acctSignIn()"></div>
+                <div class="acct-field"><label>Password</label><input class="acct-input" id="siPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')acctSignIn()"></div>
                 <button class="acct-btn-primary" id="siSubmit" onclick="acctSignIn()">Sign In</button>
                 <div class="acct-error" id="siError"></div>
             </div>
             <div id="acctCreatePane" style="display:none">
-                <div class="acct-field"><label>Username <span style="font-weight:400;opacity:.6">(letters, numbers, _ · 3–24 chars)</span></label><input class="acct-input" id="caUsername" type="text" placeholder="cool_username" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
-                <div class="acct-field"><label>Password <span style="font-weight:400;opacity:.6">(min 6 characters)</span></label><input class="acct-input" id="caPassword" type="password" placeholder="••••••••" autocomplete="new-password"></div>
-                <div class="acct-field"><label>Confirm Password</label><input class="acct-input" id="caConfirm" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+                <div class="acct-field"><label>Username <span style="font-weight:400;opacity:.6">(letters, numbers, _ · 3–24 chars)</span></label><input class="acct-input" id="caUsername" type="text" placeholder="cool_username" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="24" onkeydown="if(event.key==='Enter')acctCreateAccount()"></div>
+                <div class="acct-field"><label>Password <span style="font-weight:400;opacity:.6">(min 6 characters)</span></label><input class="acct-input" id="caPassword" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')acctCreateAccount()"></div>
+                <div class="acct-field"><label>Confirm Password</label><input class="acct-input" id="caConfirm" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')acctCreateAccount()"></div>
                 <button class="acct-btn-primary" id="caSubmit" onclick="acctCreateAccount()">Create Account</button>
                 <div class="acct-error" id="caError"></div>
             </div>
@@ -1518,6 +1746,25 @@
                     <button class="acct-action-btn" onclick="acctSignOut()">Sign Out</button>
                 </div>
                 <button class="acct-action-btn danger" onclick="acctDeleteAccount()">Delete Account</button>
+
+                <div class="acct-divider"></div>
+                <div class="acct-section-label">Change Password</div>
+                <div class="acct-field">
+                    <label>Current Password</label>
+                    <input class="acct-input" id="cpCurrent" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')acctChangePassword()">
+                </div>
+                <div class="acct-field">
+                    <label>New Password</label>
+                    <input class="acct-input" id="cpNew" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')acctChangePassword()">
+                </div>
+                <div class="acct-field">
+                    <label>Confirm New Password</label>
+                    <input class="acct-input" id="cpConfirm" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')acctChangePassword()">
+                </div>
+                <button class="acct-btn-primary" id="cpSubmit" onclick="acctChangePassword()">Change Password</button>
+                <div class="acct-error" id="cpError"></div>
+                <div class="acct-success" id="cpSuccess"></div>
+
                 <div class="pfp-picker-wrap">
                     <div class="pfp-picker-label">Profile Picture</div>
                     <div class="pfp-picker-grid" id="pfpPickerGrid"></div>
@@ -1534,6 +1781,7 @@
                 <div class="acct-search-results" id="acctSearchResults"></div>
             </div>
         </div>
+        </div><!-- /acct-modal-scrollable -->
     </div>
 </div>
 
@@ -1645,14 +1893,13 @@
     let games = [];
     let currentFilter = 'ALL';
 
-    // ── GAME OF THE WEEK ─────────────────────────────────────────────────────
+    // ── GAME OF THE DAY ─────────────────────────────────────────────────────
     function renderGOTW() {
         if (!games || games.length === 0) return;
         // Pick deterministically based on ISO week number so it changes every Monday
         const now   = new Date();
         const jan4  = new Date(now.getFullYear(), 0, 4);
-        const week  = Math.ceil(((now - jan4) / 86400000 + jan4.getDay() + 1) / 7);
-        const seed  = now.getFullYear() * 100 + week;
+        const seed  = now.getFullYear() * 1000 + (Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000));
         // Only pick from verified games with a real thumb
         const pool  = games.filter(g => g.verified && g.thumb && !g.thumb.includes('svg+xml'));
         if (pool.length === 0) return;
@@ -1744,17 +1991,20 @@
     let _acctInitDone = false;  // prevents auto-save during page load
 
     function updateAccountBtn() {
-        const btn = document.getElementById('acctBtn');
-        if (!btn) return;
+        // Sidebar account display is handled entirely by updateSidebarAccount
+        updateSidebarAccount();
+        // Also update the mobile header account button if present
+        const mobileBtn = document.getElementById('acctBtnMobile');
+        if (!mobileBtn) return;
         if (_acctUsername) {
             const initials  = _acctUsername.slice(0,2).toUpperCase();
             const avatarHtml = _acctPfp
                 ? `<span class="acct-avatar" style="background:none;padding:0"><img src="${PFP_BASE + _acctPfp}" style="width:22px;height:22px;border-radius:50%;object-fit:cover"></span>`
                 : `<span class="acct-avatar">${initials}</span>`;
             const badge = getBadgeHtml(_acctUsername, _blogIsAdmin, 'sm');
-            btn.innerHTML = `${avatarHtml}<span style="max-width:72px;overflow:hidden;text-overflow:ellipsis">${_acctUsername}</span>${badge}`;
+            mobileBtn.innerHTML = `${avatarHtml}<span style="max-width:72px;overflow:hidden;text-overflow:ellipsis">${_acctUsername}</span>${badge}`;
         } else {
-            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            mobileBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
         }
     }
 
@@ -1922,6 +2172,40 @@
         updateAccountBtn();
         const bd = document.getElementById('acctBackdrop');
         if (bd) bd.classList.remove('show');
+    }
+
+    async function acctChangePassword() {
+        const currEl  = document.getElementById('cpCurrent');
+        const newEl   = document.getElementById('cpNew');
+        const confEl  = document.getElementById('cpConfirm');
+        const errEl   = document.getElementById('cpError');
+        const sucEl   = document.getElementById('cpSuccess');
+        const btn     = document.getElementById('cpSubmit');
+        const current = currEl ? currEl.value : '';
+        const newPass = newEl  ? newEl.value  : '';
+        const confirm = confEl ? confEl.value : '';
+        if (errEl) errEl.textContent = '';
+        if (sucEl) sucEl.textContent = '';
+        if (!current)          { if (errEl) errEl.textContent = 'Enter your current password.'; return; }
+        if (!newPass)          { if (errEl) errEl.textContent = 'Enter a new password.'; return; }
+        if (newPass.length < 6){ if (errEl) errEl.textContent = 'New password must be at least 6 characters.'; return; }
+        if (newPass !== confirm){ if (errEl) errEl.textContent = 'New passwords do not match.'; return; }
+        if (newPass === current){ if (errEl) errEl.textContent = 'New password must be different from current.'; return; }
+        if (btn) { btn.disabled = true; btn.textContent = 'Changing…'; }
+        try {
+            const r = await fetch(`${API_BASE}/auth/password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_acctToken}` },
+                body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+            });
+            const data = await r.json();
+            if (!r.ok) { if (errEl) errEl.textContent = data.error || 'Failed to change password.'; return; }
+            if (sucEl) sucEl.textContent = 'Password changed successfully!';
+            if (currEl) currEl.value = '';
+            if (newEl)  newEl.value  = '';
+            if (confEl) confEl.value = '';
+        } catch(e) { if (errEl) errEl.textContent = 'Network error. Try again.'; }
+        finally { if (btn) { btn.disabled = false; btn.textContent = 'Change Password'; } }
     }
 
     async function acctDeleteAccount() {
@@ -2329,12 +2613,80 @@
         }
     }
 
+    // ── SIDEBAR NAV ──────────────────────────────────────────────────────────
+    function sideNavSwitch(view) {
+        // Update active state first
+        ['home','blog','settings'].forEach(v => {
+            const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
+            if (btn) btn.classList.toggle('active', v === view);
+        });
+        if (view === 'blog')     { toggleBlog();     return; }
+        if (view === 'settings') { toggleSettings(); return; }
+    }
+
+    // Reset sidebar active to Home when panels close
+    function sideNavResetToHome() {
+        ['home','blog','settings'].forEach(v => {
+            const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
+            if (btn) btn.classList.toggle('active', v === 'home');
+        });
+    }
+
+    // Keep sidebar avatar in sync
+    function getDynamicGreeting() {
+        const h = new Date().getHours();
+        if (h >= 5  && h < 12) return 'Morning';
+        if (h >= 12 && h < 17) return 'Afternoon';
+        if (h >= 17 && h < 21) return 'Evening';
+        return 'Night';
+    }
+
+    function updateDynamicWelcome() {
+        const el = document.getElementById('dynamicWelcomeToggle');
+        const on = el ? el.checked : (localStorage.getItem('power_dynamic_welcome') !== 'off');
+        localStorage.setItem('power_dynamic_welcome', on ? 'on' : 'off');
+        updateSidebarAccount();
+    }
+
+    function updateSidebarAccount() {
+        const avatar   = document.getElementById('sidebarAvatar');
+        const nameEl   = document.getElementById('sidebarAcctName');
+        if (!avatar || !nameEl) return;
+        if (_acctUsername) {
+            const dynamicOn = localStorage.getItem('power_dynamic_welcome') !== 'off';
+            nameEl.textContent = dynamicOn
+                ? getDynamicGreeting() + ', ' + _acctUsername + '!'
+                : _acctUsername;
+            if (_acctPfp) {
+                avatar.innerHTML = '<img src="' + PFP_BASE + _acctPfp + '" alt="">';
+                avatar.style.background = 'none';
+            } else {
+                avatar.innerHTML = '';
+                avatar.textContent = _acctUsername.slice(0,2).toUpperCase();
+                avatar.style.background = '';
+            }
+        } else {
+            nameEl.textContent = 'Sign In';
+            avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            avatar.style.background = '';
+        }
+    }
+
+    // Override updateAccountBtn to also update sidebar
+    // updateSidebarAccount is called from within updateAccountBtn below
+
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
     function debounce(fn, delay) {
         let t;
         return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
     }
-    const debouncedRender = debounce(renderGames, 150);
+    const debouncedRender = debounce(() => {
+        // Sync mobile search → main search if on mobile
+        const mobile = document.getElementById('searchInputMobile');
+        const main   = document.getElementById('searchInput');
+        if (mobile && main && document.activeElement === mobile) main.value = mobile.value;
+        renderGames();
+    }, 150);
 
     const FAVICON_URL  = 'https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png';
     const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
@@ -2636,8 +2988,10 @@
         }
 
         grid.innerHTML = '';
-        // Store games in safe lookup map — avoids all inline JSON/quote bugs
-        window._phGames = {};
+        // Reset only numeric keys — preserve shelf keys (h*, r*, f*, gotw, db:*)
+        Object.keys(window._phGames).forEach(k => {
+            if (!isNaN(k)) delete window._phGames[k];
+        });
         const cardHtmls = filtered.map((g, i) => {
             window._phGames[i] = g;
             const favd = isFavorited(g.title);
@@ -2680,6 +3034,7 @@
     function closeSettings() {
         document.getElementById('settingsMenu').classList.remove('show');
         document.getElementById('settingsBackdrop').classList.remove('show');
+        sideNavResetToHome();
     }
 
     // ── SETTINGS TABS ────────────────────────────────────────────────────
@@ -2754,11 +3109,8 @@
 
         document.body.setAttribute('data-theme', theme);
 
-        // Update logo
-        const logo = document.getElementById('mainLogo');
-        logo.src = isLogoDark(theme)
-            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
-            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
+        // Update logo (mobile header + sidebar)
+        updateAboutLogo();
         const faviconEl = document.getElementById('faviconEl');
         if (faviconEl) faviconEl.href = isLogoDark(theme) ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png' : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-light.png';
 
@@ -2774,10 +3126,21 @@
             root.style.removeProperty('--surface2');
             root.style.removeProperty('--text');
             root.style.removeProperty('--border');
-            const savedAccent = localStorage.getItem('power_accent') || '#0078D4';
-            root.style.setProperty('--accent', savedAccent);
+
+            // Themes with locked accent colors override the user's saved accent
+            const THEME_ACCENTS = { win7: '#3d9bff' };
             const picker = document.getElementById('accentPicker');
-            if (picker) picker.value = savedAccent;
+            if (THEME_ACCENTS[theme]) {
+                // Apply theme's accent and update picker to reflect it
+                root.style.setProperty('--accent', THEME_ACCENTS[theme]);
+                if (picker) picker.value = THEME_ACCENTS[theme];
+            } else {
+                // Restore user's saved accent, clear any override
+                root.style.removeProperty('--accent');
+                const savedAccent = localStorage.getItem('power_accent') || '#0078D4';
+                root.style.setProperty('--accent', savedAccent);
+                if (picker) picker.value = savedAccent;
+            }
         }
 
 
@@ -2809,10 +3172,16 @@
 
     function updateAboutLogo() {
         const theme = localStorage.getItem('power_theme') || 'system';
-        const el = document.getElementById('aboutLogo');
-        if (el) el.src = isLogoDark(theme)
-            ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
-            : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
+        const isDark = isLogoDark(theme);
+        const dark_url  = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
+        const light_url = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
+        const src = isDark ? dark_url : light_url;
+        const aboutEl    = document.getElementById('aboutLogo');
+        const sidebarEl  = document.getElementById('sidebarMainLogo');
+        const mobileEl   = document.getElementById('mainLogo');
+        if (aboutEl)   aboutEl.src   = src;
+        if (sidebarEl) sidebarEl.src = src;
+        if (mobileEl)  mobileEl.src  = src;
     }
 
     function loadSettings() {
@@ -2824,6 +3193,8 @@
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
         document.getElementById('accentPicker').value   = accent;
+        const dynEl = document.getElementById('dynamicWelcomeToggle');
+        if (dynEl) dynEl.checked = localStorage.getItem('power_dynamic_welcome') !== 'off';
 
         setFont(font);
         setFontWeight(fontWeight);
@@ -2844,6 +3215,8 @@
         if (menu.classList.contains('show') &&
             !e.target.closest('.settings-menu') &&
             !e.target.closest('.settings-btn') &&
+            !e.target.closest('#sideNavSettings') &&
+            !e.target.closest('.settings-backdrop') &&
             window.innerWidth >= 600) closeSettings();
     });
 
@@ -2851,15 +3224,18 @@
     // ── BANNER ────────────────────────────────────────────────────────────────
     async function loadBanner() {
         try {
-            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/banner.txt');
+            const res = await fetch('https://powerhouse-api.c823.workers.dev/gh/banner.txt');
             if (!res.ok) return;
             const text = (await res.text()).trim();
             // Format: STATUS|MESSAGE|COLOR
             // STATUS: ENABLED or DISABLED
             const parts = text.split('|');
-            if (parts.length < 3) return;
-            const [status, message, color] = parts;
-            if (status.trim().toUpperCase() !== 'ENABLED') return;
+            if (parts.length < 2) return;
+            const status = parts[0].trim().toUpperCase();
+            if (status !== 'ENABLED') return;
+            const message = (parts[1] || '').trim();
+            const color   = (parts[2] || '#0078D4').trim();
+            if (!message) return;
             const banner = document.getElementById('site-banner');
             const msg    = document.getElementById('site-banner-msg');
             banner.style.background = color.trim();
@@ -2871,7 +3247,7 @@
             const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
             banner.style.color = luminance > 0.5 ? '#000' : '#fff';
             msg.textContent = message.trim();
-            banner.style.display = 'block';
+            banner.style.display = 'flex';
         } catch(e) { console.warn('Banner load failed:', e); }
     }
 
@@ -2902,6 +3278,8 @@
 
         document.getElementById('cornerToggle').checked = (corners === 'rounded');
         document.getElementById('accentPicker').value   = accent;
+        const dynEl = document.getElementById('dynamicWelcomeToggle');
+        if (dynEl) dynEl.checked = localStorage.getItem('power_dynamic_welcome') !== 'off';
         setFont(font);
         setFontWeight(fontWeight);
         renderFontList();
@@ -2917,10 +3295,13 @@
             }
         });
         updateAccountBtn();
+        updateSidebarAccount();
         if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); }));
         blogInit();
         loadBanner();
-        setTimeout(() => { _acctInitDone = true; }, 3000); // allow loads to settle first
+        setTimeout(() => { _acctInitDone = true; }, 3000);
+        // Refresh dynamic greeting every minute
+        setInterval(updateSidebarAccount, 60000); // allow loads to settle first
     };
 </script>
 </body>
