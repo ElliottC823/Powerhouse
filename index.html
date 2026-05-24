@@ -83,55 +83,191 @@
             --shadow: 0 4px 24px rgba(0,0,0,0.4); --logo: dark;
         }
 
-        /* ── CUSTOM IMAGE THEMES ── */
-        [data-theme="10"] {
-            --bg: #0a0000; --bg-gradient: none;
-            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/10.png');
-            --header-gradient: rgba(10,0,0,0.82);
-            --surface: rgba(44,0,0,0.7); --surface2: rgba(60,0,0,0.75);
-            --text: #ffe8e8; --text-muted: rgba(255,232,232,0.5);
-            --border: rgba(200,0,0,0.2); --shadow: 0 2px 8px rgba(0,0,0,0.5);
-            --logo: dark; --accent: #ff2020; --theme-accent-locked: 1;
-        }
-        [data-theme="cave"] {
-            --bg: #000a00; --bg-gradient: none;
-            --bg-image: url('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/cave.png');
-            --header-gradient: rgba(0,15,0,0.82);
-            --surface: rgba(0,40,0,0.7); --surface2: rgba(0,55,0,0.75);
-            --text: #e0ffe0; --text-muted: rgba(224,255,224,0.5);
-            --border: rgba(0,160,0,0.2); --shadow: 0 2px 8px rgba(0,0,0,0.5);
-            --logo: dark; --accent: #00c44a; --theme-accent-locked: 1;
+
+        /* ── Windows 7 Aero ── */
+        [data-theme="win7"] {
+            --bg:              #0f4b9c;
+            --bg-gradient:     linear-gradient(180deg,#1975d2 0%,#1461b8 25%,#0c3d87 55%,#0a2e6e 100%);
+            --header-gradient: linear-gradient(180deg,#4d9cf0 0%,#2e86f0 18%,#1a6be0 45%,#1458c8 55%,#1050b8 100%);
+            --surface:         rgba(255,255,255,0.10);
+            --surface2:        rgba(255,255,255,0.15);
+            --text:            #ffffff;
+            --text-muted:      rgba(255,255,255,0.6);
+            --border:          rgba(255,255,255,0.22);
+            --shadow:          0 2px 8px rgba(0,0,0,0.45);
+            --accent:          #59b0f7;
+            --accent2:         #3a9ef5;
+            --accent-light:    rgba(89,176,247,0.2);
+            --radius:          3px;
+            --radius-sm:       2px;
+            --radius-xs:       2px;
+            --logo:            dark;
+            --theme-accent-locked: 1;
         }
 
-        body[data-custom-theme] {
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: scroll !important;
-            background-repeat: no-repeat !important;
-        }
-        body[data-custom-theme] header {
-            background: var(--header-gradient) !important;
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-        }
-        body[data-custom-theme] .game-card,
-        body[data-custom-theme] .settings-menu,
-        body[data-custom-theme] .filter-btn,
-        body[data-custom-theme] #searchInput,
-        body[data-custom-theme] .settings-btn {
-            backdrop-filter: blur(20px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
+        /* Aero glass titlebar */
+        [data-theme="win7"] header {
+            background: linear-gradient(180deg,
+                rgba(150,210,255,0.55) 0%,
+                rgba(80,160,255,0.45) 30%,
+                rgba(30,100,230,0.70) 55%,
+                rgba(10,60,180,0.90) 100%) !important;
+            border-bottom: 1px solid rgba(100,180,255,0.5) !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.5),
+                inset 0 -1px 0 rgba(0,0,80,0.3),
+                0 2px 6px rgba(0,0,60,0.5) !important;
+            backdrop-filter: blur(20px) saturate(1.8);
+            -webkit-backdrop-filter: blur(20px) saturate(1.8);
         }
 
-        [data-accent-locked="true"] .accent-controls { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
-        [data-accent-locked="true"] .accent-locked-note { display: block; }
-        .accent-locked-note { display: none; font-size: 0.65rem; opacity: 0.55; font-style: italic; }
+        /* Aero glass cards */
+        [data-theme="win7"] .game-card {
+            background: linear-gradient(180deg,
+                rgba(255,255,255,0.18) 0%,
+                rgba(160,200,255,0.10) 50%,
+                rgba(80,140,240,0.08) 100%) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 3px !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.35),
+                0 2px 6px rgba(0,0,60,0.4) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        [data-theme="win7"] .game-card:hover {
+            background: linear-gradient(180deg,
+                rgba(255,255,255,0.28) 0%,
+                rgba(180,220,255,0.18) 50%,
+                rgba(100,160,255,0.12) 100%) !important;
+            border-color: rgba(255,255,255,0.5) !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.5),
+                0 4px 12px rgba(0,0,80,0.45),
+                0 0 0 1px rgba(100,180,255,0.4) !important;
+        }
+
+        /* Aero glass panels */
+        [data-theme="win7"] .settings-menu,
+        [data-theme="win7"] .acct-modal,
+        [data-theme="win7"] .blog-panel,
+        [data-theme="win7"] .gotw-card {
+            background: linear-gradient(160deg,
+                rgba(220,235,255,0.15) 0%,
+                rgba(100,160,255,0.08) 100%) !important;
+            border: 1px solid rgba(255,255,255,0.28) !important;
+            border-radius: 6px !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                0 8px 32px rgba(0,0,60,0.55) !important;
+            backdrop-filter: blur(20px) saturate(1.6);
+            -webkit-backdrop-filter: blur(20px) saturate(1.6);
+        }
+
+        /* Win7 taskbar-style filter bar */
+        [data-theme="win7"] nav.filter-bar {
+            background: linear-gradient(180deg,
+                rgba(80,150,240,0.5) 0%,
+                rgba(30,90,200,0.65) 100%) !important;
+            border-bottom: 1px solid rgba(100,160,255,0.4) !important;
+            box-shadow: inset 0 1px 0 rgba(200,230,255,0.25) !important;
+        }
+        [data-theme="win7"] .filter-btn {
+            border-radius: 2px !important;
+            color: rgba(255,255,255,0.75) !important;
+        }
+        [data-theme="win7"] .filter-btn.active,
+        [data-theme="win7"] .filter-btn:hover {
+            background: linear-gradient(180deg,
+                rgba(200,225,255,0.5) 0%,
+                rgba(120,180,255,0.45) 48%,
+                rgba(60,120,230,0.55) 52%,
+                rgba(30,80,200,0.65) 100%) !important;
+            border: 1px solid rgba(180,220,255,0.55) !important;
+            color: #fff !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 4px rgba(0,0,60,0.3) !important;
+        }
+
+        /* Win7 Aero buttons — the classic 4-stop gradient */
+        [data-theme="win7"] .s-btn,
+        [data-theme="win7"] .acct-btn-primary,
+        [data-theme="win7"] .blog-submit-btn,
+        [data-theme="win7"] .acct-action-btn,
+        [data-theme="win7"] .acct-nav-tab.active {
+            background: linear-gradient(180deg,
+                #daeeff 0%,
+                #b8ddff 45%,
+                #5aaaf0 50%,
+                #3d8de0 100%) !important;
+            border: 1px solid #2369c0 !important;
+            border-bottom-color: #1a50a0 !important;
+            color: #00264d !important;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.7) !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 1px 3px rgba(0,0,80,0.35) !important;
+            border-radius: 3px !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif !important;
+        }
+        [data-theme="win7"] .s-btn:hover,
+        [data-theme="win7"] .acct-btn-primary:hover,
+        [data-theme="win7"] .acct-action-btn:hover {
+            background: linear-gradient(180deg,
+                #e8f4ff 0%,
+                #cce8ff 45%,
+                #70c0ff 50%,
+                #50a0f0 100%) !important;
+        }
+        [data-theme="win7"] .s-btn.danger,
+        [data-theme="win7"] .acct-action-btn.danger {
+            background: linear-gradient(180deg,#ffd5d0 0%,#ffb3ac 45%,#e84040 50%,#c02020 100%) !important;
+            border-color: #9b1a1a !important;
+            color: #fff !important;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.4) !important;
+        }
+
+        /* Win7 font */
+        [data-theme="win7"],
+        [data-theme="win7"] * {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif !important;
+        }
+
+        /* Shelf background */
+        [data-theme="win7"] .shelf-container {
+            background: rgba(0,0,0,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Win7 scrollbar */
+        [data-theme="win7"] ::-webkit-scrollbar-track { background: rgba(0,0,80,0.3); }
+        [data-theme="win7"] ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6aabf0, #2d6fd0);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Input fields */
+        [data-theme="win7"] input,
+        [data-theme="win7"] textarea,
+        [data-theme="win7"] select {
+            background: rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.35) !important;
+            border-top-color: rgba(0,0,0,0.25) !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,60,0.3) !important;
+            color: #fff !important;
+            border-radius: 2px !important;
+        }
+        [data-theme="win7"] input::placeholder,
+        [data-theme="win7"] textarea::placeholder { color: rgba(255,255,255,0.45) !important; }
+        [data-theme="win7"] input:focus,
+        [data-theme="win7"] textarea:focus {
+            border-color: rgba(100,180,255,0.8) !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,60,0.3), 0 0 0 2px rgba(80,160,255,0.35) !important;
+        }
 
         .custom-swatch { overflow: hidden; }
         .locked-swatch { opacity: 0.6; }
         .locked-swatch:hover { opacity: 0.85; }
-        .swatch-10   { background: linear-gradient(135deg, #1a0000 50%, #3a0000 100%); }
-        .swatch-cave { background: linear-gradient(135deg, #001a00 50%, #003a00 100%); }
 
         @media (prefers-color-scheme: light) {
             [data-theme="system"] {
@@ -148,6 +284,7 @@
 
         @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { background-color: var(--bg); }
 
         body {
             font-family: var(--font);
@@ -380,12 +517,6 @@
         .pfp-none:hover { border-color: var(--accent); color: var(--accent); }
         .pfp-none.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 
-        /* Powerhouse official badge */
-        .ph-badge {
-            width: 16px; height: 16px; flex-shrink: 0;
-            vertical-align: -3px; margin-left: 3px;
-        }
-        .ph-badge-sm { width: 13px; height: 13px; flex-shrink: 0; vertical-align: -2px; margin-left: 2px; }
         .acct-big-avatar {
             width: 46px; height: 46px; border-radius: 50%;
             background: var(--accent); color: #fff;
@@ -453,15 +584,6 @@
         }
         .admin-badge-sm { width: 12px; height: 12px; flex-shrink: 0; vertical-align: -2px; margin-left: 2px; }
         .admin-badge-lg { width: 18px; height: 18px; flex-shrink: 0; vertical-align: -3px; margin-left: 3px; }
-
-        #visitor-counter {
-            display: flex; align-items: center; gap: 6px;
-            font-size: .7rem; font-weight: 600; color: var(--muted); white-space: nowrap;
-        }
-        .vc-dot {
-            width: 7px; height: 7px; border-radius: 50%; background: #4caf50;
-            box-shadow: 0 0 0 2px rgba(76,175,80,.25); flex-shrink: 0;
-        }
 
         /* ── BLOG BUTTON ── */
         .blog-btn {
@@ -858,93 +980,94 @@
         }
         .settings-backdrop.show { display: block; opacity: 1; }
 
+        /* ══ SETTINGS PANEL ══════════════════════════════════════════════════ */
+        .settings-backdrop {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.3); z-index: 1999;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .settings-backdrop.show { display: block; opacity: 1; }
+
         .settings-menu {
             display: none; position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: color-mix(in srgb, var(--surface) 95%, transparent);
+            bottom: 0; left: 0; right: 0; z-index: 2000;
+            background: var(--surface);
+            border: 1px solid var(--border); border-bottom: none;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 -8px 40px rgba(0,0,0,0.35);
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-radius: 8px 8px 0 0;
-            border: 1px solid var(--border); border-bottom: none;
-            z-index: 2000; max-height: 88vh; overflow: hidden;
-            box-shadow: 0 -4px 32px rgba(0,0,0,0.25);
+            max-height: 90vh; min-height: 360px;
+            flex-direction: column;
             transform: translateY(100%);
-            transition: transform 0.22s cubic-bezier(0.32,0.72,0,1);
-            display: flex; flex-direction: column;
+            transition: transform 0.24s cubic-bezier(0.32,0.72,0,1);
         }
+        .settings-menu.show { display: flex; transform: translateY(0); }
+
         @media (min-width: 600px) {
             .settings-menu {
                 bottom: auto; left: auto;
-                top: calc(var(--header-height) + var(--safe-top) + 6px);
-                right: clamp(10px,3%,20px);
-                border-radius: 8px; border: 1px solid var(--border);
-                width: min(340px, 92vw); max-height: 82vh;
-                transform: translateY(-4px) scale(0.98);
-                opacity: 0;
-                pointer-events: none;
+                top: calc(var(--header-height) + var(--safe-top) + 8px);
+                right: clamp(12px,3%,24px);
+                width: 360px; max-height: 84vh; min-height: 420px;
+                border-radius: 12px; border: 1px solid var(--border);
+                transform: translateY(-6px) scale(0.98);
+                opacity: 0; pointer-events: none;
                 transition: transform 0.15s ease, opacity 0.15s ease;
-                display: flex; flex-direction: column;
             }
             .settings-menu.show { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
         }
-        .settings-menu.show { display: flex; transform: translateY(0); opacity: 1; }
 
         .sheet-handle {
-            width: 28px; height: 3px; background: var(--border);
-            border-radius: 2px; margin: 8px auto 0; flex-shrink: 0;
+            width: 32px; height: 4px; background: var(--border);
+            border-radius: 2px; margin: 10px auto 0; flex-shrink: 0; display: block;
         }
         @media (min-width: 600px) { .sheet-handle { display: none; } }
 
-        /* Settings header */
-        .settings-header { padding: 10px 14px 0; flex-shrink: 0; }
+        .settings-header { padding: 14px 18px 0; flex-shrink: 0; }
         .settings-title {
-            font-size: 0.62rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.1em; opacity: 0.4; margin-bottom: 8px;
+            font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 12px;
         }
-        .settings-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+        .settings-tabs { display: flex; border-bottom: 1px solid var(--border); }
         .settings-tab {
             background: none; border: none; color: var(--text-muted);
-            font-family: inherit; font-weight: 400; font-size: 0.78rem;
-            padding: 7px 12px 8px; cursor: pointer;
+            font-family: inherit; font-size: 0.8rem; font-weight: 400;
+            padding: 8px 14px 9px; cursor: pointer;
             border-bottom: 2px solid transparent;
-            transition: color 0.1s, border-color 0.1s;
             position: relative; bottom: -1px;
-            white-space: nowrap; border-radius: 0;
+            transition: color 0.1s, border-color 0.1s; white-space: nowrap;
         }
-        .settings-tab:hover { color: var(--text); background: color-mix(in srgb, var(--text) 5%, transparent); }
+        .settings-tab:hover { color: var(--text); }
         .settings-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 
-        /* Settings body */
         .settings-body {
-            flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-            padding: 12px 14px calc(12px + var(--safe-bottom));
+            flex: 1; overflow-y: auto; min-height: 0;
+            -webkit-overflow-scrolling: touch;
         }
         .settings-body::-webkit-scrollbar { width: 2px; }
         .settings-body::-webkit-scrollbar-track { background: transparent; }
         .settings-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-        .settings-pane { display: none; }
+        .settings-pane { display: none; padding: 16px 18px 28px; }
         .settings-pane.active { display: block; }
 
-        /* Settings rows */
+        .s-section-title {
+            font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-muted);
+            margin: 22px 0 8px; padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+        .s-section-title:first-child { margin-top: 2px; }
+
         .s-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 9px 0; gap: 12px;
-            border-bottom: 1px solid var(--border);
+            padding: 10px 0; gap: 12px;
+            border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
         }
         .s-row:last-child { border-bottom: none; }
-        .s-label { font-size: 0.82rem; font-weight: 400; }
-        .s-sublabel { font-size: 0.67rem; opacity: 0.45; font-weight: 400; margin-top: 2px; }
-
-        /* Section headings */
-        .s-section-title {
-            font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.1em; color: var(--text-muted);
-            margin: 16px 0 6px; opacity: 1;
-            padding-bottom: 4px;
-            border-bottom: 1px solid var(--border);
-        }
-        .s-section-title:first-child { margin-top: 0; }
+        .s-label { font-size: 0.82rem; font-weight: 500; }
+        .s-sublabel { font-size: 0.67rem; color: var(--text-muted); margin-top: 2px; }
 
         /* Inputs */
         input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: var(--accent); }
@@ -985,6 +1108,8 @@
         .swatch-slate    { background: linear-gradient(135deg,#1e1e2e 50%,#2a2a3c 100%); }
         .swatch-light    { background: linear-gradient(135deg,#f3f3f3 50%,#ffffff 100%); border-color: var(--border); }
         .swatch-system   { background: linear-gradient(135deg,#202020 0%,#202020 50%,#f3f3f3 50%,#f3f3f3 100%); }
+        .swatch-win7 { background: linear-gradient(135deg, rgba(160,215,255,0.9) 0%, #2d89ef 40%, #1a5ba8 70%, #0d3d7a 100%); border: 1px solid rgba(120,180,255,0.5) !important; }
+
         .swatch-system::after {
             content: '';
             position: absolute; inset: 0;
@@ -1030,24 +1155,10 @@
             margin-bottom: 5px; transition: border-color 0.1s, background 0.1s;
         }
         .mirror-btn:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
-        .mirror-btn .arrow { opacity: 0.4; font-size: 0.75rem; }
+        .mirror-btn .arrow { opacity: 0.5; }
         .mirror-disclaimer { font-size: 0.63rem; opacity: 0.4; margin-top: 3px; }
 
         /* Redeem */
-        .redeem-box { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
-        .redeem-input {
-            flex: 1; padding: 5px 10px; border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: color-mix(in srgb, var(--text) 4%, transparent);
-            color: var(--text); font-family: inherit; font-size: 0.78rem; outline: none;
-            transition: border-color 0.1s;
-        }
-        .redeem-input:focus { border-color: var(--accent); }
-        .redeem-input::placeholder { color: var(--text-muted); }
-        .redeem-msg { font-size: 0.72rem; margin-top: 4px; min-height: 1.2em; }
-        .redeem-msg.error   { color: #c42b1c; }
-        .redeem-msg.success { color: #107c10; }
-        .redeem-msg.info    { color: var(--accent); }
 
     </style>
 </head>
@@ -1067,7 +1178,6 @@
         <input type="text" id="searchInput" placeholder="Search games..." oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="controls">
-        <div id="visitor-counter"><span class="vc-dot"></span><span id="vc-count">—</span> views today</div>
         <button class="blog-btn" id="blogBtn" onclick="toggleBlog()" aria-label="Blog">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             Blog<span class="blog-notif" id="blogNotif" style="display:none"></span>
@@ -1115,7 +1225,7 @@
 <main id="game-grid"></main>
 
 <!-- ── SETTINGS PANEL ── -->
-<div id="settingsMenu" class="settings-menu" role="dialog" aria-label="Settings">
+<div id="settingsMenu" class="settings-menu" role="dialog" aria-modal="true" aria-label="Settings">
     <span class="sheet-handle"></span>
 
     <div class="settings-header">
@@ -1129,9 +1239,8 @@
 
     <div class="settings-body">
 
-        <!-- ── APPEARANCE TAB ── -->
+        <!-- APPEARANCE -->
         <div class="settings-pane active" id="pane-appearance">
-
             <div class="s-section-title">Theme</div>
             <div class="theme-picker">
                 <button class="theme-swatch swatch-midnight" onclick="setTheme('midnight')" title="Midnight" id="swatch-midnight"></button>
@@ -1140,43 +1249,40 @@
                 <button class="theme-swatch swatch-slate"    onclick="setTheme('slate')"    title="Slate"    id="swatch-slate"></button>
                 <button class="theme-swatch swatch-light"    onclick="setTheme('light')"    title="Light"    id="swatch-light"></button>
                 <button class="theme-swatch swatch-system"   onclick="setTheme('system')"   title="System"   id="swatch-system"></button>
+                <button class="theme-swatch swatch-win7"     onclick="setTheme('win7')"     title="Win7"     id="swatch-win7"></button>
             </div>
 
-            <div id="customThemeSection">
-            <div class="s-section-title" style="margin-top:14px;">Custom Themes</div>
-            <div class="theme-picker" id="customThemePicker">
-                <div style="font-size:0.75rem;opacity:0.4;font-weight:600;">Loading themes...</div>
-            </div>
-            </div>
-            <span class="accent-locked-note" id="accentLockedNote">Accent color is set by this theme</span>
-
-            <div class="s-section-title" style="margin-top:18px;">Interface</div>
+            <div class="s-section-title">Interface</div>
             <div class="s-row">
-                <div><div class="s-label">Rounded UI</div><div class="s-sublabel">Smooth card corners</div></div>
+                <div>
+                    <div class="s-label">Rounded UI</div>
+                    <div class="s-sublabel">Smooth corners on cards and panels</div>
+                </div>
                 <input type="checkbox" id="cornerToggle" checked onchange="updateUI()">
             </div>
             <div class="s-row">
-                <div><div class="s-label">Accent Color</div><div class="s-sublabel">Highlight color</div></div>
+                <div>
+                    <div class="s-label">Accent Color</div>
+                    <div class="s-sublabel">Highlight color used throughout</div>
+                </div>
                 <div class="accent-controls">
                     <button class="s-btn" onclick="resetAccent()">Reset</button>
                     <input type="color" id="accentPicker" value="#0078D4" oninput="updateUI()">
                 </div>
             </div>
 
-            <div class="s-section-title" style="margin-top:18px;">Font</div>
+            <div class="s-section-title">Font</div>
             <div class="font-list" id="fontList"></div>
 
-            <div class="s-section-title" style="margin-top:14px;">Font Weight</div>
+            <div class="s-section-title">Font Weight</div>
             <div class="weight-pills">
-                <button class="weight-pill" id="wpill-light"   onclick="setFontWeight('light')"  >Light</button>
+                <button class="weight-pill" id="wpill-light"   onclick="setFontWeight('light')">Light</button>
                 <button class="weight-pill" id="wpill-regular" onclick="setFontWeight('regular')">Regular</button>
-                <button class="weight-pill" id="wpill-bold"    onclick="setFontWeight('bold')"   >Bold</button>
+                <button class="weight-pill" id="wpill-bold"    onclick="setFontWeight('bold')">Bold</button>
             </div>
-
-
         </div>
 
-        <!-- ── DATA TAB ── -->
+        <!-- DATA -->
         <div class="settings-pane" id="pane-data">
             <div class="s-section-title">Favorites</div>
             <div class="s-row">
@@ -1195,19 +1301,15 @@
                 </div>
                 <button class="s-btn danger" onclick="clearHistory()">Clear</button>
             </div>
-
-            <div class="s-section-title" style="margin-top:18px;">Redeem Code</div>
-            <div class="redeem-box">
-                <input type="text" id="redeemInput" class="redeem-input" placeholder="Enter theme code..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                <button class="s-btn primary" onclick="redeemCode()">Redeem</button>
-            </div>
-            <div id="redeemMsg" class="redeem-msg"></div>
         </div>
 
+        <!-- ABOUT -->
         <div class="settings-pane" id="pane-about">
-            <div class="about-logo-wrap" style="text-align:center;margin-bottom:14px">
-                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" style="height:32px;object-fit:contain">
+            <div style="text-align:center; padding: 10px 0 20px;">
+                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
+                <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.10.0</span>
             </div>
+
             <div class="s-section-title">About</div>
             <p id="aboutText" class="about-text">Powerhouse is a custom-built game hub full of unblocked games, and websites to annoy teachers, and easily get 5 missing ELA assignments.</p>
 
@@ -1222,15 +1324,17 @@
 
             <div class="s-section-title">Mirrors</div>
             <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-btn">
-                Cloudflare (Main) <span class="arrow">↗</span>
+                Cloudflare (Main)
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;opacity:0.5;flex-shrink:0;margin-left:auto"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
             </a>
             <a href="https://kraftpaket.c1120.workers.dev/" target="_blank" rel="noopener" class="mirror-btn">
-                Cloudflare (Backup) <span class="arrow">↗</span>
+                Cloudflare (Backup)
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;opacity:0.5;flex-shrink:0;margin-left:auto"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
             </a>
-            <div class="mirror-disclaimer">Note: Cloudflare (Backup) is a backup — has the chance to not always be up to date</div>
+            <p class="mirror-disclaimer">Cloudflare (Backup) may not always be up to date.</p>
         </div>
 
-    </div><!-- /settings-body -->
+    </div>
 </div><!-- /settingsMenu -->
 
 <!-- Tutorial Overlay -->
@@ -1441,12 +1545,13 @@
     // ── ACCOUNT SYSTEM ───────────────────────────────────────────────────────
     const API_BASE        = 'https://powerhouse-api.c823.workers.dev';
     const ADMIN_BADGE_URL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/admin.svg';
-    const PH_BADGE_URL    = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png';
     const PFP_BASE        = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
     // Profile icon filenames in the profileicons/ folder
     const PFP_OPTIONS       = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg',
-                               '7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg','13.jpg','14.jpg','15.jpg','16.jpg'];
-    const PFP_ADMIN_OPTIONS = ['pwr.jpg','ski.jpg','dog.jpg'];
+                               '7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg',
+                               '13.jpg','14.jpg','15.jpg','16.jpg','17.jpg','18.jpg',
+                               '19.jpg','20.jpg','21.jpg','22.jpg','23.jpg','24.jpg'];
+    const PFP_ADMIN_OPTIONS = ['pwr.jpg','ski.jpg','gramps.jpg'];
 
     let _acctPfp = localStorage.getItem('ph_pfp') || '';  // filename or ''
 
@@ -1455,16 +1560,9 @@
         return pfp ? PFP_BASE + pfp : '';
     }
 
-    function isPowerhouseAccount(username) {
-        return (username || '').toLowerCase() === 'powerhouse';
-    }
-
     // Returns the badge HTML for a username (Powerhouse > admin)
     function getBadgeHtml(username, isAdmin, size) {
         const sm = size === 'sm';
-        if (isPowerhouseAccount(username)) {
-            return `<img src="${PH_BADGE_URL}" class="${sm ? 'ph-badge-sm' : 'ph-badge'}" title="Powerhouse Official" alt="Powerhouse">`;
-        }
         if (isAdmin) {
             return `<img src="${ADMIN_BADGE_URL}" class="${sm ? 'admin-badge-sm' : 'admin-badge'}" title="Admin" alt="Admin">`;
         }
@@ -1474,7 +1572,7 @@
     function renderPfpPicker() {
         const grid = document.getElementById('pfpPickerGrid');
         if (!grid) return;
-        const isPrivileged = _blogIsAdmin || isPowerhouseAccount(_acctUsername);
+        const isPrivileged = _blogIsAdmin;
         const noneHtml = `<div class="pfp-none ${!_acctPfp ? 'selected' : ''}" onclick="setPfp('')" title="No picture">None</div>`;
         const opts = PFP_OPTIONS.map(f => {
             const url = PFP_BASE + f;
@@ -1643,7 +1741,6 @@
                 if (s.font)           localStorage.setItem('power_font',             s.font);
                 if (s.corners)        localStorage.setItem('power_corners',          s.corners);
                 if (s.fontWeight)     localStorage.setItem('power_font_weight',      s.fontWeight);
-                if (s.unlockedThemes) localStorage.setItem('power_unlocked_themes',  s.unlockedThemes);
                 if (s.pfp !== undefined) { _acctPfp = s.pfp; localStorage.setItem('ph_pfp', s.pfp); }
             }
             if (data.history   && data.history.length)   localStorage.setItem('power_history',   JSON.stringify(data.history));
@@ -1665,7 +1762,6 @@
                 font:           localStorage.getItem('power_font')            || 'outfit',
                 corners:        localStorage.getItem('power_corners')         || 'rounded',
                 fontWeight:     localStorage.getItem('power_font_weight')     || 'regular',
-                unlockedThemes: localStorage.getItem('power_unlocked_themes') || '',
                 pfp:            _acctPfp || '',
             };
             const history   = JSON.parse(localStorage.getItem('power_history')   || '[]');
@@ -2084,7 +2180,6 @@
     const debouncedRender = debounce(renderGames, 150);
 
     const FAVICON_URL  = 'https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png';
-    const THEMES_DIR   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes';
     const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
 
     // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
@@ -2482,159 +2577,12 @@
     }
 
     // ── THEME SYSTEM ──────────────────────────────────────────────────────
-    const THEMES = ['midnight', 'dark', 'amoled', 'slate', 'light', 'system', '10', 'cave'];
-    const DARK_LOGOS  = ['midnight','dark','amoled','slate','10','cave'];
+    const THEMES = ['midnight', 'dark', 'amoled', 'slate', 'light', 'system', 'win7', ];
+    const DARK_LOGOS  = ['midnight','dark','amoled','slate','10','cave','win7',];
 
     // Custom themes loaded from themes.txt — keyed by id
-    let CUSTOM_THEMES = {};   // populated by loadCustomThemes()
-    let unlockedThemes = new Set(JSON.parse(localStorage.getItem('power_unlocked_themes') || '[]'));
 
-    async function loadCustomThemes() {
-        try {
-            // Use embedded themes data
-            const EMBEDDED_THEMES = [
-  {
-    "id": "ICECAVE",
-    "name": "Ice Cave",
-    "accent": "#00d2ff",
-    "image": "10.jpg",
-    "code": ["ICECAVE", "BLUECAVE"],
-    "surface": "rgba(0, 30, 60, 0.75)",
-    "surface2": "rgba(0, 45, 80, 0.8)",
-    "text": "#e0f7fa",
-    "border": "rgba(0, 210, 255, 0.35)"
-  },
-  {
-    "id": "LONDON",
-    "name": "London Aerial",
-    "accent": "#6fa8dc",
-    "image": "london.jpg",
-    "code": ["LONDON", "CITY"],
-    "surface": "rgba(44, 54, 63, 0.75)",
-    "surface2": "rgba(60, 75, 85, 0.82)",
-    "text": "#fdf5e6",
-    "border": "rgba(111, 168, 220, 0.4)"
-  },
-  {
-    "id": "MOUNTAINS",
-    "name": "Mountain Range",
-    "accent": "#8eb04a",
-    "image": "kalen-emsley-Bkci_8qcdvQ-unsplash (1).jpg",
-    "code": ["MOUNTAINS", "NATURE"],
-    "surface": "rgba(38, 50, 56, 0.72)",
-    "surface2": "rgba(55, 71, 79, 0.78)",
-    "text": "#f0f4f8",
-    "border": "rgba(142, 176, 74, 0.35)"
-  },
-  {
-    "id": "OCEANCAVE",
-    "name": "Ocean Cave",
-    "accent": "#fbc02d",
-    "image": "cave.jpg",
-    "code": ["OCEANCAVE", "WINDOWS10"],
-    "surface": "rgba(46, 33, 12, 0.78)",
-    "surface2": "rgba(63, 46, 18, 0.84)",
-    "text": "#fff9c4",
-    "border": "rgba(251, 192, 45, 0.4)"
-  },
-  {
-    "id": "SKELETON",
-    "name": "Ghost",
-    "accent": "#4caf50",
-    "image": "ghostinthemachine.jpg",
-    "code": ["GHOSTINTHEMACHINE", "PHASMOPHOBIA"],
-    "surface": "rgba(10, 10, 10, 0.85)",
-    "surface2": "rgba(25, 25, 25, 0.9)",
-    "text": "#c8e6c9",
-    "border": "rgba(76, 175, 80, 0.5)"
-  },
-  {
-    "id": "LUIS",
-    "name": "Luisgamercool23",
-    "accent": "#ff5722",
-    "image": "luisgamercool23.jpg",
-    "code": ["LUIS", "FLAMINGO"],
-    "surface": "rgba(255, 255, 255, 0.7)",
-    "surface2": "rgba(240, 240, 240, 0.8)",
-    "text": "#212121",
-    "border": "rgba(255, 87, 34, 0.3)"
-  }
-];
-            const res = { ok: true, json: async () => EMBEDDED_THEMES };
-            // (original fetch kept as fallback comment)
-            // const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/themes/themes.txt');
-            if (!res.ok) throw new Error('themes.txt ' + res.status);
-            const data = await res.json();
-            data.forEach(t => { CUSTOM_THEMES[t.id] = t; });
-            renderCustomThemePicker();
-        } catch(e) {
-            console.warn('Could not load custom themes:', e);
-            const p = document.getElementById('customThemePicker');
-            if (p) p.innerHTML = '<div style="font-size:0.75rem;opacity:0.4;">Could not load custom themes</div>';
-        }
-    }
 
-    function renderCustomThemePicker() {
-        const picker  = document.getElementById('customThemePicker');
-        const section = document.getElementById('customThemeSection');
-        if (!picker || !section) return;
-
-        const currentTheme = localStorage.getItem('power_theme') || 'system';
-        const entries = Object.values(CUSTOM_THEMES);
-
-        // Only show themes the user has unlocked
-        const unlocked = entries.filter(t => unlockedThemes.has(t.id));
-
-        // Hide the entire section if nothing is unlocked
-        section.style.display = unlocked.length === 0 ? 'none' : 'block';
-        if (unlocked.length === 0) return;
-
-        picker.innerHTML = unlocked.map(t => {
-            const isActive = currentTheme === t.id;
-            return `<button
-                class="theme-swatch custom-swatch ${isActive ? 'active' : ''}"
-                id="swatch-${t.id}"
-                onclick="setTheme('${t.id}')"
-                title="${t.name}"
-                style="background-image:url('${THEMES_DIR}/${t.image}');background-size:cover;background-position:center;position:relative;overflow:hidden;">
-            </button>`;
-        }).join('');
-    }
-
-    function redeemCode() {
-        const input = document.getElementById('redeemInput');
-        const msg   = document.getElementById('redeemMsg');
-        const code  = input.value.trim();
-        if (!code) {
-            msg.textContent = 'Please enter a code.';
-            msg.className = 'redeem-msg error';
-            return;
-        }
-        // Support multiple codes per theme — codes can be a string or array
-        const match = Object.values(CUSTOM_THEMES).find(t => {
-            if (!t.code) return false;
-            const codes = Array.isArray(t.code) ? t.code : [t.code];
-            return codes.some(c => c.toLowerCase() === code.toLowerCase());
-        });
-        if (!match) {
-            msg.textContent = 'Invalid code. Try again.';
-            msg.className = 'redeem-msg error';
-            input.value = '';
-            return;
-        }
-        if (unlockedThemes.has(match.id)) {
-            msg.textContent = `"${match.name}" is already unlocked!`;
-            msg.className = 'redeem-msg info';
-            return;
-        }
-        // Unlock it
-        unlockedThemes.add(match.id);
-        localStorage.setItem('power_unlocked_themes', JSON.stringify([...unlockedThemes]));
-        msg.textContent = `"${match.name}" theme unlocked! Find it in Appearance.`;
-        msg.className = 'redeem-msg success';
-        input.value = '';
-        renderCustomThemePicker();
-    }
 
     function isLogoDark(theme) {
         if (theme === 'system') {
@@ -2645,8 +2593,7 @@
 
     function setTheme(theme) {
         // Allow custom themes too — only fall back if not in either list
-        const isCustom = theme in CUSTOM_THEMES;
-        if (!THEMES.includes(theme) && !isCustom) theme = 'midnight';
+        if (!THEMES.includes(theme)) theme = 'midnight';
 
         document.body.setAttribute('data-theme', theme);
 
@@ -2658,53 +2605,27 @@
         const faviconEl = document.getElementById('faviconEl');
         if (faviconEl) faviconEl.href = isLogoDark(theme) ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png' : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-light.png';
 
-        if (isCustom) {
-            const t = CUSTOM_THEMES[theme];
-            // Apply background image directly on body — most reliable method
-            document.body.style.backgroundImage    = `url('${THEMES_DIR}/${t.image}')`;
-            document.body.style.backgroundSize     = 'cover';
-            document.body.style.backgroundPosition = 'center';
-            document.body.style.backgroundAttachment = 'scroll';
-            document.body.style.backgroundRepeat   = 'no-repeat';
-            document.body.setAttribute('data-custom-theme', theme);
-            // Apply surface/text/border overrides
-            const root = document.documentElement;
-            if (t.surface)  root.style.setProperty('--surface',  t.surface);
-            if (t.surface2) root.style.setProperty('--surface2', t.surface2);
-            if (t.text)     root.style.setProperty('--text',     t.text);
-            if (t.border)   root.style.setProperty('--border',   t.border);
-            // Lock accent to theme value
-            root.style.setProperty('--accent', t.accent);
-            const picker = document.getElementById('accentPicker');
-            if (picker) picker.value = t.accent;
-        } else {
-            // Clear custom background
+        {
+            // Clear any leftover custom background
             document.body.style.backgroundImage    = '';
             document.body.style.backgroundSize     = '';
             document.body.style.backgroundPosition = '';
             document.body.style.backgroundAttachment = '';
             document.body.style.backgroundRepeat   = '';
-            document.body.removeAttribute('data-custom-theme');
-            // Remove overridden CSS vars
             const root = document.documentElement;
             root.style.removeProperty('--surface');
             root.style.removeProperty('--surface2');
             root.style.removeProperty('--text');
             root.style.removeProperty('--border');
-            // Restore saved accent
             const savedAccent = localStorage.getItem('power_accent') || '#0078D4';
             root.style.setProperty('--accent', savedAccent);
             const picker = document.getElementById('accentPicker');
             if (picker) picker.value = savedAccent;
         }
 
-        // Lock/unlock accent picker UI
-        document.body.setAttribute('data-accent-locked', isCustom ? 'true' : 'false');
-        const lockedNote = document.getElementById('accentLockedNote');
-        if (lockedNote) lockedNote.style.display = isCustom ? 'block' : 'none';
 
         // Highlight active swatch in both standard and custom pickers
-        [...THEMES, ...Object.keys(CUSTOM_THEMES)].forEach(t => {
+        [...THEMES].forEach(t => {
             const sw = document.getElementById('swatch-' + t);
             if (sw) sw.classList.toggle('active', t === theme);
         });
@@ -2801,42 +2722,8 @@
     // Uses countapi.xyz — a free, no-setup global hit counter.
     // Resets daily by using today's date as part of the key.
     // No backend, no KV, no worker changes needed.
-    const VISITS_URL = 'https://powerhouse-api.c823.workers.dev/visits';
 
-    async function trackVisit() {
-        try {
-            // Use localStorage so the flag survives tab closes and browser restarts
-            // — a device only counts once ever, not once per session
-            const VISITED_KEY = 'ph_device_visited';
-            const alreadyCounted = localStorage.getItem(VISITED_KEY);
 
-            if (alreadyCounted) {
-                // Device already counted — just fetch and display current count
-                const res = await fetch(VISITS_URL);
-                if (!res.ok) return;
-                const data = await res.json();
-                showVisitCount(data.count);
-                return;
-            }
-
-            // First ever visit on this device — POST to increment
-            const res = await fetch(VISITS_URL, { method: 'POST' });
-            if (!res.ok) return;
-            const data = await res.json();
-            showVisitCount(data.count);
-            localStorage.setItem(VISITED_KEY, '1');
-        } catch(e) {
-            // Silently fail — counter is non-critical
-        }
-    }
-
-    async function showVisitCount(n) {
-        if (n == null) return;
-        const el      = document.getElementById('vc-count');
-        const counter = document.getElementById('visitor-counter');
-        if (el) el.textContent = Number(n).toLocaleString();
-        if (counter) counter.style.display = 'flex';
-    }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
 
@@ -2862,10 +2749,6 @@
         setFontWeight(fontWeight);
         renderFontList();
 
-        // Load custom themes FIRST — then apply the saved theme so custom
-        // themes are available in CUSTOM_THEMES before setTheme runs
-        await loadCustomThemes();
-
         const theme = localStorage.getItem('power_theme') || 'system';
         setTheme(theme);
         updateUI();
@@ -2876,7 +2759,6 @@
         if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); }));
         blogInit();
         loadBanner();
-        trackVisit();
         setTimeout(() => { _acctInitDone = true; }, 3000); // allow loads to settle first
     };
 </script>
