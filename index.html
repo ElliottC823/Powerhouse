@@ -1422,7 +1422,7 @@
 
 <!-- ══ MOBILE HEADER (≤680px only) ══════════════════════════════════ -->
 <header id="mobileHeader" style="display:none">
-    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="logo-img">
+    <img id="mainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" class="logo-img">
     <div class="search-container" style="flex:1;max-width:none">
         <input type="text" id="searchInputMobile" placeholder="Search games..." oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
@@ -1440,7 +1440,7 @@
 <!-- ══ SIDEBAR ══════════════════════════════════════════════════════════ -->
 <div id="sidebar">
     <div class="sidebar-brand">
-        <img id="sidebarMainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" class="sidebar-logo">
+        <img id="sidebarMainLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" class="sidebar-logo">
     </div>
 
     <nav class="sidebar-nav">
@@ -1611,7 +1611,7 @@
         <!-- ABOUT -->
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
-                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
+                <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
                 <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.10.0</span>
             </div>
 
@@ -1646,7 +1646,7 @@
 <div class="welcome-backdrop" id="welcomeBackdrop">
     <div class="welcome-modal">
         <img id="welcomeLogo" class="welcome-logo"
-             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
+             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg"
              alt="Powerhouse">
         <div class="welcome-heading">Welcome to Powerhouse</div>
         <div class="welcome-sub">Create a free account to unlock the full experience.</div>
@@ -2594,8 +2594,8 @@
             const isDark = !(['light'].includes(theme)) &&
                 !(theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
             logo.src = isDark
-                ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
-                : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
+                ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg'
+                : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.svg';
         }
         bd.classList.add('show');
     }
@@ -2689,7 +2689,7 @@
     }, 150);
 
     const FAVICON_URL  = 'https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png';
-    const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
+    const LOGO_DARK   = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg';
 
     // ── ABOUT:BLANK GAME LOADER ──────────────────────────────────────────────
     function loadInBlank(url, title, thumb) {
@@ -3173,8 +3173,8 @@
     function updateAboutLogo() {
         const theme = localStorage.getItem('power_theme') || 'system';
         const isDark = isLogoDark(theme);
-        const dark_url  = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png';
-        const light_url = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
+        const dark_url  = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg';
+        const light_url = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.svg';
         const src = isDark ? dark_url : light_url;
         const aboutEl    = document.getElementById('aboutLogo');
         const sidebarEl  = document.getElementById('sidebarMainLogo');
