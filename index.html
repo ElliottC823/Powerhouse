@@ -585,6 +585,86 @@
         .admin-badge-sm { width: 12px; height: 12px; flex-shrink: 0; vertical-align: -2px; margin-left: 2px; }
         .admin-badge-lg { width: 18px; height: 18px; flex-shrink: 0; vertical-align: -3px; margin-left: 3px; }
 
+        /* ══ WELCOME PROMPT ════════════════════════════════════════════════════ */
+        .welcome-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 4000;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+            padding: 20px clamp(10px,4%,32px);
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .welcome-backdrop.show { display: flex; opacity: 1; }
+        .welcome-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+            width: 100%; max-width: 420px;
+            padding: 28px 28px 24px;
+            animation: fadeUp 0.22s ease;
+        }
+        @keyframes fadeUp {
+            from { transform: translateY(16px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .welcome-logo {
+            display: block; height: 26px; object-fit: contain;
+            margin: 0 auto 20px;
+        }
+        .welcome-heading {
+            font-size: 1.15rem; font-weight: 800;
+            text-align: center; margin-bottom: 6px; line-height: 1.3;
+        }
+        .welcome-sub {
+            font-size: 0.78rem; color: var(--text-muted);
+            text-align: center; margin-bottom: 20px; line-height: 1.5;
+        }
+        .welcome-benefits {
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px; margin-bottom: 20px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .welcome-benefit {
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .welcome-benefit-icon {
+            width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+            background: var(--accent-light);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .welcome-benefit-icon svg { width: 14px; height: 14px; color: var(--accent); }
+        .welcome-benefit-text { font-size: 0.78rem; line-height: 1.4; }
+        .welcome-benefit-title { font-weight: 600; }
+        .welcome-benefit-desc { color: var(--text-muted); font-size: 0.72rem; }
+        .welcome-actions { display: flex; flex-direction: column; gap: 8px; }
+        .welcome-btn-primary {
+            width: 100%; padding: 11px;
+            background: var(--accent); color: #fff;
+            border: none; border-radius: var(--radius-sm);
+            font-family: inherit; font-size: 0.88rem; font-weight: 700;
+            cursor: pointer; transition: opacity 0.1s;
+        }
+        .welcome-btn-primary:hover { opacity: 0.88; }
+        .welcome-btn-secondary {
+            width: 100%; padding: 10px;
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            color: var(--text);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            font-family: inherit; font-size: 0.82rem; font-weight: 600;
+            cursor: pointer; transition: background 0.1s;
+        }
+        .welcome-btn-secondary:hover { background: color-mix(in srgb, var(--text) 10%, transparent); }
+        .welcome-skip {
+            background: none; border: none; color: var(--text-muted);
+            font-family: inherit; font-size: 0.72rem; cursor: pointer;
+            text-align: center; display: block; width: 100%;
+            padding: 6px; transition: color 0.1s;
+        }
+        .welcome-skip:hover { color: var(--text); }
+
         /* ── BLOG BUTTON ── */
         .blog-btn {
             background: transparent; border: 1px solid var(--border);
@@ -1336,6 +1416,53 @@
 
     </div>
 </div><!-- /settingsMenu -->
+
+<!-- ── WELCOME PROMPT ── -->
+<div class="welcome-backdrop" id="welcomeBackdrop">
+    <div class="welcome-modal">
+        <img id="welcomeLogo" class="welcome-logo"
+             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
+             alt="Powerhouse">
+        <div class="welcome-heading">Welcome to Powerhouse</div>
+        <div class="welcome-sub">Create a free account to unlock the full experience.</div>
+
+        <div class="welcome-benefits">
+            <div class="welcome-benefit">
+                <div class="welcome-benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <div class="welcome-benefit-text">
+                    <div class="welcome-benefit-title">Sync across devices</div>
+                    <div class="welcome-benefit-desc">Your settings, favorites, and play history follow you everywhere.</div>
+                </div>
+            </div>
+            <div class="welcome-benefit">
+                <div class="welcome-benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </div>
+                <div class="welcome-benefit-text">
+                    <div class="welcome-benefit-title">Save your favorites</div>
+                    <div class="welcome-benefit-desc">Heart games and find them instantly — never lose your list.</div>
+                </div>
+            </div>
+            <div class="welcome-benefit">
+                <div class="welcome-benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                </div>
+                <div class="welcome-benefit-text">
+                    <div class="welcome-benefit-title">Profile picture</div>
+                    <div class="welcome-benefit-desc">Pick an avatar and show up in the Powerhouse community.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="welcome-actions">
+            <button class="welcome-btn-primary" onclick="dismissWelcome('create')">Create Account</button>
+            <button class="welcome-btn-secondary" onclick="dismissWelcome('signin')">Sign In</button>
+            <button class="welcome-skip" onclick="dismissWelcome('skip')">Maybe later</button>
+        </div>
+    </div>
+</div>
 
 <!-- Tutorial Overlay -->
 <div class="acct-backdrop" id="acctBackdrop" onclick="closeAccountModal(event)">
@@ -2172,6 +2299,36 @@
             }).catch(() => {});
     }
 
+    // ── WELCOME PROMPT ───────────────────────────────────────────────────────
+    function showWelcomePrompt() {
+        const bd = document.getElementById('welcomeBackdrop');
+        if (!bd) return;
+        // Update logo to match current theme
+        const logo = document.getElementById('welcomeLogo');
+        if (logo) {
+            const theme = localStorage.getItem('power_theme') || 'system';
+            const isDark = !(['light'].includes(theme)) &&
+                !(theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
+            logo.src = isDark
+                ? 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png'
+                : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.png';
+        }
+        bd.classList.add('show');
+    }
+
+    function dismissWelcome(action) {
+        const bd = document.getElementById('welcomeBackdrop');
+        if (bd) bd.classList.remove('show');
+        localStorage.setItem('ph_welcomed', '1');
+        if (action === 'create') {
+            toggleAccountModal();
+            setTimeout(() => acctSwitchTab('create'), 50);
+        } else if (action === 'signin') {
+            toggleAccountModal();
+            setTimeout(() => acctSwitchTab('signin'), 50);
+        }
+    }
+
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
     function debounce(fn, delay) {
         let t;
@@ -2754,6 +2911,10 @@
         updateUI();
 
         fetchData().then(() => {
+            // Show welcome prompt to first-time visitors who aren't signed in
+            if (!_acctToken && !localStorage.getItem('ph_welcomed')) {
+                setTimeout(showWelcomePrompt, 900);
+            }
         });
         updateAccountBtn();
         if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); }));
