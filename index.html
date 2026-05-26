@@ -1069,121 +1069,6 @@
         }
         .unclesai-backdrop.show { display: block; }
 
-        /* ══ MESSAGES ════════════════════════════════════════════════════════════ */
-        .msg-backdrop {
-            display: none; position: fixed; inset: 0; z-index: 2500;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-        }
-        .msg-backdrop.show { display: flex; align-items: flex-start; justify-content: center; padding: 20px clamp(8px,3%,20px); overflow-y: auto; }
-        @media (min-width: 681px) { .msg-backdrop.show { padding-left: calc(var(--sidebar-width) + 20px); } }
-        .msg-panel {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.4);
-            width: 100%; max-width: 480px; height: min(620px, 85vh);
-            display: flex; flex-direction: column; margin: auto;
-            animation: fadeUp .2s ease; overflow: hidden;
-        }
-        .msg-panel-header {
-            display: flex; align-items: center; gap: 10px;
-            padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-        }
-        .msg-panel-title { font-size: .88rem; font-weight: 700; flex: 1; }
-        .msg-panel-close {
-            background: none; border: none; color: var(--muted); cursor: pointer;
-            padding: 4px; display: flex; align-items: center;
-        }
-        .msg-panel-close:hover { color: var(--text); }
-        .msg-panel-close svg { width: 16px; height: 16px; }
-
-        /* Conversations list */
-        .msg-convos { flex: 1; overflow-y: auto; min-height: 0; }
-        .msg-convo-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 11px 16px; cursor: pointer; transition: background .1s;
-            border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
-        }
-        .msg-convo-item:hover { background: color-mix(in srgb, var(--text) 4%, transparent); }
-        .msg-convo-avatar {
-            width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
-        }
-        .msg-convo-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .msg-convo-info { flex: 1; min-width: 0; }
-        .msg-convo-name { font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .msg-convo-preview { font-size: .72rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
-        .msg-convo-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-        .msg-convo-time { font-size: .62rem; color: var(--muted); }
-        .msg-unread-badge {
-            background: var(--accent); color: #fff; font-size: .58rem; font-weight: 700;
-            min-width: 17px; height: 17px; border-radius: 99px;
-            display: flex; align-items: center; justify-content: center; padding: 0 4px;
-        }
-        .msg-empty { text-align: center; padding: 32px 0; color: var(--muted); font-size: .8rem; opacity: .6; }
-
-        /* Chat view */
-        .msg-chat-header {
-            display: flex; align-items: center; gap: 10px;
-            padding: 11px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-            cursor: pointer;
-        }
-        .msg-chat-header:hover .msg-chat-name { color: var(--accent); }
-        .msg-chat-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
-        .msg-chat-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .msg-chat-name { font-size: .85rem; font-weight: 700; transition: color .1s; }
-        .msg-back-btn {
-            background: none; border: none; color: var(--muted); cursor: pointer;
-            padding: 4px 6px 4px 0; display: flex; align-items: center; flex-shrink: 0;
-        }
-        .msg-back-btn:hover { color: var(--text); }
-        .msg-messages {
-            flex: 1; overflow-y: auto; min-height: 0;
-            padding: 14px 14px 8px; display: flex; flex-direction: column; gap: 6px;
-        }
-        .msg-messages::-webkit-scrollbar { width: 2px; }
-        .msg-messages::-webkit-scrollbar-thumb { background: var(--border); }
-        .msg-bubble-wrap {
-            display: flex; flex-direction: column;
-            align-items: flex-start; max-width: 78%;
-        }
-        .msg-bubble-wrap.mine { align-self: flex-end; align-items: flex-end; }
-        .msg-bubble {
-            background: var(--surface2); color: var(--text);
-            padding: 9px 13px; border-radius: 18px;
-            font-size: .83rem; line-height: 1.45;
-            word-break: break-word; white-space: pre-wrap;
-        }
-        .msg-bubble-wrap.mine .msg-bubble {
-            background: var(--accent); color: #fff;
-        }
-        .msg-time {
-            font-size: .6rem; color: var(--muted); margin-top: 2px; padding: 0 4px;
-        }
-        .msg-date-divider {
-            text-align: center; font-size: .62rem; color: var(--muted);
-            margin: 8px 0; padding: 0 10px;
-        }
-        .msg-input-row {
-            display: flex; gap: 8px; padding: 10px 12px;
-            border-top: 1px solid var(--border); flex-shrink: 0;
-        }
-        .msg-input {
-            flex: 1; background: color-mix(in srgb, var(--text) 5%, transparent);
-            border: 1px solid var(--border); border-radius: 20px;
-            color: var(--text); font-family: inherit; font-size: .84rem;
-            padding: 8px 14px; outline: none; resize: none; min-height: 38px;
-            max-height: 120px; transition: border-color .1s;
-            overflow-y: auto;
-        }
-        .msg-input:focus { border-color: var(--accent); }
-        .msg-input::placeholder { color: var(--muted); }
-        .msg-send-btn {
-            width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; align-self: flex-end;
-            background: var(--accent); border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity .1s;
-        }
-        .msg-send-btn:hover { opacity: .85; }
-        .msg-send-btn svg { width: 16px; height: 16px; color: #fff; }
-
         /* ── BLOG BUTTON ── */
         .blog-btn {
             background: transparent; border: 1px solid var(--border);
@@ -1828,10 +1713,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Friends<span class="nav-notif" id="friendReqBadge" style="display:none;background:#c42b1c"></span>
         </button>
-        <button class="sidebar-nav-btn" id="sideNavMessages" onclick="sideNavSwitch('messages')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Messages<span class="nav-notif" id="msgBadge" style="display:none"></span>
-        </button>
         <button class="sidebar-nav-btn" id="sideNavBlog" onclick="sideNavSwitch('blog')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Blog
@@ -2006,7 +1887,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.10.0</span>
+                <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.12.6</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -2019,6 +1900,7 @@
                 <div class="contributor-chip">MonkeyKC<span class="role">Content Provider</span></div>
                 <div class="contributor-chip">Toethesis<span class="role">Contributor</span></div>
                 <div class="contributor-chip">Uncle_Stein<span class="role">Contributor</span></div>
+                <div class="contributor-chip">Norwegian<span class="role">Contributor</span></div>
             </div>
 
             <div class="s-section-title">Mirrors</div>
@@ -2330,46 +2212,6 @@
     <iframe class="unclesai-iframe" id="unclesaiFrame" src="" title="Uncle's AI" allow="clipboard-write"></iframe>
 </div>
 
-<!-- ── MESSAGES PANEL ── -->
-<div class="msg-backdrop" id="msgBackdrop" onclick="msgBackdropClick(event)">
-    <div class="msg-panel" id="msgPanel">
-        <!-- Conversations view -->
-        <div id="msgViewConvos" style="display:flex;flex-direction:column;height:100%">
-            <div class="msg-panel-header">
-                <span class="msg-panel-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;margin-right:6px;vertical-align:-2px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages
-                </span>
-                <button class="msg-panel-close" onclick="toggleMessages()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="msg-convos" id="msgConvoList"></div>
-        </div>
-        <!-- Chat view -->
-        <div id="msgViewChat" style="display:none;flex-direction:column;height:100%">
-            <div class="msg-chat-header" id="msgChatHeader">
-                <button class="msg-back-btn" onclick="msgShowConvos()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:16px;height:16px"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <div class="msg-chat-avatar"><img id="msgChatAvatar" src="" alt=""></div>
-                <span class="msg-chat-name" id="msgChatName"></span>
-                <button class="msg-panel-close" onclick="toggleMessages()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
-            <div class="msg-messages" id="msgMessages"></div>
-            <div class="msg-input-row">
-                <textarea class="msg-input" id="msgInput" placeholder="Message…" rows="1"
-                    onkeydown="msgInputKeydown(event)"
-                    oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-                <button class="msg-send-btn" onclick="msgSend()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- ── BLOG OVERLAY ─────────────────────────────── -->
 <div class="blog-backdrop" id="blogBackdrop" onclick="blogBackdropClick(event)">
     <div class="blog-panel" id="blogPanel">
@@ -2511,17 +2353,13 @@
                                '7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg',
                                '13.jpg','14.jpg','15.jpg','16.jpg','17.jpg','18.jpg',
                                '19.jpg','20.jpg','21.jpg','22.jpg','23.jpg','24.jpg'];
-    const PFP_ADMIN_OPTIONS = ['pwr.jpg','ski.jpg','dog.jpg','hockey.jpg'];
+    const PFP_ADMIN_OPTIONS = ['pwr.jpg','ski.jpg','dog.jpg','hockey.jpg', 'productions.jpg'];
 
     let _acctPfp = localStorage.getItem('ph_pfp') || '';  // filename or ''
 
     // ── PFP helpers ──
     function getPfpUrl(pfp) {
-        return PFP_BASE + (pfp || 'default.jpg');
-    }
-    function pfpImg(pfp, alt, style) {
-        const s = style || 'width:100%;height:100%;object-fit:cover;border-radius:50%';
-        return `<img src="${getPfpUrl(pfp)}" alt="${alt||''}" style="${s}" onerror="this.src='${PFP_BASE}default.jpg'">`;
+        return pfp ? PFP_BASE + pfp : '';
     }
 
     // Returns the badge HTML for a username (Powerhouse > admin)
@@ -2539,8 +2377,8 @@
     function renderPfpPicker() {
         const grid = document.getElementById('pfpPickerGrid');
         if (!grid) return;
-        const isPrivileged = _blogIsAdmin || _isContributor;
-        const noneHtml = `<div class="pfp-none ${!_acctPfp ? 'selected' : ''}" onclick="setPfp('')" title="Default picture"><img src="${PFP_BASE}default.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;opacity:0.7" alt="Default"></div>`;
+        const isPrivileged = _blogIsAdmin;
+        const noneHtml = `<div class="pfp-none ${!_acctPfp ? 'selected' : ''}" onclick="setPfp('')" title="No picture">None</div>`;
         const opts = PFP_OPTIONS.map(f => {
             const url = PFP_BASE + f;
             return `<img src="${url}" class="pfp-option ${_acctPfp === f ? 'selected' : ''}" onclick="setPfp('${f}')" title="${f}" loading="lazy">`;
@@ -2569,9 +2407,14 @@
     function updateBigAvatar() {
         const el = document.getElementById('acctBigAvatar');
         if (!el) return;
-        el.innerHTML = pfpImg(_acctPfp, 'Profile picture');
-        el.style.background = 'none';
-        el.textContent = '';
+        if (_acctPfp) {
+            el.innerHTML = `<img src="${PFP_BASE + _acctPfp}" alt="Profile picture" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+            el.style.background = 'none';
+        } else {
+            el.innerHTML = '';
+            el.textContent = (_acctUsername || '').slice(0,2).toUpperCase();
+            el.style.background = '';
+        }
     }
     let _acctToken    = localStorage.getItem('ph_token')    || null;
     let _acctUsername = localStorage.getItem('ph_username') || null;
@@ -2586,7 +2429,9 @@
         if (!mobileBtn) return;
         if (_acctUsername) {
             const initials  = _acctUsername.slice(0,2).toUpperCase();
-            const avatarHtml = `<span class="acct-avatar" style="background:none;padding:0"><img src="${getPfpUrl(_acctPfp)}" style="width:22px;height:22px;border-radius:50%;object-fit:cover" onerror="this.src='${PFP_BASE}default.jpg'"></span>`;
+            const avatarHtml = _acctPfp
+                ? `<span class="acct-avatar" style="background:none;padding:0"><img src="${PFP_BASE + _acctPfp}" style="width:22px;height:22px;border-radius:50%;object-fit:cover"></span>`
+                : `<span class="acct-avatar">${initials}</span>`;
             const badge = getBadgeHtml(_acctUsername, _blogIsAdmin, 'sm', _isContributor);
             mobileBtn.innerHTML = `${avatarHtml}<span style="max-width:72px;overflow:hidden;text-overflow:ellipsis">${_acctUsername}</span>${badge}`;
         } else {
@@ -3224,12 +3069,11 @@
     // ── SIDEBAR NAV ──────────────────────────────────────────────────────────
     function sideNavSwitch(view) {
         // Update active state first
-        ['home','friends','messages','blog','unclesai','settings','admin'].forEach(v => {
+        ['home','friends','blog','unclesai','settings','admin'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === view);
         });
         if (view === 'friends')  { toggleFriends();  return; }
-        if (view === 'messages') { toggleMessages(); return; }
         if (view === 'blog')     { toggleBlog();     return; }
         if (view === 'unclesai') { toggleUnclesAI(); return; }
         if (view === 'settings') { toggleSettings(); return; }
@@ -3238,7 +3082,7 @@
 
     // Reset sidebar active to Home when panels close
     function sideNavResetToHome() {
-        ['home','friends','messages','blog','unclesai','settings','admin'].forEach(v => {
+        ['home','friends','blog','unclesai','settings','admin'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === 'home');
         });
@@ -3269,8 +3113,14 @@
             nameEl.textContent = dynamicOn
                 ? getDynamicGreeting() + ', ' + _acctUsername + '!'
                 : _acctUsername;
-            avatar.innerHTML = '<img src="' + getPfpUrl(_acctPfp) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.src='' + PFP_BASE + 'default.jpg'">';
-            avatar.style.background = 'none';
+            if (_acctPfp) {
+                avatar.innerHTML = '<img src="' + PFP_BASE + _acctPfp + '" alt="">';
+                avatar.style.background = 'none';
+            } else {
+                avatar.innerHTML = '';
+                avatar.textContent = _acctUsername.slice(0,2).toUpperCase();
+                avatar.style.background = '';
+            }
         } else {
             nameEl.textContent = 'Sign In';
             avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
@@ -3324,18 +3174,16 @@
                         <div class="friend-since">Formerly ${escHtmlAcct(f.username)}</div>
                     </div>
                     <div class="friend-actions">
-                        <button class="friend-btn" onclick="msgOpenWithFriend('${escHtmlAcct(f.username)}')">Message</button>
                         <button class="friend-btn danger" onclick="friendRemove('${escHtmlAcct(f.username)}')">Remove</button>
                     </div>
                 </div>` : `
                 <div class="friend-row">
-                    <div class="friend-avatar">${pfpImg(f.pfp, escHtmlAcct(f.username))}</div>
+                    <div class="friend-avatar">${f.pfp ? `<img src="${PFP_BASE + f.pfp}" alt="">` : escHtmlAcct(f.username).slice(0,2).toUpperCase()}</div>
                     <div class="friend-info">
                         <div class="friend-name">${escHtmlAcct(f.username)}${getBadgeHtml(f.username, f.isAdmin, 'sm')}</div>
                         <div class="friend-since">Friends since ${new Date(f.since).toLocaleDateString()}</div>
                     </div>
                     <div class="friend-actions">
-                        <button class="friend-btn" onclick="msgOpenWithFriend('${escHtmlAcct(f.username)}')">Message</button>
                         <button class="friend-btn danger" onclick="friendRemove('${escHtmlAcct(f.username)}')">Remove</button>
                     </div>
                 </div>`).join('');
@@ -3359,7 +3207,7 @@
             if (reqs.length === 0) { el.innerHTML = '<div class="friends-empty">No pending requests.</div>'; return; }
             el.innerHTML = reqs.map(req => `
                 <div class="friend-row">
-                    <div class="friend-avatar">${pfpImg(req.pfp, escHtmlAcct(req.from))}</div>
+                    <div class="friend-avatar">${req.pfp ? `<img src="${PFP_BASE + req.pfp}" alt="">` : escHtmlAcct(req.from).slice(0,2).toUpperCase()}</div>
                     <div class="friend-info">
                         <div class="friend-name">${escHtmlAcct(req.from)}</div>
                         <div class="friend-since">${new Date(req.sentAt).toLocaleDateString()}</div>
@@ -3522,7 +3370,7 @@
             el.innerHTML = users.map(u => {
                 const isAdm = admins.includes(u.username.toLowerCase());
                 return `<div class="admin-user-row">
-                    <div class="admin-user-avatar">${pfpImg(u.pfp, escHtmlAcct(u.username))}</div>
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE + u.pfp}" alt="">` : escHtmlAcct(u.username).slice(0,2).toUpperCase()}</div>
                     <div style="flex:1;min-width:0">
                         <div class="admin-user-name">${escHtmlAcct(u.username)}${getBadgeHtml(u.username, isAdm, 'sm', contributors.includes(u.username.toLowerCase()))}</div>
                         <div class="admin-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
@@ -3567,7 +3415,7 @@
                 const isAdm = admins.includes(u.username.toLowerCase());
                 const isProtected = ['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase());
                 return `<div class="admin-user-row">
-                    <div class="admin-user-avatar">${pfpImg(u.pfp, escHtmlAcct(u.username))}</div>
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE + u.pfp}" alt="">` : escHtmlAcct(u.username).slice(0,2).toUpperCase()}</div>
                     <div style="flex:1;min-width:0">
                         <div class="admin-user-name">${escHtmlAcct(u.username)}${getBadgeHtml(u.username, isAdm, 'sm', contributors.includes(u.username.toLowerCase()))}</div>
                         <div class="admin-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
@@ -3753,189 +3601,6 @@
         } else {
             sideNavResetToHome();
         }
-    }
-
-    // ── MESSAGES ─────────────────────────────────────────────────────────────
-    let _msgCurrentConvo = null; // username of open chat
-    let _msgPollTimer    = null;
-
-    function toggleMessages() {
-        const bd = document.getElementById('msgBackdrop');
-        const isOpen = bd.classList.contains('show');
-        bd.classList.toggle('show', !isOpen);
-        if (!isOpen) {
-            if (!_acctToken) {
-                document.getElementById('msgConvoList').innerHTML = '<div class="msg-empty">Sign in to use messages.</div>';
-            } else {
-                msgLoadConvos();
-                msgShowConvos();
-            }
-            msgStartPolling();
-        } else {
-            msgStopPolling();
-            _msgCurrentConvo = null;
-            sideNavResetToHome();
-        }
-    }
-
-    function msgBackdropClick(e) {
-        if (e.target === document.getElementById('msgBackdrop')) toggleMessages();
-    }
-
-    function msgShowConvos() {
-        document.getElementById('msgViewConvos').style.display = 'flex';
-        document.getElementById('msgViewChat').style.display   = 'none';
-        _msgCurrentConvo = null;
-        msgLoadConvos();
-    }
-
-    async function msgLoadConvos() {
-        if (!_acctToken) return;
-        const el = document.getElementById('msgConvoList');
-        try {
-            const r = await fetch(`${API_BASE}/social/conversations`, { headers: { Authorization: `Bearer ${_acctToken}` } });
-            if (!r.ok) { el.innerHTML = '<div class="msg-empty">Failed to load.</div>'; return; }
-            const data = await r.json();
-            const convos = data.conversations || [];
-            updateMsgBadge(convos.reduce((s, c) => s + (c.unread || 0), 0));
-            if (convos.length === 0) {
-                el.innerHTML = '<div class="msg-empty">No messages yet.<br>Message a friend from their profile!</div>'; return;
-            }
-            el.innerHTML = convos.map(c => `
-                <div class="msg-convo-item" onclick="msgOpenChat('${escHtmlAcct(c.username)}')">
-                    <div class="msg-convo-avatar">${pfpImg(c.pfp, c.username)}</div>
-                    <div class="msg-convo-info">
-                        <div class="msg-convo-name">${escHtmlAcct(c.username)}${getBadgeHtml(c.username, c.isAdmin, 'sm', c.isContributor)}</div>
-                        <div class="msg-convo-preview">${c.lastFrom === _acctUsername ? 'You: ' : ''}${escHtmlAcct(c.lastMessage || '')}</div>
-                    </div>
-                    <div class="msg-convo-meta">
-                        <span class="msg-convo-time">${msgRelTime(c.lastAt)}</span>
-                        ${c.unread ? `<span class="msg-unread-badge">${c.unread > 9 ? '9+' : c.unread}</span>` : ''}
-                    </div>
-                </div>`).join('');
-        } catch(e) { el.innerHTML = '<div class="msg-empty">Failed to load.</div>'; }
-    }
-
-    async function msgOpenChat(username) {
-        _msgCurrentConvo = username;
-        document.getElementById('msgViewConvos').style.display = 'none';
-        document.getElementById('msgViewChat').style.display   = 'flex';
-        document.getElementById('msgChatName').textContent     = username;
-        document.getElementById('msgChatAvatar').src = getPfpUrl(''); // placeholder
-        document.getElementById('msgMessages').innerHTML = '<div class="msg-empty">Loading…</div>';
-        document.getElementById('msgInput').value = '';
-        document.getElementById('msgInput').style.height = 'auto';
-        // Fetch pfp for chat partner
-        try {
-            const sr = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(username)}`);
-            if (sr.ok) {
-                const sd = await sr.json();
-                const u = (sd.results||[]).find(x => x.username.toLowerCase() === username.toLowerCase());
-                if (u) document.getElementById('msgChatAvatar').src = getPfpUrl(u.pfp);
-            }
-        } catch(e) {}
-        await msgLoadChat(username);
-        setTimeout(() => document.getElementById('msgInput').focus(), 50);
-    }
-
-    async function msgLoadChat(username) {
-        if (!_acctToken) return;
-        const el = document.getElementById('msgMessages');
-        try {
-            const r = await fetch(`${API_BASE}/social/messages/${encodeURIComponent(username)}`, { headers: { Authorization: `Bearer ${_acctToken}` } });
-            if (!r.ok) { el.innerHTML = '<div class="msg-empty">Failed to load.</div>'; return; }
-            const data = await r.json();
-            const msgs = data.messages || [];
-            if (msgs.length === 0) { el.innerHTML = '<div class="msg-empty">No messages yet. Say hi!</div>'; return; }
-            let lastDate = '';
-            el.innerHTML = msgs.map(m => {
-                const mine   = m.from === _acctUsername;
-                const d      = new Date(m.sentAt);
-                const dStr   = d.toLocaleDateString();
-                const divider = dStr !== lastDate ? `<div class="msg-date-divider">${dStr}</div>` : '';
-                lastDate = dStr;
-                return `${divider}<div class="msg-bubble-wrap${mine ? ' mine' : ''}">
-                    <div class="msg-bubble">${escHtmlMsg(m.text)}</div>
-                    <div class="msg-time">${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
-                </div>`;
-            }).join('');
-            el.scrollTop = el.scrollHeight;
-            // Mark as read
-            fetch(`${API_BASE}/social/messages/${encodeURIComponent(username)}/read`, {
-                method: 'POST', headers: { Authorization: `Bearer ${_acctToken}` }
-            }).catch(()=>{});
-            updateMsgBadge(0); // optimistic
-            msgLoadConvos();   // refresh badge properly
-        } catch(e) { el.innerHTML = '<div class="msg-empty">Failed to load.</div>'; }
-    }
-
-    async function msgSend() {
-        const input = document.getElementById('msgInput');
-        const text  = (input.value || '').trim();
-        if (!text || !_msgCurrentConvo || !_acctToken) return;
-        input.value = ''; input.style.height = 'auto';
-        // Optimistic render
-        const el = document.getElementById('msgMessages');
-        const now = new Date();
-        el.insertAdjacentHTML('beforeend', `
-            <div class="msg-bubble-wrap mine">
-                <div class="msg-bubble">${escHtmlMsg(text)}</div>
-                <div class="msg-time">${now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
-            </div>`);
-        el.scrollTop = el.scrollHeight;
-        try {
-            await fetch(`${API_BASE}/social/message`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
-                body: JSON.stringify({ to: _msgCurrentConvo, text })
-            });
-        } catch(e) {}
-    }
-
-    function msgInputKeydown(e) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); msgSend(); }
-    }
-
-    function updateMsgBadge(count) {
-        const b = document.getElementById('msgBadge');
-        if (b) { b.style.display = count > 0 ? 'inline-flex' : 'none'; b.textContent = count > 9 ? '9+' : count; }
-    }
-
-    async function msgRefreshBadge() {
-        if (!_acctToken) return;
-        try {
-            const r = await fetch(`${API_BASE}/social/conversations`, { headers: { Authorization: `Bearer ${_acctToken}` } });
-            if (r.ok) {
-                const d = await r.json();
-                updateMsgBadge((d.conversations||[]).reduce((s,c) => s + (c.unread||0), 0));
-                // Refresh open chat
-                if (_msgCurrentConvo) msgLoadChat(_msgCurrentConvo);
-            }
-        } catch(e) {}
-    }
-
-    function msgStartPolling() { if (!_msgPollTimer) _msgPollTimer = setInterval(msgRefreshBadge, 8000); }
-    function msgStopPolling()  { clearInterval(_msgPollTimer); _msgPollTimer = null; }
-
-    function msgRelTime(iso) {
-        if (!iso) return '';
-        const diff = Date.now() - new Date(iso);
-        if (diff < 60000)     return 'now';
-        if (diff < 3600000)   return Math.floor(diff/60000) + 'm';
-        if (diff < 86400000)  return Math.floor(diff/3600000) + 'h';
-        return new Date(iso).toLocaleDateString();
-    }
-
-    function escHtmlMsg(str) {
-        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function msgOpenWithFriend(username) {
-        const bd = document.getElementById('msgBackdrop');
-        bd.classList.add('show');
-        sideNavSwitch('messages');
-        msgOpenChat(username);
-        msgStartPolling();
     }
 
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
@@ -4551,7 +4216,6 @@
         applyUnclesAISetting();
         if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); }));
         if (_acctToken) friendsStartPolling();
-        if (_acctToken) { msgRefreshBadge(); msgStartPolling(); }
         blogInit();
         loadBanner();
         setTimeout(() => { _acctInitDone = true; }, 3000);
