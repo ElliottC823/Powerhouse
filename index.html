@@ -1879,7 +1879,7 @@
                     <div class="s-label">Uncle's AI</div>
                     <div class="s-sublabel">Show the Uncle's AI button in the sidebar</div>
                 </div>
-                <input type="checkbox" id="unclesaiToggle" onchange="updateUnclesAISetting()">
+                <input type="checkbox" id="unclesaiToggle" checked onchange="updateUnclesAISetting()">
             </div>
         </div>
 
@@ -1887,7 +1887,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.12.0</span>
+                <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.10.0</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -1898,7 +1898,7 @@
                 <div class="contributor-chip">C823<span class="role">Lead Developer</span></div>
                 <div class="contributor-chip">UncleJoe826<span class="role">Senior Developer</span></div>
                 <div class="contributor-chip">MonkeyKC<span class="role">Content Provider</span></div>
-                <div class="contributor-chip">Toethesis<span class="role">Head of Concepts</span></div>
+                <div class="contributor-chip">Toethesis<span class="role">Contributor</span></div>
                 <div class="contributor-chip">Uncle_Stein<span class="role">Contributor</span></div>
             </div>
 
@@ -2014,24 +2014,18 @@
                         <div class="acct-since" id="acctSyncStatus">Not synced yet</div>
                     </div>
                 </div>
+
+                <div class="pfp-picker-wrap">
+                    <div class="pfp-picker-label">Profile Picture</div>
+                    <div class="pfp-picker-grid" id="pfpPickerGrid"></div>
+                </div>
+
                 <div class="acct-action-row">
                     <button class="acct-action-btn" id="acctSyncBtn" onclick="acctSyncNow()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Sync Now
                     </button>
                     <button class="acct-action-btn" onclick="acctSignOut()">Sign Out</button>
                 </div>
-                <div class="acct-divider"></div>
-                <div class="acct-section-label" style="color:#c42b1c">Delete Account</div>
-                <div class="acct-field">
-                    <label>Username</label>
-                    <input class="acct-input" id="delUsername" type="text" placeholder="your_username" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')acctDeleteAccount()">
-                </div>
-                <div class="acct-field">
-                    <label>Current Password</label>
-                    <input class="acct-input" id="delPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')acctDeleteAccount()">
-                </div>
-                <button class="acct-action-btn danger" onclick="acctDeleteAccount()">Delete Account</button>
-                <div class="acct-error" id="delError"></div>
 
                 <div class="acct-divider"></div>
                 <div class="acct-section-label">Change Password</div>
@@ -2051,10 +2045,18 @@
                 <div class="acct-error" id="cpError"></div>
                 <div class="acct-success" id="cpSuccess"></div>
 
-                <div class="pfp-picker-wrap">
-                    <div class="pfp-picker-label">Profile Picture</div>
-                    <div class="pfp-picker-grid" id="pfpPickerGrid"></div>
+                <div class="acct-divider"></div>
+                <div class="acct-section-label" style="color:#c42b1c">Delete Account</div>
+                <div class="acct-field">
+                    <label>Username</label>
+                    <input class="acct-input" id="delUsername" type="text" placeholder="your_username" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')acctDeleteAccount()">
                 </div>
+                <div class="acct-field">
+                    <label>Current Password</label>
+                    <input class="acct-input" id="delPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')acctDeleteAccount()">
+                </div>
+                <button class="acct-action-btn danger" onclick="acctDeleteAccount()">Delete Account</button>
+                <div class="acct-error" id="delError"></div>
             </div>
 
             <!-- Users / Search pane -->
@@ -3374,9 +3376,9 @@
                     </div>
                     <div class="admin-user-actions">
                         ${u.username.toLowerCase() !== (_acctUsername||'').toLowerCase() ? `
-                        ${['c823','powerhouse'].includes(u.username.toLowerCase()) ? '' : `<button class="admin-btn danger" onclick="adminDeleteUser('${escHtmlAcct(u.username)}')">Delete</button>`}
+                        ${['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? '' : `<button class="admin-btn danger" onclick="adminDeleteUser('${escHtmlAcct(u.username)}')">Delete</button>`}
                         ${isAdm
-                            ? (['c823','powerhouse'].includes(u.username.toLowerCase()) ? '<span style="font-size:.65rem;color:var(--muted)">Protected</span>' : `<button class="admin-btn" onclick="adminToggleAdmin('${escHtmlAcct(u.username)}', false)">Revoke Admin</button>`)
+                            ? (['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? '<span style="font-size:.65rem;color:var(--muted)">Protected</span>' : `<button class="admin-btn" onclick="adminToggleAdmin('${escHtmlAcct(u.username)}', false)">Revoke Admin</button>`)
                             : `<button class="admin-btn primary" onclick="adminToggleAdmin('${escHtmlAcct(u.username)}', true)">Make Admin</button>`
                         }
                         ${!isAdm ? (contributors.includes(u.username.toLowerCase())
@@ -3410,7 +3412,7 @@
             if (users.length === 0) { el.innerHTML = '<div class="admin-empty">No accounts found.</div>'; return; }
             el.innerHTML = users.map(u => {
                 const isAdm = admins.includes(u.username.toLowerCase());
-                const isProtected = ['c823','powerhouse'].includes(u.username.toLowerCase());
+                const isProtected = ['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase());
                 return `<div class="admin-user-row">
                     <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE + u.pfp}" alt="">` : escHtmlAcct(u.username).slice(0,2).toUpperCase()}</div>
                     <div style="flex:1;min-width:0">
@@ -3574,7 +3576,7 @@
     }
 
     function applyUnclesAISetting() {
-        const on  = localStorage.getItem('ph_unclesai') === '1';
+        const on  = localStorage.getItem('ph_unclesai') !== '0';
         const btn = document.getElementById('sideNavUnclesai');
         const el  = document.getElementById('unclesaiToggle');
         if (btn) btn.style.display = on ? 'flex' : 'none';
@@ -3591,8 +3593,9 @@
         if (!isOpen) {
             // Lazy-load iframe on first open
             const frame = document.getElementById('unclesaiFrame');
-            if (!frame.src || frame.src === window.location.href) {
+            if (!frame.dataset.loaded) {
                 frame.src = 'https://unclesai.lovable.app/';
+                frame.dataset.loaded = '1';
             }
         } else {
             sideNavResetToHome();
