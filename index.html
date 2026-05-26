@@ -624,21 +624,27 @@
         .pfp-picker-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
         .pfp-picker-grid {
             display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
+            width: 100%;
         }
         .pfp-option {
-            width: 100%; aspect-ratio: 1; border-radius: 50%; object-fit: cover;
+            display: block;
+            width: 100%; max-width: 100%;
+            aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover;
             border: 2px solid transparent; cursor: pointer;
+            min-width: 0; box-sizing: border-box;
             transition: border-color .12s, transform .12s;
         }
         .pfp-option:hover { transform: scale(1.08); border-color: var(--accent); }
         .pfp-option.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
         .pfp-none {
-            width: 100%; aspect-ratio: 1; border-radius: 50%;
+            width: 100%; max-width: 100%;
+            aspect-ratio: 1 / 1; border-radius: 50%;
             border: 2px dashed var(--border); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             color: var(--muted); font-size: .6rem; font-weight: 700;
             transition: border-color .12s, color .12s;
             background: color-mix(in srgb, var(--text) 4%, transparent);
+            min-width: 0; box-sizing: border-box;
         }
         .pfp-none:hover { border-color: var(--accent); color: var(--accent); }
         .pfp-none.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
@@ -807,6 +813,80 @@
             position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
         }
         #site-banner-close:hover { opacity: 1; }
+
+        /* ══ FRIENDS PANEL ═══════════════════════════════════════════════════════ */
+        .friends-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 2500;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+        }
+        .friends-backdrop.show { display: flex; align-items: flex-start; justify-content: center; padding: 20px clamp(8px,3%,20px); overflow-y: auto; }
+        @media (min-width: 681px) { .friends-backdrop.show { padding-left: calc(var(--sidebar-width) + 20px); } }
+        .friends-panel {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.4);
+            width: 100%; max-width: 460px; min-height: 200px;
+            display: flex; flex-direction: column; margin: auto;
+            animation: fadeUp .2s ease;
+        }
+        .friends-panel-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 18px 0; flex-shrink: 0;
+        }
+        .friends-panel-title { font-size: .9rem; font-weight: 700; flex: 1; }
+        .friends-panel-close {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            padding: 4px; display: flex; align-items: center; transition: color .1s;
+        }
+        .friends-panel-close:hover { color: var(--text); }
+        .friends-panel-close svg { width: 16px; height: 16px; }
+        .friends-tabs {
+            display: flex; border-bottom: 1px solid var(--border);
+            padding: 0 18px; margin-top: 12px; flex-shrink: 0;
+        }
+        .friends-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .75rem; font-weight: 400;
+            padding: 7px 12px 8px; cursor: pointer;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s; display: flex; align-items: center; gap: 5px;
+        }
+        .friends-tab:hover { color: var(--text); }
+        .friends-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .friends-body { flex: 1; padding: 12px 18px 20px; overflow-y: auto; max-height: 70vh; }
+        .friends-body::-webkit-scrollbar { width: 2px; }
+        .friends-body::-webkit-scrollbar-thumb { background: var(--border); }
+        .friends-empty { text-align: center; padding: 28px 0; color: var(--muted); font-size: .8rem; opacity: .6; }
+        .friend-row {
+            display: flex; align-items: center; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+        }
+        .friend-row:last-child { border-bottom: none; }
+        .friend-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .75rem; font-weight: 700; flex-shrink: 0; overflow: hidden;
+        }
+        .friend-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .friend-info { flex: 1; min-width: 0; }
+        .friend-name { font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .friend-since { font-size: .65rem; color: var(--muted); margin-top: 1px; }
+        .friend-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .friend-btn {
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .68rem; font-weight: 600;
+            padding: 4px 10px; cursor: pointer; transition: all .1s; white-space: nowrap;
+        }
+        .friend-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .friend-btn.danger:hover { border-color: rgba(196,43,28,.4); color: #c42b1c; }
+        .friend-btn.accept { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .friend-btn.accept:hover { opacity: .85; }
+        .freq-badge {
+            background: #c42b1c; color: #fff; font-size: .55rem; font-weight: 700;
+            min-width: 16px; height: 16px; border-radius: 8px;
+            display: inline-flex; align-items: center; justify-content: center; padding: 0 4px;
+        }
 
         /* ── BLOG BUTTON ── */
         .blog-btn {
@@ -1448,6 +1528,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Home
         </button>
+        <button class="sidebar-nav-btn" id="sideNavFriends" onclick="sideNavSwitch('friends')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Friends<span class="nav-notif" id="friendReqBadge" style="display:none;background:#c42b1c"></span>
+        </button>
         <button class="sidebar-nav-btn" id="sideNavBlog" onclick="sideNavSwitch('blog')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Blog
@@ -1782,6 +1866,34 @@
             </div>
         </div>
         </div><!-- /acct-modal-scrollable -->
+    </div>
+</div>
+
+<!-- ── FRIENDS PANEL ── -->
+<div class="friends-backdrop" id="friendsBackdrop" onclick="friendsBackdropClick(event)">
+    <div class="friends-panel">
+        <div class="friends-panel-header">
+            <span class="friends-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;margin-right:6px;vertical-align:-2px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Friends
+            </span>
+            <button class="friends-panel-close" onclick="toggleFriends()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="friends-tabs">
+            <button class="friends-tab active" id="friendsTabList" onclick="friendsPaneSwitch('list')">
+                Friends <span id="friendCountLabel" style="font-size:.65rem;color:var(--muted)"></span>
+            </button>
+            <button class="friends-tab" id="friendsTabReqs" onclick="friendsPaneSwitch('requests')">
+                Requests <span class="freq-badge" id="friendsReqCount" style="display:none"></span>
+            </button>
+        </div>
+        <div class="friends-body" id="friendsPaneList">
+            <div id="friendsList"><div class="friends-empty">Loading…</div></div>
+        </div>
+        <div class="friends-body" id="friendsPaneReqs" style="display:none">
+            <div id="friendsReqList"><div class="friends-empty">Loading…</div></div>
+        </div>
     </div>
 </div>
 
@@ -2245,6 +2357,7 @@
                         </div>
                         <div class="acct-result-info" style="flex:1;min-width:0">
                             <div class="acct-result-name">${escHtmlAcct(u.username)}${getBadgeHtml(u.username, admins.includes(u.username.toLowerCase()), 'sm')}</div>
+                        ${_acctToken && u.username.toLowerCase() !== (_acctUsername||'').toLowerCase() ? `<button class="friend-btn" style="font-size:.65rem;padding:3px 8px;margin-top:3px" onclick="friendRequest('${escHtmlAcct(u.username)}')">+ Add Friend</button>` : ''}
                             <div class="acct-result-since">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
                         </div>
 
@@ -2616,17 +2729,18 @@
     // ── SIDEBAR NAV ──────────────────────────────────────────────────────────
     function sideNavSwitch(view) {
         // Update active state first
-        ['home','blog','settings'].forEach(v => {
+        ['home','friends','blog','settings'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === view);
         });
+        if (view === 'friends')  { toggleFriends();  return; }
         if (view === 'blog')     { toggleBlog();     return; }
         if (view === 'settings') { toggleSettings(); return; }
     }
 
     // Reset sidebar active to Home when panels close
     function sideNavResetToHome() {
-        ['home','blog','settings'].forEach(v => {
+        ['home','friends','blog','settings'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === 'home');
         });
@@ -2674,6 +2788,136 @@
 
     // Override updateAccountBtn to also update sidebar
     // updateSidebarAccount is called from within updateAccountBtn below
+
+    // ── FRIENDS ──────────────────────────────────────────────────────────────
+    function toggleFriends() {
+        const bd = document.getElementById('friendsBackdrop');
+        const isOpen = bd.classList.contains('show');
+        bd.classList.toggle('show', !isOpen);
+        if (!isOpen) { friendsPaneSwitch('list'); friendsLoadList(); friendsLoadRequests(); }
+        else sideNavResetToHome();
+    }
+
+    function friendsBackdropClick(e) {
+        if (e.target === document.getElementById('friendsBackdrop')) toggleFriends();
+    }
+
+    function friendsPaneSwitch(tab) {
+        document.getElementById('friendsPaneList').style.display = tab === 'list'     ? 'block' : 'none';
+        document.getElementById('friendsPaneReqs').style.display = tab === 'requests' ? 'block' : 'none';
+        document.getElementById('friendsTabList').classList.toggle('active', tab === 'list');
+        document.getElementById('friendsTabReqs').classList.toggle('active', tab === 'requests');
+    }
+
+    async function friendsLoadList() {
+        const el = document.getElementById('friendsList');
+        if (!el) return;
+        if (!_acctToken) { el.innerHTML = '<div class="friends-empty">Sign in to see your friends.</div>'; return; }
+        el.innerHTML = '<div class="friends-empty">Loading…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/social/friends`, { headers: { Authorization: `Bearer ${_acctToken}` } });
+            if (!r.ok) { el.innerHTML = '<div class="friends-empty">Failed to load.</div>'; return; }
+            const data = await r.json();
+            const friends = data.friends || [];
+            const lbl = document.getElementById('friendCountLabel');
+            if (lbl) lbl.textContent = friends.length ? `(${friends.length})` : '';
+            if (friends.length === 0) { el.innerHTML = '<div class="friends-empty">No friends yet. Search for users to add them!</div>'; return; }
+            el.innerHTML = friends.map(f => `
+                <div class="friend-row">
+                    <div class="friend-avatar">${f.pfp ? `<img src="${PFP_BASE + f.pfp}" alt="">` : escHtmlAcct(f.username).slice(0,2).toUpperCase()}</div>
+                    <div class="friend-info">
+                        <div class="friend-name">${escHtmlAcct(f.username)}${getBadgeHtml(f.username, f.isAdmin, 'sm')}</div>
+                        <div class="friend-since">Friends since ${new Date(f.since).toLocaleDateString()}</div>
+                    </div>
+                    <div class="friend-actions">
+                        <button class="friend-btn danger" onclick="friendRemove('${escHtmlAcct(f.username)}')">Remove</button>
+                    </div>
+                </div>`).join('');
+        } catch(e) { el.innerHTML = '<div class="friends-empty">Failed to load.</div>'; }
+    }
+
+    async function friendsLoadRequests() {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/social/friend/requests`, { headers: { Authorization: `Bearer ${_acctToken}` } });
+            if (!r.ok) return;
+            const data = await r.json();
+            const reqs = data.requests || [];
+            // Update badges
+            const sideBadge = document.getElementById('friendReqBadge');
+            const tabBadge  = document.getElementById('friendsReqCount');
+            if (sideBadge) { sideBadge.style.display = reqs.length ? 'inline-flex' : 'none'; sideBadge.textContent = reqs.length > 9 ? '9+' : reqs.length; }
+            if (tabBadge)  { tabBadge.style.display  = reqs.length ? 'inline-flex' : 'none'; tabBadge.textContent  = reqs.length > 9 ? '9+' : reqs.length; }
+            const el = document.getElementById('friendsReqList');
+            if (!el) return;
+            if (reqs.length === 0) { el.innerHTML = '<div class="friends-empty">No pending requests.</div>'; return; }
+            el.innerHTML = reqs.map(req => `
+                <div class="friend-row">
+                    <div class="friend-avatar">${req.pfp ? `<img src="${PFP_BASE + req.pfp}" alt="">` : escHtmlAcct(req.from).slice(0,2).toUpperCase()}</div>
+                    <div class="friend-info">
+                        <div class="friend-name">${escHtmlAcct(req.from)}</div>
+                        <div class="friend-since">${new Date(req.sentAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="friend-actions">
+                        <button class="friend-btn accept" onclick="friendAccept('${escHtmlAcct(req.from)}')">Accept</button>
+                        <button class="friend-btn danger" onclick="friendDecline('${escHtmlAcct(req.from)}')">Decline</button>
+                    </div>
+                </div>`).join('');
+        } catch(e) {}
+    }
+
+    async function friendRequest(username) {
+        if (!_acctToken) { toggleAccountModal(); return; }
+        try {
+            const r = await fetch(`${API_BASE}/social/friend/request`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username })
+            });
+            const data = await r.json();
+            alert(r.ok ? `Friend request sent to ${username}!` : (data.error || 'Failed to send request.'));
+        } catch(e) { alert('Network error.'); }
+    }
+
+    async function friendAccept(username) {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/social/friend/accept`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username })
+            });
+            if (r.ok) { friendsLoadList(); friendsLoadRequests(); }
+            else { const d = await r.json(); alert(d.error || 'Failed.'); }
+        } catch(e) {}
+    }
+
+    async function friendDecline(username) {
+        if (!_acctToken) return;
+        try {
+            await fetch(`${API_BASE}/social/friend/decline`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username })
+            });
+            friendsLoadList(); friendsLoadRequests();
+        } catch(e) {}
+    }
+
+    async function friendRemove(username) {
+        if (!confirm(`Remove ${username} from friends?`)) return;
+        try {
+            const r = await fetch(`${API_BASE}/social/friend/remove`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username })
+            });
+            if (r.ok) friendsLoadList();
+        } catch(e) {}
+    }
+
+    // Poll for friend requests every 60s
+    function friendsStartPolling() {
+        if (!_acctToken) return;
+        friendsLoadRequests();
+        setInterval(friendsLoadRequests, 60000);
+    }
 
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
     function debounce(fn, delay) {
@@ -3297,6 +3541,7 @@
         updateAccountBtn();
         updateSidebarAccount();
         if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); }));
+        if (_acctToken) friendsStartPolling();
         blogInit();
         loadBanner();
         setTimeout(() => { _acctInitDone = true; }, 3000);
