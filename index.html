@@ -888,6 +888,121 @@
             display: inline-flex; align-items: center; justify-content: center; padding: 0 4px;
         }
 
+        /* ══ ADMIN PANEL ═════════════════════════════════════════════════════════ */
+        .admin-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 2500;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+        }
+        .admin-backdrop.show { display: flex; align-items: flex-start; justify-content: center; padding: 20px clamp(8px,3%,20px); overflow-y: auto; }
+        @media (min-width: 681px) { .admin-backdrop.show { padding-left: calc(var(--sidebar-width) + 20px); } }
+        .admin-panel {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.5);
+            width: 100%; max-width: 580px;
+            display: flex; flex-direction: column; margin: auto;
+            animation: fadeUp .2s ease;
+        }
+        .admin-panel-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 18px 0; flex-shrink: 0;
+            border-bottom: 1px solid var(--border); padding-bottom: 14px;
+        }
+        .admin-panel-title {
+            font-size: .9rem; font-weight: 700; flex: 1;
+            display: flex; align-items: center; gap: 7px;
+        }
+        .admin-title-badge {
+            font-size: .58rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .07em; background: var(--accent); color: #fff;
+            padding: 2px 7px; border-radius: 4px;
+        }
+        .admin-panel-close {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            padding: 4px; display: flex; align-items: center; transition: color .1s;
+        }
+        .admin-panel-close:hover { color: var(--text); }
+        .admin-panel-close svg { width: 16px; height: 16px; }
+        .admin-tabs {
+            display: flex; border-bottom: 1px solid var(--border);
+            padding: 0 18px; flex-shrink: 0;
+        }
+        .admin-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .75rem; font-weight: 400;
+            padding: 8px 14px 9px; cursor: pointer;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s;
+        }
+        .admin-tab:hover { color: var(--text); }
+        .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .admin-body { padding: 16px 18px 24px; overflow-y: auto; max-height: 72vh; }
+        .admin-body::-webkit-scrollbar { width: 2px; }
+        .admin-body::-webkit-scrollbar-thumb { background: var(--border); }
+        .admin-section-title {
+            font-size: .58rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .1em; color: var(--muted);
+            margin: 18px 0 8px; padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+        .admin-section-title:first-child { margin-top: 0; }
+        .admin-stat-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            margin-bottom: 4px;
+        }
+        .admin-stat {
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 12px; text-align: center;
+        }
+        .admin-stat-val { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+        .admin-stat-lbl { font-size: .62rem; color: var(--muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+        .admin-user-row {
+            display: flex; align-items: center; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+        }
+        .admin-user-row:last-child { border-bottom: none; }
+        .admin-user-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--accent); color: #fff; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .7rem; font-weight: 700; overflow: hidden;
+        }
+        .admin-user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .admin-user-name { flex: 1; font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .admin-user-meta { font-size: .65rem; color: var(--muted); }
+        .admin-user-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .admin-btn {
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .68rem; font-weight: 600;
+            padding: 3px 9px; cursor: pointer; transition: all .1s; white-space: nowrap;
+        }
+        .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .admin-btn.danger { border-color: rgba(196,43,28,.3); color: #c42b1c; }
+        .admin-btn.danger:hover { background: rgba(196,43,28,.1); border-color: #c42b1c; }
+        .admin-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .admin-btn.primary:hover { opacity: .85; }
+        .admin-empty { text-align: center; padding: 24px 0; color: var(--muted); font-size: .8rem; opacity: .6; }
+        .admin-search-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .admin-search-input {
+            flex: 1; background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .82rem;
+            padding: 7px 10px; outline: none; transition: border-color .1s;
+        }
+        .admin-search-input:focus { border-color: var(--accent); }
+        .admin-announce-box { display: flex; flex-direction: column; gap: 8px; }
+        .admin-announce-input {
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .82rem;
+            padding: 8px 10px; outline: none; resize: vertical; min-height: 70px;
+            transition: border-color .1s;
+        }
+        .admin-announce-input:focus { border-color: var(--accent); }
+        .admin-color-row { display: flex; align-items: center; gap: 8px; }
+        .admin-msg { font-size: .72rem; margin-top: 4px; color: var(--accent); min-height: 16px; }
+
         /* ── BLOG BUTTON ── */
         .blog-btn {
             background: transparent; border: 1px solid var(--border);
@@ -1541,6 +1656,10 @@
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/><path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
             Settings
         </button>
+        <button class="sidebar-nav-btn" id="sideNavAdmin" onclick="sideNavSwitch('admin')" style="display:none;color:#e8a000">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Admin
+        </button>
     </nav>
 
     <div class="sidebar-spacer"></div>
@@ -1829,7 +1948,18 @@
                     </button>
                     <button class="acct-action-btn" onclick="acctSignOut()">Sign Out</button>
                 </div>
+                <div class="acct-divider"></div>
+                <div class="acct-section-label" style="color:#c42b1c">Delete Account</div>
+                <div class="acct-field">
+                    <label>Username</label>
+                    <input class="acct-input" id="delUsername" type="text" placeholder="your_username" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')acctDeleteAccount()">
+                </div>
+                <div class="acct-field">
+                    <label>Current Password</label>
+                    <input class="acct-input" id="delPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')acctDeleteAccount()">
+                </div>
                 <button class="acct-action-btn danger" onclick="acctDeleteAccount()">Delete Account</button>
+                <div class="acct-error" id="delError"></div>
 
                 <div class="acct-divider"></div>
                 <div class="acct-section-label">Change Password</div>
@@ -1866,6 +1996,68 @@
             </div>
         </div>
         </div><!-- /acct-modal-scrollable -->
+    </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div class="admin-backdrop" id="adminBackdrop" onclick="adminBackdropClick(event)">
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <span class="admin-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--accent)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Admin Panel
+                <span class="admin-title-badge">Staff Only</span>
+            </span>
+            <button class="admin-panel-close" onclick="toggleAdmin()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="admin-tabs">
+            <button class="admin-tab active" id="adminTabOverview"  onclick="adminTabSwitch('overview')">Overview</button>
+            <button class="admin-tab"        id="adminTabUsers"     onclick="adminTabSwitch('users')">Users</button>
+            <button class="admin-tab"        id="adminTabBanner"    onclick="adminTabSwitch('banner')">Banner</button>
+        </div>
+
+        <!-- Overview -->
+        <div class="admin-body" id="adminPaneOverview">
+            <div class="admin-section-title">Site Stats</div>
+            <div class="admin-stat-grid">
+                <div class="admin-stat"><div class="admin-stat-val" id="adminStatUsers">—</div><div class="admin-stat-lbl">Total Users</div></div>
+                <div class="admin-stat"><div class="admin-stat-val" id="adminStatPosts">—</div><div class="admin-stat-lbl">Blog Posts</div></div>
+                <div class="admin-stat"><div class="admin-stat-val" id="adminStatAdmins">—</div><div class="admin-stat-lbl">Admins</div></div>
+            </div>
+            <div class="admin-section-title" style="margin-top:20px">Admin List</div>
+            <div id="adminAdminList"><div class="admin-empty">Loading…</div></div>
+        </div>
+
+        <!-- Users -->
+        <div class="admin-body" id="adminPaneUsers" style="display:none">
+            <div class="admin-search-row">
+                <input class="admin-search-input" id="adminUserSearch" placeholder="Search username…" oninput="adminSearchUsers()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div id="adminUserList"><div class="admin-empty">Search for a user above.</div></div>
+        </div>
+
+        <!-- Banner -->
+        <div class="admin-body" id="adminPaneBanner" style="display:none">
+            <div class="admin-section-title">Site Banner</div>
+            <p style="font-size:.75rem;color:var(--muted);margin-bottom:12px">Controls the announcement banner shown at the top of the site. Use the form below to set it instantly — no GitHub edits needed.</p>
+            <div class="admin-section-title">Current Banner Preview</div>
+            <div id="adminBannerPreview" style="font-size:.8rem;color:var(--muted);padding:8px 0">Loading…</div>
+            <div class="admin-section-title" style="margin-top:16px">Quick Set via Worker</div>
+            <div class="admin-announce-box">
+                <input class="admin-search-input" id="adminBannerMsg" placeholder="Banner message…" autocomplete="off">
+                <div class="admin-color-row">
+                    <span style="font-size:.75rem;color:var(--muted)">Color:</span>
+                    <input type="color" id="adminBannerColor" value="#0078D4" style="width:36px;height:28px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:none">
+                    <label style="font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer">
+                        <input type="checkbox" id="adminBannerEnabled" checked> Enabled
+                    </label>
+                </div>
+                <button class="admin-btn primary" onclick="adminSetBanner()" style="align-self:flex-start;padding:6px 16px">Update Banner</button>
+                <div class="admin-msg" id="adminBannerMsg2"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2321,14 +2513,28 @@
     }
 
     async function acctDeleteAccount() {
-        if (!confirm('Delete your Powerhouse account and all saved data? This cannot be undone.')) return;
+        const usernameEl = document.getElementById('delUsername');
+        const passwordEl = document.getElementById('delPassword');
+        const errEl      = document.getElementById('delError');
+        const username   = usernameEl ? usernameEl.value.trim() : '';
+        const password   = passwordEl ? passwordEl.value : '';
+        if (errEl) errEl.textContent = '';
+        if (!username) { if (errEl) errEl.textContent = 'Enter your username to confirm.'; return; }
+        if (username.toLowerCase() !== (_acctUsername || '').toLowerCase()) {
+            if (errEl) errEl.textContent = 'Username does not match your account.'; return;
+        }
+        if (!password) { if (errEl) errEl.textContent = 'Enter your current password.'; return; }
+        if (!confirm('This will permanently delete your account and all saved data. This cannot be undone.')) return;
         try {
             const r = await fetch(`${API_BASE}/auth/account`, {
                 method: 'DELETE',
-                headers: {'Authorization': `Bearer ${_acctToken}`}
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username, password })
             });
-            if (r.ok || r.status === 401) acctSignOut();
-        } catch(e) { alert('Failed to delete account. Try again.'); }
+            const data = await r.json();
+            if (r.ok) { acctSignOut(); }
+            else { if (errEl) errEl.textContent = data.error || 'Failed to delete account.'; }
+        } catch(e) { if (errEl) errEl.textContent = 'Network error. Try again.'; }
     }
 
     async function acctSearch() {
@@ -2446,6 +2652,8 @@
             _blogIsAdmin = r.ok && (await r.json()).isAdmin === true;
         } catch(e) { _blogIsAdmin = false; }
         document.getElementById('blogTabAdmin').style.display = _blogIsAdmin ? 'inline-flex' : 'none';
+        const adminBtn = document.getElementById('sideNavAdmin');
+        if (adminBtn) adminBtn.style.display = _blogIsAdmin ? 'flex' : 'none';
     }
 
     // ── Load posts (public) ──
@@ -2729,18 +2937,19 @@
     // ── SIDEBAR NAV ──────────────────────────────────────────────────────────
     function sideNavSwitch(view) {
         // Update active state first
-        ['home','friends','blog','settings'].forEach(v => {
+        ['home','friends','blog','settings','admin'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === view);
         });
         if (view === 'friends')  { toggleFriends();  return; }
         if (view === 'blog')     { toggleBlog();     return; }
         if (view === 'settings') { toggleSettings(); return; }
+        if (view === 'admin')    { toggleAdmin();    return; }
     }
 
     // Reset sidebar active to Home when panels close
     function sideNavResetToHome() {
-        ['home','friends','blog','settings'].forEach(v => {
+        ['home','friends','blog','settings','admin'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === 'home');
         });
@@ -2917,6 +3126,180 @@
         if (!_acctToken) return;
         friendsLoadRequests();
         setInterval(friendsLoadRequests, 60000);
+    }
+
+    // ── ADMIN PANEL ──────────────────────────────────────────────────────────
+    function toggleAdmin() {
+        const bd = document.getElementById('adminBackdrop');
+        const isOpen = bd.classList.contains('show');
+        bd.classList.toggle('show', !isOpen);
+        if (!isOpen) { adminTabSwitch('overview'); adminLoadOverview(); }
+        else sideNavResetToHome();
+    }
+
+    function adminBackdropClick(e) {
+        if (e.target === document.getElementById('adminBackdrop')) toggleAdmin();
+    }
+
+    function adminTabSwitch(tab) {
+        ['overview','users','banner'].forEach(t => {
+            document.getElementById('adminPane' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
+            document.getElementById('adminTab'  + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+        });
+        if (tab === 'banner') adminLoadBannerPreview();
+    }
+
+    async function adminLoadOverview() {
+        if (!_blogIsAdmin) return;
+        try {
+            const [adminsRes, postsRes] = await Promise.all([
+                fetch(`${API_BASE}/blog/admins`),
+                fetch(`${API_BASE}/blog/posts`)
+            ]);
+            const adminsData = adminsRes.ok ? await adminsRes.json() : {};
+            const postsData  = postsRes.ok  ? await postsRes.json()  : {};
+            const admins = adminsData.admins || [];
+            const posts  = (postsData.posts  || []).filter(p => p.status === 'published');
+
+            document.getElementById('adminStatPosts').textContent  = posts.length;
+            document.getElementById('adminStatAdmins').textContent = admins.length;
+
+            // Fetch user count via search (broad query)
+            const usersRes = await fetch(`${API_BASE}/admin/stats`, { headers: { Authorization: `Bearer ${_acctToken}` } });
+            if (usersRes.ok) {
+                const d = await usersRes.json();
+                document.getElementById('adminStatUsers').textContent = d.userCount ?? '—';
+            }
+
+            // Admin list — enrich with pfp via search
+            const listEl = document.getElementById('adminAdminList');
+            if (listEl) {
+                if (admins.length === 0) { listEl.innerHTML = '<div class="admin-empty">No admins found.</div>'; }
+                else {
+                    // Fetch pfp for each admin in parallel
+                    const adminProfiles = await Promise.all(admins.map(async u => {
+                        try {
+                            const r = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(u)}`);
+                            if (r.ok) {
+                                const d = await r.json();
+                                const match = (d.results || []).find(x => x.username.toLowerCase() === u.toLowerCase());
+                                return { username: u, pfp: match?.pfp || '' };
+                            }
+                        } catch(e) {}
+                        return { username: u, pfp: '' };
+                    }));
+                    listEl.innerHTML = adminProfiles.map(({ username: u, pfp }) => `
+                        <div class="admin-user-row">
+                            <div class="admin-user-avatar">
+                                ${pfp ? `<img src="${PFP_BASE + pfp}" alt="">` : escHtmlAcct(u).slice(0,2).toUpperCase()}
+                            </div>
+                            <div style="flex:1">
+                                <div class="admin-user-name">${escHtmlAcct(u)}
+                                    <img src="${ADMIN_BADGE_URL}" style="width:12px;height:12px" alt="admin">
+                                </div>
+                            </div>
+                        </div>`).join('');
+                }
+            }
+        } catch(e) { console.error('Admin overview error', e); }
+    }
+
+    async function adminSearchUsers() {
+        const q = (document.getElementById('adminUserSearch')?.value || '').trim();
+        const el = document.getElementById('adminUserList');
+        if (!el) return;
+        if (q.length < 1) { el.innerHTML = '<div class="admin-empty">Search for a user above.</div>'; return; }
+        el.innerHTML = '<div class="admin-empty">Searching…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`);
+            const data = r.ok ? await r.json() : {};
+            const users = data.results || [];
+            const adminsRes = await fetch(`${API_BASE}/blog/admins`);
+            const adminsData = adminsRes.ok ? await adminsRes.json() : {};
+            const admins = (adminsData.admins || []).map(a => a.toLowerCase());
+            if (users.length === 0) { el.innerHTML = '<div class="admin-empty">No users found.</div>'; return; }
+            el.innerHTML = users.map(u => {
+                const isAdm = admins.includes(u.username.toLowerCase());
+                return `<div class="admin-user-row">
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE + u.pfp}" alt="">` : escHtmlAcct(u.username).slice(0,2).toUpperCase()}</div>
+                    <div style="flex:1;min-width:0">
+                        <div class="admin-user-name">${escHtmlAcct(u.username)}${getBadgeHtml(u.username, isAdm, 'sm')}</div>
+                        <div class="admin-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="admin-user-actions">
+                        ${u.username.toLowerCase() !== (_acctUsername||'').toLowerCase() ? `
+                        ${['c823','powerhouse'].includes(u.username.toLowerCase()) ? '' : `<button class="admin-btn danger" onclick="adminDeleteUser('${escHtmlAcct(u.username)}')">Delete</button>`}
+                        ${isAdm
+                            ? (['c823','powerhouse'].includes(u.username.toLowerCase()) ? '<span style="font-size:.65rem;color:var(--muted)">Protected</span>' : `<button class="admin-btn" onclick="adminToggleAdmin('${escHtmlAcct(u.username)}', false)">Revoke Admin</button>`)
+                            : `<button class="admin-btn primary" onclick="adminToggleAdmin('${escHtmlAcct(u.username)}', true)">Make Admin</button>`
+                        }` : '<span style="font-size:.65rem;color:var(--muted)">You</span>'}
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e) { el.innerHTML = '<div class="admin-empty">Search failed.</div>'; }
+    }
+
+    async function adminDeleteUser(username) {
+        if (!confirm(`Permanently delete account "${username}"? This cannot be undone.`)) return;
+        try {
+            const r = await fetch(`${API_BASE}/admin/user/${encodeURIComponent(username)}`, {
+                method: 'DELETE', headers: { Authorization: `Bearer ${_acctToken}` }
+            });
+            const d = await r.json();
+            if (r.ok) { alert(`${username} deleted.`); adminSearchUsers(); }
+            else alert(d.error || 'Failed to delete user.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+    async function adminToggleAdmin(username, makeAdmin) {
+        if (!confirm(`${makeAdmin ? 'Grant' : 'Revoke'} admin for "${username}"?`)) return;
+        try {
+            const r = await fetch(`${API_BASE}/admin/admin`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username, makeAdmin })
+            });
+            const d = await r.json();
+            if (r.ok) { adminSearchUsers(); adminLoadOverview(); }
+            else alert(d.error || 'Failed.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+    async function adminLoadBannerPreview() {
+        const el = document.getElementById('adminBannerPreview');
+        if (!el) return;
+        try {
+            const r = await fetch('https://powerhouse-api.c823.workers.dev/banner');
+            const text = r.ok ? (await r.text()).trim() : '';
+            if (!text) { el.textContent = 'No banner file found.'; return; }
+            const parts = text.split('|');
+            el.innerHTML = `<code style="font-size:.75rem">${escHtmlAcct(text)}</code><br>
+                <span style="font-size:.72rem;color:var(--muted)">${parts[0]?.trim().toUpperCase() === 'ENABLED' ? '🟢 Active' : '🔴 Disabled'}</span>`;
+        } catch(e) { el.textContent = 'Could not fetch banner.'; }
+    }
+
+    async function adminSetBanner() {
+        const msg     = document.getElementById('adminBannerMsg')?.value?.trim();
+        const color   = document.getElementById('adminBannerColor')?.value || '#0078D4';
+        const enabled = document.getElementById('adminBannerEnabled')?.checked;
+        const msgEl   = document.getElementById('adminBannerMsg2');
+        if (!msg && enabled) { if (msgEl) msgEl.textContent = 'Enter a message.'; return; }
+        const content = `${enabled ? 'ENABLED' : 'DISABLED'}|${msg || ''}|${color}`;
+        try {
+            const r = await fetch(`${API_BASE}/admin/banner`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ content })
+            });
+            const d = await r.json();
+            if (r.ok) {
+                if (msgEl) msgEl.textContent = 'Banner updated! Reload to see changes.';
+                adminLoadBannerPreview();
+                loadBanner();
+            } else {
+                if (msgEl) msgEl.textContent = d.error || 'Failed.';
+            }
+        } catch(e) { if (msgEl) msgEl.textContent = 'Network error.'; }
     }
 
     // ── DEBOUNCE ─────────────────────────────────────────────────────────────
@@ -3468,7 +3851,7 @@
     // ── BANNER ────────────────────────────────────────────────────────────────
     async function loadBanner() {
         try {
-            const res = await fetch('https://powerhouse-api.c823.workers.dev/gh/banner.txt');
+            const res = await fetch('https://powerhouse-api.c823.workers.dev/banner');
             if (!res.ok) return;
             const text = (await res.text()).trim();
             // Format: STATUS|MESSAGE|COLOR
