@@ -2085,7 +2085,7 @@
             <span class="nav-notif" id="mobileNavBlogBadge" style="display:none"></span>
         </button>
         <button class="mobile-nav-btn" id="mobileNavUnclesai" onclick="sideNavSwitch('unclesai'); toggleMobileNav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 1 8 8c0 5.25-8 12-8 12S4 15.25 4 10a8 8 0 0 1 8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="11" y1="2" x2="11" y2="4"/><line x1="13" y1="2" x2="13" y2="4"/></svg>
             <span>Uncle's AI</span>
         </button>
         <div style="height:1px;background:var(--border);margin:8px 0"></div>
@@ -2125,7 +2125,7 @@
             <span class="nav-notif" id="blogNotif" style="display:none"></span>
         </button>
         <button class="sidebar-nav-btn" id="sideNavUnclesai" onclick="sideNavSwitch('unclesai')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 1 8 8c0 5.25-8 12-8 12S4 15.25 4 10a8 8 0 0 1 8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="11" y1="2" x2="11" y2="4"/><line x1="13" y1="2" x2="13" y2="4"/></svg>
             Uncle's AI
         </button>
         <button class="sidebar-nav-btn" id="sideNavSettings" onclick="sideNavSwitch('settings')">
@@ -3221,13 +3221,27 @@
         if (!user || !pass) { err.textContent = 'Please fill in all fields.'; return; }
         btn.disabled = true; btn.textContent = 'Signing in…'; err.textContent = '';
         try {
+            console.log('[Login] Attempting to login as:', user);
             const r    = await fetch(`${API_BASE}/auth/login`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username: user, password: pass})
             });
             const data = await r.json();
-            if (data.banned) { err.textContent = `Your account has been banned. Reason: ${data.banReason || 'No reason given.'}`; return; }
-            if (!r.ok) { err.textContent = data.error || 'Sign-in failed.'; return; }
+            console.log('[Login] Response:', data);
+
+            if (data.banned) {
+                console.log('[Login] Account is BANNED');
+                err.textContent = `Your account has been banned. Reason: ${data.banReason || 'No reason given.'}`;
+                return;
+            }
+
+            if (!r.ok) {
+                console.log('[Login] Login failed:', data.error);
+                err.textContent = data.error || 'Sign-in failed.';
+                return;
+            }
+
+            console.log('[Login] Login successful for:', user);
             _acctToken = data.token; _acctUsername = data.username;
             localStorage.setItem('ph_token', _acctToken);
             localStorage.setItem('ph_username', _acctUsername);
@@ -3236,7 +3250,10 @@
             await checkBlogAdmin();
             updateAccountBtn();
             refreshAccountModal();
-        } catch(e) { err.textContent = 'Network error. Try again.'; }
+        } catch(e) {
+            console.error('[Login] Error:', e);
+            err.textContent = 'Network error. Try again.';
+        }
         finally { btn.disabled = false; btn.textContent = 'Sign In'; }
     }
 
@@ -3957,6 +3974,7 @@
         document.getElementById('msgConvosView').style.display = 'block';
         document.getElementById('msgChatView').classList.remove('show');
         document.getElementById('msgBackBtn').classList.remove('show');
+        document.getElementById('msgHeaderTitle').style.display = 'flex';
         document.getElementById('msgHeaderTitle').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--accent)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Messages`;
         _msgCurrentChat = null;
     }
@@ -4000,8 +4018,8 @@
         document.getElementById('msgConvosView').style.display = 'none';
         document.getElementById('msgChatView').classList.add('show');
         document.getElementById('msgBackBtn').classList.add('show');
+        document.getElementById('msgHeaderTitle').style.display = 'none';
         document.getElementById('msgChatName').textContent = username;
-        document.getElementById('msgHeaderTitle').textContent = username;
         document.getElementById('msgChatAvatar').src = '';
         document.getElementById('msgMessagesList').innerHTML = '<div class="msg-empty">Loading…</div>';
         document.getElementById('msgInput').value = '';
@@ -5553,38 +5571,45 @@
     async function checkAccountStatus() {
         try {
             const token = _acctToken || localStorage.getItem('ph_token');
-            if (!token) return Promise.resolve();
+            console.log('[Ban Check] Token exists:', !!token);
+            if (!token) {
+                console.log('[Ban Check] No token, skipping');
+                return Promise.resolve();
+            }
 
+            console.log('[Ban Check] Calling /auth/status endpoint...');
             const response = await fetch(`${API_BASE}/auth/status`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
+            console.log('[Ban Check] Response status:', response.status);
             if (!response.ok) {
-                console.error('Failed to check account status:', response.status);
+                const errorText = await response.text();
+                console.error('[Ban Check] Failed:', response.status, errorText);
                 return Promise.resolve();
             }
 
             const data = await response.json();
-            console.log('Account status:', data);
+            console.log('[Ban Check] Account status response:', data);
 
             // Check if banned - blocks everything
             if (data.banned) {
-                console.log('User is banned, showing ban popup');
+                console.log('[Ban Check] USER IS BANNED! Showing popup...');
                 showBanPopup(data.banReason);
                 return new Promise(() => {}); // Never resolves — blocks app
             }
 
             // Check if has unacknowledged warnings
             if (data.warnings && data.warnings > 0 && !data.warningAcknowledged) {
-                console.log(`User has ${data.warnings} unacknowledged warnings`);
+                console.log(`[Ban Check] User has ${data.warnings} unacknowledged warnings`);
                 return showWarningPopup(data.warnings);
             }
 
-            console.log('Account status check passed');
+            console.log('[Ban Check] Account status check PASSED');
             return Promise.resolve();
 
         } catch (err) {
-            console.error('Error checking account status:', err);
+            console.error('[Ban Check] Error:', err);
             return Promise.resolve();
         }
     }
