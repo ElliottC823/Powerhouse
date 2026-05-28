@@ -5725,12 +5725,10 @@
                 <p style="color: var(--text-muted); margin: 16px 0; font-size: 14px; line-height: 1.5;">Please review the Community Guidelines and refrain from the behavior that resulted in this warning.</p>
 
                 <div style="background: color-mix(in srgb, var(--surface2) 70%, transparent); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-sm); margin: 20px 0; text-align: left;">
-                    <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
                         <input type="checkbox" id="warningAckCheckbox" style="width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
-                        <label style="cursor: pointer; flex: 1; margin: 0;">
-                            <span style="font-size: 14px; color: var(--text);">I understand the warning and agree to follow the Community Guidelines. I will not engage in behavior that violates the rules again.</span>
-                        </label>
-                    </div>
+                        <span style="font-size: 14px; color: var(--text); flex: 1;">I understand the warning and agree to follow the Community Guidelines. I will not engage in behavior that violates the rules again.</span>
+                    </label>
                 </div>
 
                 <button id="warningAckButton" onclick="acknowledgeWarning()" style="padding: 12px 28px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px; opacity: 0.5; cursor: not-allowed; width: 100%; transition: all 0.2s ease; margin-top: 20px; box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);" disabled>I Acknowledge</button>
@@ -5754,12 +5752,6 @@
                     button.style.cursor = 'not-allowed';
                     button.disabled = true;
                 }
-            });
-
-            // Make the label clickable
-            checkboxLabel.addEventListener('click', () => {
-                checkbox.checked = !checkbox.checked;
-                checkbox.dispatchEvent(new Event('change'));
             });
 
             // Store resolve for use in acknowledgeWarning
