@@ -474,15 +474,90 @@
 
         @media (max-width: 680px) {
             #sidebar { display: none; }
-            #main-content { margin-left: 0; }
+            #main-content { margin-left: 0; padding-top: 0; }
             #topbar { display: none; }
             #mobileHeader { display: flex !important; }
             .mobile-nav-toggle { display: flex; }
+
+            /* Mobile header improvements */
+            #mobileHeader {
+                padding: var(--safe-top) 12px 0 12px !important;
+                height: auto !important;
+                min-height: calc(var(--header-height) + var(--safe-top));
+                gap: 8px;
+            }
+            #mobileHeader .logo-img {
+                height: 20px;
+                flex-shrink: 0;
+            }
+            #mobileHeader .search-container {
+                flex: 1;
+                max-width: none;
+                min-width: 0;
+            }
+            #mobileHeader .search-container input {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+                height: 36px !important;
+            }
+            #mobileHeader .controls {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+            }
+            #mobileHeader .controls button {
+                width: 36px;
+                height: 36px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--radius-sm);
+            }
+
+            /* Mobile game grid */
+            #game-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: clamp(8px, 2vw, 12px);
+                padding: clamp(12px, 3vw, 16px);
+                padding-top: 12px;
+            }
+            @media (min-width: 400px) { #game-grid { grid-template-columns: repeat(2, 1fr); } }
+            @media (min-width: 550px) { #game-grid { grid-template-columns: repeat(3, 1fr); } }
+
+            /* Mobile content sections */
+            .shelf-container,
+            .gotw-container,
+            nav.filter-bar {
+                padding: clamp(12px, 3vw, 16px) !important;
+            }
+
+            /* Mobile game cards */
+            .game-card {
+                min-height: 0;
+            }
+            .game-card img {
+                min-height: 80px;
+            }
+
+            /* Mobile filter bar */
+            nav.filter-bar {
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                scroll-behavior: smooth;
+            }
+
+            /* Mobile main content padding */
+            #main-content > * {
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
 
         /* ── HEADER — W11 title bar style with acrylic (mobile fallback only) ── */
         header {
-            background: var(--header-gradient);
+            background: color-mix(in srgb, var(--bg) 60%, transparent);
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
             padding: 0 clamp(12px,3%,24px);
@@ -491,7 +566,8 @@
             display: flex; align-items: center; justify-content: space-between; gap: 12px;
             position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid var(--border);
-            transition: background 0.2s, border-color 0.2s;
+            transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         .logo-img { height: 24px; flex-shrink: 0; max-width: 110px; object-fit: contain; }
         .search-container { flex-grow: 1; min-width: 0; max-width: 340px; }
@@ -2297,7 +2373,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">v1.12.6</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.1.2 (2026-05-28)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -2308,7 +2384,7 @@
                 <div class="contributor-chip">C823<span class="role">Lead Developer</span></div>
                 <div class="contributor-chip">UncleJoe826<span class="role">Senior Developer</span></div>
                 <div class="contributor-chip">MonkeyKC<span class="role">Content Provider</span></div>
-                <div class="contributor-chip">Toethesis<span class="role">Contributor</span></div>
+                <div class="contributor-chip">Toethesis<span class="role">Senior Developer</span></div>
                 <div class="contributor-chip">Uncle_Stein<span class="role">Contributor</span></div>
                 <div class="contributor-chip">Norwegian<span class="role">Contributor</span></div>
             </div>
