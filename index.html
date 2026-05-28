@@ -2110,9 +2110,100 @@
 
         /* Redeem */
 
+        /* Maintenance Screen */
+        #maintenanceScreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg-gradient);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+        }
+        #maintenanceScreen.show {
+            display: flex;
+        }
+        .maintenance-content {
+            background: color-mix(in srgb, var(--surface) 90%, transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: clamp(40px, 8vw, 60px);
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+        .maintenance-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            opacity: 0.8;
+        }
+        .maintenance-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            color: var(--text);
+        }
+        .maintenance-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+        .maintenance-details {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+        .maintenance-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+        .maintenance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 120, 212, 0.4);
+        }
+        .maintenance-retry {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
+
     </style>
 </head>
 <body data-theme="system">
+
+<!-- Maintenance Screen -->
+<div id="maintenanceScreen">
+    <div class="maintenance-content">
+        <svg class="maintenance-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6"/>
+            <circle cx="12" cy="20" r="1"/>
+        </svg>
+        <h1 class="maintenance-title">Site Maintenance</h1>
+        <p class="maintenance-subtitle">Powerhouse is currently under maintenance.</p>
+        <p class="maintenance-details">We're making improvements to keep the platform running smoothly. Please check back soon!</p>
+        <button class="maintenance-btn" onclick="location.reload()">Try Again</button>
+        <div class="maintenance-retry">Retrying connection...</div>
+    </div>
+</div>
 
 <!-- Settings backdrop -->
 <div class="settings-backdrop" id="settingsBackdrop" onclick="closeSettings()"></div>
@@ -2373,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.1.2 (2026-05-28)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.2.0 (2026-05-28)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -2759,6 +2850,7 @@
             <button class="admin-tab"        id="adminTabAllusers"  onclick="adminTabSwitch('allusers')">All Users</button>
             <button class="admin-tab"        id="adminTabRanks"     onclick="adminTabSwitch('ranks')">Ranks</button>
             <button class="admin-tab"        id="adminTabBanner"    onclick="adminTabSwitch('banner')">Banner</button>
+            <button class="admin-tab"        id="adminTabSuggest"   onclick="adminTabSwitch('suggest')">Suggest Game</button>
         </div>
 
         <!-- Overview -->
@@ -2824,6 +2916,49 @@
                 <button class="admin-btn primary" onclick="adminSetBanner()" style="align-self:flex-start;padding:6px 16px">Update Banner</button>
                 <div class="admin-msg" id="adminBannerMsg2"></div>
             </div>
+        </div>
+
+        <!-- Suggest Game -->
+        <div class="admin-body" id="adminPaneSuggest" style="display:none">
+            <div class="admin-section-title">Suggest a New Game</div>
+            <p style="font-size:.75rem;color:var(--muted);margin-bottom:16px">Submit a game suggestion to be reviewed by admins.</p>
+
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <div>
+                    <label style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Game Name</label>
+                    <input class="admin-search-input" id="suggestName" placeholder="Enter game name…" autocomplete="off">
+                </div>
+
+                <div>
+                    <label style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Thumbnail URL</label>
+                    <input class="admin-search-input" id="suggestThumbnail" placeholder="https://example.com/image.jpg" autocomplete="off">
+                </div>
+
+                <div>
+                    <label style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Game URL / Link</label>
+                    <input class="admin-search-input" id="suggestUrl" placeholder="https://example.com/game" autocomplete="off">
+                </div>
+
+                <div>
+                    <label style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Description</label>
+                    <textarea class="admin-search-input" id="suggestDescription" placeholder="Describe the game…" rows="3" autocomplete="off" style="resize:vertical"></textarea>
+                </div>
+
+                <div style="display:flex;gap:12px">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.85rem">
+                        <input type="checkbox" id="suggestVerified"> Verified Unblocked
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.85rem">
+                        <input type="checkbox" id="suggestBlank"> Can Use about:blank
+                    </label>
+                </div>
+
+                <button class="admin-btn primary" onclick="adminSubmitGameSuggestion()" style="align-self:flex-start;padding:8px 20px">Submit Suggestion</button>
+                <div class="admin-msg" id="suggestMsg"></div>
+            </div>
+
+            <div class="admin-section-title" style="margin-top:24px">Pending Suggestions</div>
+            <div id="suggestList"><div class="admin-empty">Loading suggestions…</div></div>
         </div>
     </div>
 </div>
@@ -3378,7 +3513,7 @@
     async function acctLoadData() {
         if (!_acctToken) return;
         try {
-            const r = await fetch(`${API_BASE}/auth/load`, {
+            const r = await fetchWithRetry(`${API_BASE}/auth/load`, {
                 headers: {'Authorization': `Bearer ${_acctToken}`}
             });
             if (r.status === 401) { acctHandleExpired(); return; }
@@ -4371,7 +4506,7 @@
     }
 
     function adminTabSwitch(tab) {
-        ['overview','users','allusers','ranks','banner'].forEach(t => {
+        ['overview','users','allusers','ranks','banner','suggest'].forEach(t => {
             document.getElementById('adminPane' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
             document.getElementById('adminTab'  + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
         });
@@ -4639,6 +4774,86 @@
                 if (msgEl) msgEl.textContent = d.error || 'Failed.';
             }
         } catch(e) { if (msgEl) msgEl.textContent = 'Network error.'; }
+    }
+
+    // ── GAME SUGGESTIONS ────────────────────────────────────────────────────
+    async function adminSubmitGameSuggestion() {
+        const name = document.getElementById('suggestName')?.value?.trim();
+        const thumbnail = document.getElementById('suggestThumbnail')?.value?.trim();
+        const url = document.getElementById('suggestUrl')?.value?.trim();
+        const description = document.getElementById('suggestDescription')?.value?.trim();
+        const verified = document.getElementById('suggestVerified')?.checked;
+        const canUseBlank = document.getElementById('suggestBlank')?.checked;
+        const msgEl = document.getElementById('suggestMsg');
+
+        if (!name || !thumbnail || !url || !description) {
+            if (msgEl) msgEl.textContent = 'All fields are required.';
+            return;
+        }
+
+        try {
+            const r = await fetch(`${API_BASE}/admin/suggest-game`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ name, thumbnail, url, description, verified, canUseBlank })
+            });
+            const d = await r.json();
+            if (r.ok) {
+                if (msgEl) msgEl.textContent = 'Game suggestion submitted!';
+                document.getElementById('suggestName').value = '';
+                document.getElementById('suggestThumbnail').value = '';
+                document.getElementById('suggestUrl').value = '';
+                document.getElementById('suggestDescription').value = '';
+                document.getElementById('suggestVerified').checked = false;
+                document.getElementById('suggestBlank').checked = false;
+                adminLoadSuggestions();
+            } else {
+                if (msgEl) msgEl.textContent = d.error || 'Failed.';
+            }
+        } catch(e) { if (msgEl) msgEl.textContent = 'Network error.'; }
+    }
+
+    async function adminLoadSuggestions() {
+        const el = document.getElementById('suggestList');
+        if (!el) return;
+        el.innerHTML = '<div class="admin-empty">Loading…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/admin/suggestions`, {
+                headers: { Authorization: `Bearer ${_acctToken}` }
+            });
+            const d = r.ok ? (await r.json()) : { suggestions: [] };
+            const suggestions = d.suggestions || [];
+            if (suggestions.length === 0) {
+                el.innerHTML = '<div class="admin-empty">No suggestions yet.</div>';
+                return;
+            }
+            el.innerHTML = suggestions.map(s => `
+                <div style="background:color-mix(in srgb,var(--text) 3%,transparent);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px">
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                        <img src="${s.thumbnail}" alt="${s.name}" style="width:60px;height:60px;border-radius:4px;object-fit:cover;flex-shrink:0">
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:.85rem;font-weight:600">${escHtmlAcct(s.name)}</div>
+                            <div style="font-size:.7rem;color:var(--muted);margin:3px 0">${escHtmlAcct(s.description).slice(0,100)}</div>
+                            <div style="font-size:.65rem;color:var(--muted)">
+                                By ${escHtmlAcct(s.suggestedBy)} · ${new Date(s.suggestedAt).toLocaleDateString()}
+                                ${s.verified ? ' · Verified' : ''} ${s.canUseBlank ? ' · about:blank' : ''}
+                            </div>
+                        </div>
+                        <button class="admin-btn danger" onclick="adminRemoveSuggestion('${s.id}')" style="padding:6px 12px;font-size:.7rem">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch(e) { el.innerHTML = '<div class="admin-empty">Failed to load.</div>'; }
+    }
+
+    async function adminRemoveSuggestion(suggestionId) {
+        try {
+            const r = await fetch(`${API_BASE}/admin/suggestion/${encodeURIComponent(suggestionId)}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${_acctToken}` }
+            });
+            if (r.ok) adminLoadSuggestions();
+        } catch(e) { console.error('Failed to remove suggestion', e); }
     }
 
     // ── UNCLE'S AI SETTING ───────────────────────────────────────────────────
@@ -5134,13 +5349,51 @@
     // ── EMBEDDED DATA ────────────────────────────────────────────────────────
     const EMBEDDED_ABOUT = "Powerhouse is a custom-built game hub full of unblocked games, and websites to annoy teachers, and easily get 5 missing ELA assignments.";
 
+    // Retry wrapper for API calls with exponential backoff
+    async function fetchWithRetry(url, options = {}, maxRetries = 3) {
+        let lastError;
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                const res = await fetch(url, options);
+
+                // Handle 429 Rate Limit
+                if (res.status === 429) {
+                    if (attempt < maxRetries) {
+                        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff: 1s, 2s, 4s
+                        console.warn(`Rate limited (429). Retrying in ${delay}ms...`);
+                        await new Promise(r => setTimeout(r, delay));
+                        continue;
+                    } else {
+                        throw new Error('Rate limit exceeded after retries');
+                    }
+                }
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res;
+            } catch (e) {
+                lastError = e;
+                if (attempt < maxRetries) {
+                    const delay = Math.pow(2, attempt) * 500;
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+        }
+        throw lastError;
+    }
+
+    function showMaintenanceScreen() {
+        const screen = document.getElementById('maintenanceScreen');
+        if (screen) screen.classList.add('show');
+    }
+
     async function fetchData() {
         try {
-            const res = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const res = await fetchWithRetry('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
             games = await res.json();
         } catch (e) {
-            console.error('Load failed', e);
+            console.error('Load failed after retries', e);
+            showMaintenanceScreen();
+            return;
         }
         const aboutEl = document.getElementById('aboutText');
         if (aboutEl) aboutEl.innerText = EMBEDDED_ABOUT;
