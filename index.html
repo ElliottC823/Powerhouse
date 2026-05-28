@@ -4011,7 +4011,20 @@
             const data = await r.json();
             const theirPfpEl = document.getElementById('msgChatAvatar'); _msgCurrentChatPfp = data.theirPfp || ''; if (theirPfpEl) { if (_msgCurrentChatPfp) { theirPfpEl.src = PFP_BASE + _msgCurrentChatPfp; theirPfpEl.style.display = ''; } else { theirPfpEl.style.display = 'none'; } }
             msgRenderMessages(data.messages || []);
+            // Mark messages as read to clear notifications
+            msgMarkAsRead(username);
         } catch(e) { document.getElementById('msgMessagesList').innerHTML = '<div class="msg-empty">Failed to load.</div>'; }
+    }
+
+    async function msgMarkAsRead(username) {
+        try {
+            await fetch(`${API_BASE}/social/messages/${encodeURIComponent(username)}/read`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${_acctToken}` }
+            });
+            // Refresh badge and conversation list
+            msgLoadConvos();
+        } catch(e) {}
     }
 
     function msgRenderMessages(messages) {
@@ -4844,7 +4857,7 @@
                 <div class="mod-user-row">
                     <div class="mod-user-info">
                         <div class="mod-user-name" style="margin-bottom:3px">${escHtmlAcct(b.username)}</div>
-                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${escHtmlAcct(b.reason)}</div>
+                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${escHtmlAcct(censorText(b.reason))}</div>
                         <div class="mod-user-meta">${new Date(b.bannedAt).toLocaleDateString()} · by ${escHtmlAcct(b.by)}</div>
                     </div>
                     <div class="mod-actions">
@@ -4880,7 +4893,7 @@
                 <div class="mod-user-row">
                     <div class="mod-user-info">
                         <div class="mod-user-name" style="margin-bottom:3px">${escHtmlAcct(w.username)}</div>
-                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${escHtmlAcct(w.reason)}</div>
+                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${escHtmlAcct(censorText(w.reason))}</div>
                         <div class="mod-user-meta">${new Date(w.issuedAt).toLocaleDateString()} · by ${escHtmlAcct(w.by)}</div>
                     </div>
                     <div class="mod-actions">
@@ -5518,7 +5531,7 @@
         updateAccountBtn();
         updateSidebarAccount();
         applyUnclesAISetting();
-        if (_acctToken) acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); loadMyRank(); }));
+        if (_acctToken) acctLoadData().then(() => checkAccountStatus().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); loadMyRank(); })));
         if (_acctToken) friendsStartPolling();
         if (_acctToken) { msgRefreshBadge(); setInterval(() => { if (!document.hidden) msgRefreshBadge(); }, 300000); }
         blogInit();
@@ -5527,6 +5540,239 @@
         // Refresh dynamic greeting every minute
         setInterval(updateSidebarAccount, 60000); // allow loads to settle first
     };
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // WARNING & BAN POPUP SYSTEM
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async function checkAccountStatus() {
+        try {
+            const token = _acctToken || localStorage.getItem('jwt_token');
+            if (!token) return Promise.resolve();
+
+            const response = await fetch(`${API_BASE}/auth/status`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) {
+                console.error('Failed to check account status');
+                return Promise.resolve();
+            }
+
+            const data = await response.json();
+
+            // Check if banned
+            if (data.banned) {
+                showBanPopup(data.banReason);
+                return new Promise(() => {}); // Never resolves — blocks app
+            }
+
+            // Check if has unacknowledged warnings
+            if (data.warnings && data.warnings > 0 && !data.warningAcknowledged) {
+                return showWarningPopup(data.warnings);
+            }
+
+            return Promise.resolve();
+
+        } catch (err) {
+            console.error('Error checking account status:', err);
+            return Promise.resolve();
+        }
+    }
+
+    function showBanPopup(reason) {
+        const overlay = document.createElement('div');
+        overlay.id = 'banPopupOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        `;
+
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            background: var(--surface);
+            border: 2px solid #d32f2f;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: var(--text);
+        `;
+
+        popup.innerHTML = `
+            <h2 style="margin-top: 0; color: #d32f2f;">Account Banned</h2>
+            <p style="font-size: 16px; margin: 20px 0;">Your account has been banned from Powerhouse.</p>
+            ${reason ? `<p style="color: var(--text-muted); font-style: italic;">Reason: ${escapeHtml(reason)}</p>` : ''}
+            <p style="color: var(--text-muted); margin: 20px 0;">You will not be able to access Powerhouse until this ban is lifted by an administrator.</p>
+            <button onclick="logoutFromBan()" style="padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px;">Log Out</button>
+        `;
+
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        // Disable all page functionality
+        disableApplication();
+    }
+
+    function showWarningPopup(warningCount) {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.id = 'warningPopupOverlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                background: var(--surface);
+                border: 2px solid #ff9800;
+                border-radius: 12px;
+                padding: 30px;
+                max-width: 500px;
+                text-align: center;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                color: var(--text);
+            `;
+
+            const warningText = warningCount === 1 ? 'You have received 1 warning' : `You have received ${warningCount} warnings`;
+            const banWarning = warningCount >= 2 ? '<p style="color: #ff9800; font-weight: bold; margin: 15px 0;">⚠️ One more warning and your account will be banned!</p>' : '';
+
+            popup.innerHTML = `
+                <h2 style="margin-top: 0; color: #ff9800;">Account Warning</h2>
+                <p style="font-size: 16px; margin: 20px 0;">${warningText} on your account.</p>
+                ${banWarning}
+                <p style="color: var(--text-muted); margin: 20px 0;">Please review the Community Guidelines and refrain from the behavior that resulted in this warning.</p>
+
+                <div style="background: var(--surface2); padding: 15px; border-radius: 8px; margin: 20px 0; text-align: left; max-height: 200px; overflow-y: auto;">
+                    <strong style="display: block; margin-bottom: 10px;">To continue, please acknowledge:</strong>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer;">
+                        <input type="checkbox" id="warningAckCheckbox" style="margin-right: 12px; margin-top: 3px; width: 20px; height: 20px; cursor: pointer;">
+                        <span>I understand the warning and agree to follow the Community Guidelines. I will not engage in behavior that violates the rules again.</span>
+                    </label>
+                </div>
+
+                <button id="warningAckButton" onclick="acknowledgeWarning()" style="padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; opacity: 0.5; cursor: not-allowed;" disabled>I Acknowledge</button>
+            `;
+
+            overlay.appendChild(popup);
+            document.body.appendChild(overlay);
+
+            // Enable button only when checkbox is checked
+            const checkbox = document.getElementById('warningAckCheckbox');
+            const button = document.getElementById('warningAckButton');
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    button.style.opacity = '1';
+                    button.style.cursor = 'pointer';
+                    button.disabled = false;
+                } else {
+                    button.style.opacity = '0.5';
+                    button.style.cursor = 'not-allowed';
+                    button.disabled = true;
+                }
+            });
+
+            // Store resolve for use in acknowledgeWarning
+            window._warningPopupResolve = resolve;
+
+            // Disable all page functionality
+            disableApplication();
+        });
+    }
+
+    async function acknowledgeWarning() {
+        try {
+            const token = _acctToken || localStorage.getItem('jwt_token');
+            const response = await fetch(`${API_BASE}/auth/acknowledge-warning`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                // Remove popup
+                const overlay = document.getElementById('warningPopupOverlay');
+                if (overlay) overlay.remove();
+
+                // Enable application
+                enableApplication();
+
+                // Resolve the promise
+                if (window._warningPopupResolve) {
+                    window._warningPopupResolve();
+                    delete window._warningPopupResolve;
+                }
+            } else {
+                alert('Failed to acknowledge warning. Please try again.');
+            }
+        } catch (err) {
+            console.error('Error acknowledging warning:', err);
+            alert('An error occurred. Please try again.');
+        }
+    }
+
+    function logoutFromBan() {
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('acctUsername');
+        location.reload();
+    }
+
+    function disableApplication() {
+        // Disable all interactive elements
+        const buttons = document.querySelectorAll('button');
+        const inputs = document.querySelectorAll('input, textarea, select');
+        const links = document.querySelectorAll('a');
+
+        [buttons, inputs, links].forEach(nodeList => {
+            nodeList.forEach(el => {
+                el.disabled = true;
+                el.style.pointerEvents = 'none';
+                el.style.opacity = '0.5';
+            });
+        });
+    }
+
+    function enableApplication() {
+        // Re-enable all interactive elements
+        const buttons = document.querySelectorAll('button');
+        const inputs = document.querySelectorAll('input, textarea, select');
+        const links = document.querySelectorAll('a');
+
+        [buttons, inputs, links].forEach(nodeList => {
+            nodeList.forEach(el => {
+                el.disabled = false;
+                el.style.pointerEvents = 'auto';
+                el.style.opacity = '1';
+            });
+        });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 </script>
 </body>
 </html>
