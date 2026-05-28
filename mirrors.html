@@ -1,59 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse Mirrors</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" id="faviconEl" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png">
+    <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent:     #0078D4;
-            --bg:         #0d0e12;
-            --surface:    #1e2028;
-            --surface2:   #252830;
-            --text:       #f5f6fa;
-            --text-muted: rgba(245,246,250,0.45);
-            --border:     #35394a;
-            --radius:     8px;
-            --radius-sm:  6px;
+            --accent: #0078D4;
+            --accent2: #106EBE;
+            --accent-light: rgba(0,120,212,0.12);
+            --radius: 8px;
+            --radius-sm: 6px;
+            --radius-xs: 4px;
+            --header-height: 48px;
+            --font: 'Outfit', sans-serif;
+            --font-weight-normal: 400;
+            --font-weight-bold: 600;
+            --font-weight-black: 700;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
         }
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        [data-theme="midnight"] {
+            --bg: #1a1d2e; --bg-gradient: linear-gradient(160deg,#1a1d2e 0%,#141620 100%);
+            --header-gradient: linear-gradient(90deg,#1e2235 0%,#252840 100%);
+            --surface: #22263a; --surface2: #2a2f47; --text: #e8eaf6;
+            --text-muted: rgba(232,234,246,0.5); --border: #363a55;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+        [data-theme="dark"] {
+            --bg: #0d0e12; --bg-gradient: linear-gradient(160deg,#0d0e12 0%,#13151b 100%);
+            --header-gradient: linear-gradient(90deg,#13151b 0%,#1a1c24 100%);
+            --surface: #1e2028; --surface2: #252830; --text: #f5f6fa;
+            --text-muted: rgba(245,246,250,0.5); --border: #35394a;
+            --shadow: 0 4px 24px rgba(0,0,0,0.5);
+        }
+        [data-theme="amoled"] {
+            --bg: #000; --bg-gradient: #000;
+            --header-gradient: linear-gradient(90deg,#0a0a0a,#111);
+            --surface: #111; --surface2: #1a1a1a; --text: #fff;
+            --text-muted: rgba(255,255,255,0.45); --border: #222;
+            --shadow: 0 4px 24px rgba(0,0,0,0.7);
+        }
+        [data-theme="light"] {
+            --bg: #f2f3f8; --bg-gradient: linear-gradient(160deg,#f2f3f8 0%,#e8eaf4 100%);
+            --header-gradient: linear-gradient(90deg,#fff 0%,#f2f3f8 100%);
+            --surface: #fff; --surface2: #f0f1f7; --text: #060712;
+            --text-muted: rgba(6,7,18,0.45); --border: #d4d7ea;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
 
-        html, body {
-            width: 100%; height: 100%;
-            overflow: hidden;
-            background: var(--bg);
-            background-image: linear-gradient(160deg, #0d0e12 0%, #13151b 100%);
-            font-family: 'Segoe UI Variable', 'Segoe UI', 'Outfit', system-ui, sans-serif;
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: var(--bg-gradient);
             color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-overflow-scrolling: touch;
         }
 
-        body::before {
+        /* ── Mica noise texture ── */
+        body::after {
             content: '';
             position: fixed; inset: 0;
-            background-image:
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.022;
             pointer-events: none;
+            z-index: 0;
         }
 
+        /* ── Header ── */
         header {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 48px;
-            background: linear-gradient(90deg, #13151b 0%, #1a1c24 100%);
+            position: sticky; top: 0; z-index: 100;
+            height: calc(var(--header-height) + var(--safe-top));
+            padding: var(--safe-top) 20px 0;
+            background: var(--header-gradient);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 20px;
-            padding-top: env(safe-area-inset-top, 0px);
-            z-index: 10;
+            flex-shrink: 0;
         }
 
         .logo-img {
@@ -63,242 +108,208 @@
             animation: fadeUp 0.5s ease 0.1s forwards;
         }
 
+        /* ── Page content ── */
         main {
-            position: fixed; inset: 0;
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 32px;
-            padding-top: 48px;
+            padding: calc(40px + var(--safe-top))
+                     calc(20px + var(--safe-right))
+                     calc(40px + var(--safe-bottom))
+                     calc(20px + var(--safe-left));
+            position: relative;
+            z-index: 1;
+            gap: 24px;
         }
 
-        .loader-card {
-            background: var(--surface);
+        /* ── Card ── */
+        .container {
+            background: color-mix(in srgb, var(--surface) 70%, transparent);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 36px 44px;
+            padding: clamp(28px, 6vw, 40px);
+            width: 100%;
+            max-width: 480px;
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeUp 0.4s ease 0.15s forwards;
+        }
+
+        /* ── Logo block ── */
+        .logo-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 28px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.25);
-            opacity: 0;
-            transform: translateY(12px);
-            animation: fadeUp 0.45s ease 0.2s forwards;
-            min-width: 280px;
+            gap: 14px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .spinner-wrap {
-            position: relative;
-            width: 56px; height: 56px;
+        .card-logo {
+            width: clamp(160px, 70%, 240px);
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
         }
 
-        .spinner {
-            width: 56px; height: 56px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.75s linear infinite;
-        }
-
-        .spinner-wrap::after {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,120,212,0.18) 0%, transparent 70%);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .loader-label {
-            font-size: 0.7rem;
+        .page-title {
+            font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.18em;
             text-transform: uppercase;
+            letter-spacing: 0.14em;
             color: var(--text-muted);
+            margin: 0;
         }
 
-        .loader-status {
+        .page-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin: 12px 0 0 0;
+            line-height: 1.5;
+        }
+
+        /* ── Mirror links ── */
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .mirror-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: color-mix(in srgb, var(--surface2) 40%, var(--surface));
+            border: 1px solid var(--border);
+            padding: 14px 16px;
+            min-height: 56px;
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.12s ease-out;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        @media (hover: hover) {
+            .mirror-link:hover {
+                border-color: var(--accent);
+                background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+                color: var(--accent);
+                transform: translateY(-2px);
+            }
+            .mirror-link:hover .mirror-arrow { opacity: 1; }
+        }
+
+        .mirror-link:active { opacity: 0.8; transform: translateY(0); }
+
+        .mirror-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+
+        .mirror-link-label {
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--text);
-            text-align: center;
-            min-height: 1.4em;
-            transition: opacity 0.2s;
-        }
-
-        .progress-track {
-            width: 200px;
-            height: 3px;
-            background: var(--border);
-            border-radius: 99px;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--accent);
-            border-radius: 99px;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 8px rgba(0,120,212,0.5);
-        }
-
-        .error-card {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            text-align: center;
-        }
-
-        .error-icon {
-            width: 44px; height: 44px;
-            background: rgba(196,43,28,0.12);
-            border: 1px solid rgba(196,43,28,0.3);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .error-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #c42b1c;
-        }
-
-        .error-sub {
-            font-size: 0.8rem;
+        .disclaimer {
+            font-size: 0.75rem;
             color: var(--text-muted);
-            max-width: 220px;
-            line-height: 1.6;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .retry-btn {
-            margin-top: 4px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 10px 24px;
-            font-family: inherit;
+        .mirror-arrow {
+            font-size: 0.9rem;
+            opacity: 0.4;
+            flex-shrink: 0;
+            transition: opacity 0.12s ease-out;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            font-size: 0.7rem;
             font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: opacity 0.15s;
-        }
-        .retry-btn:hover  { opacity: 0.85; }
-        .retry-btn:active { opacity: 0.65; }
-
-        @keyframes spin    { to { transform: rotate(360deg); } }
-        @keyframes fadeUp  { to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse   {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50%       { opacity: 1;   transform: scale(1.08); }
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            width: 100%;
         }
 
-        #content { display: none; }
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            main {
+                padding: calc(28px + var(--safe-top))
+                         calc(16px + var(--safe-right))
+                         calc(28px + var(--safe-bottom))
+                         calc(16px + var(--safe-left));
+            }
+            .container {
+                padding: clamp(20px, 5vw, 28px);
+            }
+        }
     </style>
 </head>
-<body>
+<body data-theme="midnight">
 
     <header>
         <img class="logo-img"
-             id="headerLogo"
-             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
+             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg"
              alt="Powerhouse">
     </header>
 
     <main>
-        <div class="loader-card" id="loaderCard">
+        <div class="container">
 
-            <div id="loadingState" style="display:flex;flex-direction:column;align-items:center;gap:28px;">
-                <div class="spinner-wrap">
-                    <div class="spinner"></div>
-                </div>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-                    <div class="loader-label">Powerhouse Mirrors</div>
-                    <div class="loader-status" id="loaderStatus">Connecting…</div>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg"
+                     alt="Powerhouse" class="card-logo">
+                <p class="page-title">Mirror Links</p>
+                <p class="page-desc">Access Powerhouse from alternate locations</p>
             </div>
 
-            <div class="error-card" id="errorState">
-                <div class="error-icon">✕</div>
-                <div class="error-title">Load Failed</div>
-                <div class="error-sub" id="errorSub">Could not reach GitHub. Check your connection and try again.</div>
-                <button class="retry-btn" onclick="retry()">Try Again</button>
+            <div class="link-list">
+                <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-link">
+                    <div class="mirror-text">
+                        <span class="mirror-link-label">Cloudflare (Main)</span>
+                        <span class="disclaimer">Primary instance — always latest</span>
+                    </div>
+                    <span class="mirror-arrow">↗</span>
+                </a>
+                <a href="https://kraftpaket.c1120.workers.dev" target="_blank" rel="noopener" class="mirror-link">
+                    <div class="mirror-text">
+                        <span class="mirror-link-label">Cloudflare (Backup)</span>
+                        <span class="disclaimer">Fallback — may lag behind</span>
+                    </div>
+                    <span class="mirror-arrow">↗</span>
+                </a>
             </div>
+
+            <div class="footer">Powerhouse V2.1.2 (2026-05-28)</div>
 
         </div>
     </main>
 
-    <div id="content"></div>
-
-    <script>
-        const statusEl  = document.getElementById('loaderStatus');
-        const fillEl    = document.getElementById('progressFill');
-        const loadingEl = document.getElementById('loadingState');
-        const errorEl   = document.getElementById('errorState');
-        const errorSub  = document.getElementById('errorSub');
-
-        function setProgress(pct, label) {
-            fillEl.style.width = pct + '%';
-            if (label) statusEl.textContent = label;
-        }
-
-        function showError(msg) {
-            loadingEl.style.display = 'none';
-            errorEl.style.display   = 'flex';
-            if (msg) errorSub.textContent = msg;
-        }
-
-        async function loadMirrors() {
-            loadingEl.style.display = 'flex';
-            errorEl.style.display   = 'none';
-            setProgress(0, 'Connecting…');
-
-            const repoURL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/mirrors.html';
-
-            try {
-                setProgress(20, 'Fetching mirrors…');
-
-                const response = await fetch(repoURL);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                setProgress(65, 'Downloading…');
-
-                const html = await response.text();
-
-                setProgress(90, 'Preparing…');
-
-                const baseTag       = `<base href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/">`;
-                const processedHtml = html.replace('<head>', `<head>${baseTag}`);
-
-                setProgress(100, 'Launching…');
-
-                await new Promise(r => setTimeout(r, 280));
-
-                document.open();
-                document.write(processedHtml);
-                document.close();
-
-            } catch (error) {
-                console.error('Powerhouse Mirrors Load Error:', error);
-                showError(`Could not reach GitHub (${error.message}). Check your connection and try again.`);
-            }
-        }
-
-        function retry() {
-            loadMirrors();
-        }
-
-        window.addEventListener('load', () => {
-            setTimeout(loadMirrors, 400);
-        });
-    </script>
 </body>
 </html>
