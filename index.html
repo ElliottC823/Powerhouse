@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.2.0 (2026-05-28)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.3.0 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3322,7 +3322,15 @@
                     return `<img src="${url}" class="pfp-option ${_acctPfp === f ? 'selected' : ''}" onclick="setPfp('${f}')" title="${f}" loading="lazy">`;
                 }).join('');
         }
-        grid.innerHTML = noneHtml + opts.join('') + adminOpts;
+        let limitedEditionOpts = '';
+        if (_acctLimitedEditionPfps && _acctLimitedEditionPfps.length > 0) {
+            limitedEditionOpts = `<div style="grid-column:1/-1;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fbc02d;margin-top:6px;margin-bottom:2px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:11px;height:11px;background:linear-gradient(135deg,#fbc02d,#f57f17);border-radius:2px"></span> Limited Edition</div>`
+                + _acctLimitedEditionPfps.map(f => {
+                    const url = PFP_BASE + f;
+                    return `<img src="${url}" class="pfp-option ${_acctPfp === f ? 'selected' : ''}" onclick="setPfp('${f}')" title="${f}" loading="lazy" style="border-color:#fbc02d;box-shadow:0 0 0 1px #fbc02d;">`;
+                }).join('');
+        }
+        grid.innerHTML = noneHtml + opts.join('') + adminOpts + limitedEditionOpts;
     }
 
     function setPfp(filename) {
@@ -3351,6 +3359,7 @@
     let _acctUsername = localStorage.getItem('ph_username') || null;
     let _acctSaving   = false;
     let _acctInitDone = false;  // prevents auto-save during page load
+    let _acctLimitedEditionPfps = [];  // limited edition PFPs user owns
 
     function updateAccountBtn() {
         // Sidebar account display is handled entirely by updateSidebarAccount
@@ -3529,10 +3538,16 @@
             }
             if (data.history   && data.history.length)   localStorage.setItem('power_history',   JSON.stringify(data.history));
             if (data.favorites && data.favorites.length) localStorage.setItem('power_favorites', JSON.stringify(data.favorites));
+            if (data.limitedEditionPfps && Array.isArray(data.limitedEditionPfps)) {
+                _acctLimitedEditionPfps = data.limitedEditionPfps;
+            }
             loadSettings();
             renderGames();
             const st = document.getElementById('acctSyncStatus');
             if (st && data.savedAt) st.textContent = 'Synced ' + new Date(data.savedAt).toLocaleString();
+
+            // Check for weekly PFP promotion
+            checkWeeklyPfpPromotion();
         } catch(e) { console.warn('acctLoadData', e); }
     }
 
@@ -6190,6 +6205,127 @@
         location.reload();
     }
 
+    function showWeeklyPfpPopup() {
+        const overlay = document.createElement('div');
+        overlay.id = 'weeklyPfpOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.2s ease-out;
+        `;
+
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            background: color-mix(in srgb, var(--surface) 90%, transparent);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            color: var(--text);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+        `;
+
+        const PFP_BASE = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
+
+        popup.innerHTML = `
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="width: 48px; height: 48px;">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+            </div>
+            <h2 style="margin: 0 0 12px 0; color: var(--accent); font-size: 24px; font-weight: 700;">Claim Your Free Profile Picture!</h2>
+            <p style="font-size: 13px; margin: 0 0 20px 0; color: var(--text-muted);">Limited-time offer (May 31 - June 18)</p>
+
+            <div style="background: color-mix(in srgb, var(--surface2) 70%, transparent); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin: 20px 0;">
+                <img src="${PFP_BASE}classof26.jpg" alt="Class of 26" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto; border: 2px solid var(--accent);">
+                <div style="margin-top: 12px; font-weight: 600; color: var(--text);">Class of 26</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Exclusive limited edition profile picture</div>
+            </div>
+
+            <p style="color: var(--text); margin: 16px 0; font-size: 14px; line-height: 1.6;">Get an exclusive profile picture available only this week! Once claimed, you'll be able to use it in your profile picture selector anytime.</p>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button onclick="document.getElementById('weeklyPfpOverlay').remove(); enableApplication();" style="flex: 1; padding: 12px 20px; background: var(--border); color: var(--text); border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s ease;">Later</button>
+                <button onclick="claimWeeklyPfp()" style="flex: 1; padding: 12px 20px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);">Claim Now</button>
+            </div>
+        `;
+
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        // Disable all page functionality
+        disableApplication();
+    }
+
+    async function claimWeeklyPfp() {
+        try {
+            const r = await fetch(`${API_BASE}/claim-weekly-pfp`, {
+                method: 'POST',
+                headers: {'Authorization': `Bearer ${_acctToken}`}
+            });
+            const data = await r.json();
+            if (r.ok) {
+                // Update limited edition PFPs and close popup
+                const userDataRaw = await fetch(`${API_BASE}/auth/load`, {
+                    headers: {'Authorization': `Bearer ${_acctToken}`}
+                });
+                const userData = await userDataRaw.json();
+                if (userData.data && userData.data.limitedEditionPfps) {
+                    // Update the PFP picker to show the new limited edition PFP
+                    updatePfpPickerWithLimited(userData.data.limitedEditionPfps);
+                }
+
+                const overlay = document.getElementById('weeklyPfpOverlay');
+                if (overlay) overlay.remove();
+                enableApplication();
+                alert('🎉 Profile picture claimed! You can now use it in the profile picture selector.');
+            } else {
+                alert('Error: ' + (data.error || 'Failed to claim profile picture'));
+            }
+        } catch (e) {
+            console.error('Error claiming PFP:', e);
+            alert('An error occurred. Please try again.');
+        }
+    }
+
+    async function checkWeeklyPfpPromotion() {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/weekly-pfp-info`, {
+                headers: {'Authorization': `Bearer ${_acctToken}`}
+            });
+            if (!r.ok) return;
+            const data = await r.json();
+            if (data.isActive && !data.hasClaimed) {
+                showWeeklyPfpPopup();
+            }
+        } catch (e) {
+            console.warn('Error checking weekly PFP promotion:', e);
+        }
+    }
+
+    function updatePfpPickerWithLimited(limitedPfps) {
+        // This will be called when user claims the weekly PFP
+        // Just reload the PFP picker to show the new PFP as available
+        if (document.getElementById('pfpPickerGrid')) {
+            refreshPfpPicker();
+        }
+    }
+
     function disableApplication() {
         // Disable all interactive elements EXCEPT popup elements
         const buttons = document.querySelectorAll('button');
@@ -6198,8 +6334,8 @@
 
         [buttons, inputs, links].forEach(nodeList => {
             nodeList.forEach(el => {
-                // Skip elements inside ban, warning, or deleted account popups
-                if (el.closest('#banPopupOverlay') || el.closest('#warningPopupOverlay') || el.closest('#deletedPopupOverlay')) {
+                // Skip elements inside ban, warning, deleted account, or weekly PFP popups
+                if (el.closest('#banPopupOverlay') || el.closest('#warningPopupOverlay') || el.closest('#deletedPopupOverlay') || el.closest('#weeklyPfpOverlay')) {
                     return;
                 }
                 el.disabled = true;
