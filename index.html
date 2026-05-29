@@ -76,11 +76,11 @@
             --shadow: 0 4px 24px rgba(0,0,0,0.08); --logo: light;
         }
         [data-theme="system"] {
-            --bg: #1a1d2e; --bg-gradient: linear-gradient(160deg,#1a1d2e 0%,#141620 100%);
-            --header-gradient: linear-gradient(90deg,#1e2235 0%,#252840 100%);
-            --surface: #22263a; --surface2: #2a2f47; --text: #e8eaf6;
-            --text-muted: rgba(232,234,246,0.5); --border: #363a55;
-            --shadow: 0 4px 24px rgba(0,0,0,0.4); --logo: dark;
+            --bg: #0d0e12; --bg-gradient: linear-gradient(160deg,#0d0e12 0%,#13151b 100%);
+            --header-gradient: linear-gradient(90deg,#13151b 0%,#1a1c24 100%);
+            --surface: #1e2028; --surface2: #252830; --text: #f5f6fa;
+            --text-muted: rgba(245,246,250,0.5); --border: #35394a;
+            --shadow: 0 4px 24px rgba(0,0,0,0.5); --logo: dark;
         }
 
 
@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.3.0 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.3.1 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3361,6 +3361,9 @@
     let _acctSaving   = false;
     let _acctInitDone = false;  // prevents auto-save during page load
     let _acctLimitedEditionPfps = [];  // limited edition PFPs user owns
+    let _acctWarningCount = 0;  // track warnings for real-time updates
+    let _acctBanned = false;  // track ban status for real-time updates
+    let _statusCheckInterval = null;  // interval for polling ban/warning status
 
     function updateAccountBtn() {
         // Sidebar account display is handled entirely by updateSidebarAccount
@@ -3466,11 +3469,14 @@
             _acctToken = data.token; _acctUsername = data.username;
             localStorage.setItem('ph_token', _acctToken);
             localStorage.setItem('ph_username', _acctUsername);
+            _acctWarningCount = 0;  // Reset warning count
+            _acctBanned = false;  // Reset ban status
             updateAccountBtn();
             await acctLoadData();
             await checkBlogAdmin();
             updateAccountBtn();
             refreshAccountModal();
+            startStatusPolling();  // Start polling for ban/warning updates
         } catch(e) {
             console.error('[Login] Error:', e);
             err.textContent = 'Network error. Try again.';
@@ -3552,6 +3558,45 @@
         } catch(e) { console.warn('acctLoadData', e); }
     }
 
+    async function checkAccountStatus() {
+        if (!_acctToken || _acctBanned) return;  // Don't poll if banned
+        try {
+            const r = await fetch(`${API_BASE}/auth/status`, {
+                headers: {'Authorization': `Bearer ${_acctToken}`}
+            });
+            if (!r.ok) return;
+            const data = await r.json();
+
+            // Check if user was banned
+            if (data.isBanned && !_acctBanned) {
+                _acctBanned = true;
+                showBanPopup(data.banReason);
+                stopStatusPolling();
+                return;
+            }
+
+            // Check if new warnings were issued
+            if (data.warningCount > _acctWarningCount) {
+                _acctWarningCount = data.warningCount;
+                await showWarningPopup(data.warningCount, data.latestWarningReason);
+            }
+        } catch (e) {
+            console.warn('Error checking account status:', e);
+        }
+    }
+
+    function startStatusPolling() {
+        if (_statusCheckInterval) return;  // Already polling
+        _statusCheckInterval = setInterval(checkAccountStatus, 5000);  // Poll every 5 seconds
+    }
+
+    function stopStatusPolling() {
+        if (_statusCheckInterval) {
+            clearInterval(_statusCheckInterval);
+            _statusCheckInterval = null;
+        }
+    }
+
     async function acctSaveData() {
         if (!_acctToken || _acctSaving) return;
         _acctSaving = true;
@@ -3589,6 +3634,9 @@
 
     function acctSignOut() {
         _acctToken = null; _acctUsername = null;
+        _acctWarningCount = 0;
+        _acctBanned = false;
+        stopStatusPolling();
         localStorage.removeItem('ph_token');
         localStorage.removeItem('ph_username');
         updateAccountBtn();
@@ -5901,6 +5949,7 @@
             }).catch(err => console.error('Account check failed:', err));
         }
         if (_acctToken) friendsStartPolling();
+        if (_acctToken) startStatusPolling();  // Start polling for ban/warning updates
         if (_acctToken) { msgRefreshBadge(); setInterval(() => { if (!document.hidden) msgRefreshBadge(); }, 300000); }
         blogInit();
         loadBanner();
