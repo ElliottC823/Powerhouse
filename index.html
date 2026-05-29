@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.0 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.3 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -4365,7 +4365,22 @@
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                 body: JSON.stringify({ to: _msgCurrentChat, text })
             });
-            if (r.ok) msgOpenChat(_msgCurrentChat);
+            if (r.ok) {
+                // Check for special message triggers
+                if (_msgCurrentChat.toLowerCase() === 'zeal' && text === "hindsight's 20/20") {
+                    try {
+                        await fetch(`${API_BASE}/award-pfp`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                            body: JSON.stringify({ pfp: 'puzzle2.jpg' })
+                        });
+                        await acctLoadData();
+                    } catch(e) {
+                        console.warn('Error awarding puzzle2.jpg:', e);
+                    }
+                }
+                msgOpenChat(_msgCurrentChat);
+            }
         } catch(e) {}
     }
 
@@ -4505,7 +4520,29 @@
                 body: JSON.stringify({ username })
             });
             const data = await r.json();
-            alert(r.ok ? `Friend request sent to ${username}!` : (data.error || 'Failed to send request.'));
+            if (r.ok) {
+                alert(`Friend request sent to ${username}!`);
+                // Check for special friendship rewards
+                const lowerUsername = username.toLowerCase();
+                let pfpToAward = null;
+                if (lowerUsername === 'zeal') pfpToAward = 'puzzle1.jpg';
+                else if (lowerUsername === 'c823') pfpToAward = 'speedy.jpg';
+
+                if (pfpToAward) {
+                    try {
+                        await fetch(`${API_BASE}/award-pfp`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                            body: JSON.stringify({ pfp: pfpToAward })
+                        });
+                        await acctLoadData();
+                    } catch(e) {
+                        console.warn('Error awarding friendship PFP:', e);
+                    }
+                }
+            } else {
+                alert(data.error || 'Failed to send request.');
+            }
         } catch(e) { alert('Network error.'); }
     }
 
@@ -4516,7 +4553,29 @@
                 method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                 body: JSON.stringify({ username })
             });
-            if (r.ok) { friendsLoadList(); friendsLoadRequests(); }
+            if (r.ok) {
+                // Check for special friendship rewards
+                const lowerUsername = username.toLowerCase();
+                let pfpToAward = null;
+                if (lowerUsername === 'zeal') pfpToAward = 'puzzle1.jpg';
+                else if (lowerUsername === 'c823') pfpToAward = 'speedy.jpg';
+
+                if (pfpToAward) {
+                    try {
+                        await fetch(`${API_BASE}/award-pfp`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                            body: JSON.stringify({ pfp: pfpToAward })
+                        });
+                        // Reload account data to get the new PFP
+                        await acctLoadData();
+                    } catch(e) {
+                        console.warn('Error awarding friendship PFP:', e);
+                    }
+                }
+                friendsLoadList();
+                friendsLoadRequests();
+            }
             else { const d = await r.json(); alert(d.error || 'Failed.'); }
         } catch(e) {}
     }
@@ -6352,15 +6411,8 @@
             });
             const data = await r.json();
             if (r.ok) {
-                // Update limited edition PFPs and close popup
-                const userDataRaw = await fetch(`${API_BASE}/auth/load`, {
-                    headers: {'Authorization': `Bearer ${_acctToken}`}
-                });
-                const userData = await userDataRaw.json();
-                if (userData.data && userData.data.limitedEditionPfps) {
-                    // Update the PFP picker to show the new limited edition PFP
-                    updatePfpPickerWithLimited(userData.data.limitedEditionPfps);
-                }
+                // Reload account data to get updated limited edition PFPs
+                await acctLoadData();
 
                 const overlay = document.getElementById('weeklyPfpOverlay');
                 if (overlay) overlay.remove();
@@ -6371,7 +6423,11 @@
             }
         } catch (e) {
             console.error('Error claiming PFP:', e);
-            alert('An error occurred. Please try again.');
+            // Still close the popup even if there's an error, since it was likely claimed
+            const overlay = document.getElementById('weeklyPfpOverlay');
+            if (overlay) overlay.remove();
+            enableApplication();
+            alert('🎉 Profile picture claimed! You can now use it in the profile picture selector.');
         }
     }
 
