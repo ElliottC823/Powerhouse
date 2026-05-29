@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.3 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.4 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -5153,7 +5153,7 @@
                         <div class="mod-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
                     </div>
                     <div class="mod-actions">
-                        <button class="mod-btn" onclick="modWarnPrompt('${escHtmlAcct(u.username)}')">Warn</button>
+                        ${['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? `<button class="mod-btn" disabled title="Protected account" style="opacity: 0.5; cursor: not-allowed;">Warn</button>` : `<button class="mod-btn" onclick="modWarnPrompt('${escHtmlAcct(u.username)}')">Warn</button>`}
                         <button class="mod-btn danger" onclick="modBanPrompt('${escHtmlAcct(u.username)}')" ${u.rank === 'Founder' ? 'disabled title="Founder-ranked users cannot be banned"' : ''} style="${u.rank === 'Founder' ? 'opacity: 0.5; cursor: not-allowed;' : ''}">Ban</button>
                     </div>
                 </div>`).join('');
