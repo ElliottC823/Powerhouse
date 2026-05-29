@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.3.1 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.0 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -5175,6 +5175,18 @@
             </div>
             <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">This user will not be able to log in until unbanned. A reason is required.</div>
             <textarea class="warn-reason-input" id="banReason_${escHtmlAcct(username)}" rows="2" placeholder="Reason for ban…"></textarea>
+            <div style="margin-top:8px">
+                <label style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px">Ban Duration</label>
+                <select id="banDuration_${escHtmlAcct(username)}" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surface2);color:var(--text);font-size:.85rem">
+                    <option value="1day">1 Day</option>
+                    <option value="2days">2 Days</option>
+                    <option value="4days">4 Days</option>
+                    <option value="8days">8 Days</option>
+                    <option value="16days">16 Days</option>
+                    <option value="1month">1 Month</option>
+                    <option value="permanent" selected>Permanent</option>
+                </select>
+            </div>
             <div style="display:flex;gap:6px;margin-top:8px">
                 <button class="mod-btn danger" onclick="modIssueBan('${escHtmlAcct(username)}')">Confirm Ban</button>
                 <button class="mod-btn" onclick="document.getElementById('banForm_${escHtmlAcct(username)}').remove()">Cancel</button>
@@ -5185,7 +5197,9 @@
 
     async function modIssueBan(username) {
         const reasonEl = document.getElementById('banReason_' + username);
+        const durationEl = document.getElementById('banDuration_' + username);
         const reason = (reasonEl?.value || '').trim();
+        const duration = durationEl?.value || 'permanent';
         const form   = document.getElementById('banForm_' + username);
         if (!reason) { if (reasonEl) { reasonEl.style.borderColor='#c42b1c'; reasonEl.focus(); } return; }
         const btn = form?.querySelector('.mod-btn.danger');
@@ -5194,7 +5208,7 @@
             const r = await fetch(`${API_BASE}/mod/ban`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
-                body: JSON.stringify({ username, reason })
+                body: JSON.stringify({ username, reason, duration })
             });
             const d = await r.json();
             if (r.ok) {
@@ -5227,17 +5241,21 @@
             const bans = r.ok ? ((await r.json()).bans || []) : [];
             if (ct) ct.textContent = `${bans.length} ban${bans.length !== 1 ? 's' : ''}`;
             if (bans.length === 0) { el.innerHTML = '<div class="mod-empty">No active bans.</div>'; return; }
-            el.innerHTML = bans.map(b => `
+            el.innerHTML = bans.map(b => {
+                const durationStr = b.duration === 'permanent' ? 'Permanent' : (b.expiresAt ? `Expires ${new Date(b.expiresAt).toLocaleDateString()} at ${new Date(b.expiresAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}` : 'Permanent');
+                return `
                 <div class="mod-user-row">
                     <div class="mod-user-info">
                         <div class="mod-user-name" style="margin-bottom:3px">${escHtmlAcct(b.username)}</div>
                         <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${escHtmlAcct(censorText(b.reason))}</div>
+                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Duration:</span> ${durationStr}</div>
                         <div class="mod-user-meta">${new Date(b.bannedAt).toLocaleDateString()} · by ${escHtmlAcct(b.by)}</div>
                     </div>
                     <div class="mod-actions">
                         <button class="mod-btn green" onclick="modUnban('${escHtmlAcct(b.username)}')">Unban</button>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         } catch(e) { el.innerHTML = '<div class="mod-empty">Failed.</div>'; }
     }
 
@@ -5729,6 +5747,7 @@
         document.documentElement.style.setProperty('--font', f.stack);
         localStorage.setItem('power_font', id);
         renderFontList();
+        if (_acctToken) acctSaveData();  // Sync to server if logged in
     }
 
     // ── THEME SYSTEM ──────────────────────────────────────────────────────
@@ -5795,6 +5814,7 @@
 
         localStorage.setItem('power_theme', theme);
         updateAboutLogo();
+        if (_acctToken) acctSaveData();  // Sync to server if logged in
     }
 
     function updateUI() {
@@ -5806,6 +5826,7 @@
         localStorage.setItem('power_corners', isRounded ? 'rounded' : 'sharp');
         localStorage.setItem('power_accent',  accent);
         renderGames();
+        if (_acctToken) acctSaveData();  // Sync to server if logged in
     }
 
     function resetAccent() {
@@ -6127,7 +6148,7 @@
         disableApplication();
     }
 
-    function showWarningPopup(warningCount) {
+    function showWarningPopup(warningCount, reason) {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'warningPopupOverlay';
@@ -6164,6 +6185,7 @@
 
             const warningText = warningCount === 1 ? 'You have received 1 warning' : `You have received ${warningCount} warnings`;
             const banWarning = warningCount >= 2 ? '<div style="background: color-mix(in srgb, #ff9800 12%, transparent); border: 1px solid #ff9800; border-radius: var(--radius-sm); padding: 12px; margin: 16px 0; display: flex; align-items: center; gap: 10px;"><svg viewBox="0 0 24 24" fill="none" stroke="#ff9800" stroke-width="2" style="width: 20px; height: 20px; flex-shrink: 0;"><path d="M12 2L2 20h20z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="1" fill="#ff9800"/></svg><span style="font-weight: 600; color: #ff9800;">One more warning and your account will be banned!</span></div>' : '';
+            const reasonHtml = reason ? `<div style="background: color-mix(in srgb, var(--surface2) 70%, transparent); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin: 16px 0; text-align: left;"><div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">Reason</div><div style="font-size: 14px; color: var(--text);">${escapeHtml(reason)}</div></div>` : '';
 
             popup.innerHTML = `
                 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
@@ -6175,6 +6197,7 @@
                 </div>
                 <h2 style="margin: 0 0 16px 0; color: #ff9800; font-size: 24px; font-weight: 700;">Account Warning</h2>
                 <p style="font-size: 15px; margin: 0 0 12px 0; color: var(--text);">${warningText} on your account.</p>
+                ${reasonHtml}
                 ${banWarning}
                 <p style="color: var(--text-muted); margin: 16px 0; font-size: 14px; line-height: 1.5;">Please review the Community Guidelines and refrain from the behavior that resulted in this warning.</p>
 
