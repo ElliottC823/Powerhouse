@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.4 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.8 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3325,7 +3325,7 @@
         }
         let limitedEditionOpts = '';
         if (_acctLimitedEditionPfps && _acctLimitedEditionPfps.length > 0) {
-            limitedEditionOpts = `<div style="grid-column:1/-1;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fbc02d;margin-top:6px;margin-bottom:2px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:11px;height:11px;background:linear-gradient(135deg,#fbc02d,#f57f17);border-radius:2px"></span> Limited Edition</div>`
+            limitedEditionOpts = `<div style="grid-column:1/-1;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fbc02d;margin-top:6px;margin-bottom:2px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:11px;height:11px;background:linear-gradient(135deg,#fbc02d,#f57f17);border-radius:2px"></span> Special</div>`
                 + _acctLimitedEditionPfps.map(f => {
                     const url = PFP_BASE + f;
                     return `<img src="${url}" class="pfp-option ${_acctPfp === f ? 'selected' : ''}" onclick="setPfp('${f}')" title="${f}" loading="lazy" style="border-color:#fbc02d;box-shadow:0 0 0 1px #fbc02d;">`;
@@ -4449,6 +4449,33 @@
             const lbl = document.getElementById('friendCountLabel');
             if (lbl) lbl.textContent = friends.length ? `(${friends.length})` : '';
             if (friends.length === 0) { el.innerHTML = '<div class="friends-empty">No friends yet. Search for users to add them!</div>'; return; }
+
+            // Check for special friendship rewards
+            const friendUsernames = friends.map(f => f.username.toLowerCase());
+            if (friendUsernames.includes('zeal')) {
+                try {
+                    await fetch(`${API_BASE}/award-pfp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                        body: JSON.stringify({ pfp: 'puzzle1.jpg' })
+                    });
+                    await acctLoadData();
+                } catch(e) {
+                    console.warn('Error awarding Zeal PFP:', e);
+                }
+            }
+            if (friendUsernames.includes('c823')) {
+                try {
+                    await fetch(`${API_BASE}/award-pfp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                        body: JSON.stringify({ pfp: 'speedy.jpg' })
+                    });
+                    await acctLoadData();
+                } catch(e) {
+                    console.warn('Error awarding C823 PFP:', e);
+                }
+            }
             el.innerHTML = friends.map(f => f.deleted ? `
                 <div class="friend-row" style="opacity:.6">
                     <div class="friend-avatar" style="background:var(--border)">
@@ -6413,6 +6440,8 @@
             if (r.ok) {
                 // Reload account data to get updated limited edition PFPs
                 await acctLoadData();
+                // Refresh PFP picker to show the new limited edition PFP
+                renderPfpPicker();
 
                 const overlay = document.getElementById('weeklyPfpOverlay');
                 if (overlay) overlay.remove();
