@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.4.8 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.0 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3364,6 +3364,7 @@
     let _acctWarningCount = 0;  // track warnings for real-time updates
     let _acctBanned = false;  // track ban status for real-time updates
     let _statusCheckInterval = null;  // interval for polling ban/warning status
+    let _weeklyPfpPromptShown = false;  // prevent showing popup multiple times in session
 
     function updateAccountBtn() {
         // Sidebar account display is handled entirely by updateSidebarAccount
@@ -3636,6 +3637,7 @@
         _acctToken = null; _acctUsername = null;
         _acctWarningCount = 0;
         _acctBanned = false;
+        _weeklyPfpPromptShown = false;
         stopStatusPolling();
         localStorage.removeItem('ph_token');
         localStorage.removeItem('ph_username');
@@ -4369,12 +4371,16 @@
                 // Check for special message triggers
                 if (_msgCurrentChat.toLowerCase() === 'zeal' && text === "hindsight's 20/20") {
                     try {
-                        await fetch(`${API_BASE}/award-pfp`, {
+                        const awardRes = await fetch(`${API_BASE}/award-pfp`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                             body: JSON.stringify({ pfp: 'puzzle2.jpg' })
                         });
-                        await acctLoadData();
+                        if (awardRes.ok) {
+                            await acctLoadData();
+                            renderPfpPicker();
+                            alert(`🎉 You've been awarded a special profile picture! Check your Special collection.`);
+                        }
                     } catch(e) {
                         console.warn('Error awarding puzzle2.jpg:', e);
                     }
@@ -4557,12 +4563,16 @@
 
                 if (pfpToAward) {
                     try {
-                        await fetch(`${API_BASE}/award-pfp`, {
+                        const awardRes = await fetch(`${API_BASE}/award-pfp`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                             body: JSON.stringify({ pfp: pfpToAward })
                         });
-                        await acctLoadData();
+                        if (awardRes.ok) {
+                            await acctLoadData();
+                            renderPfpPicker();
+                            alert(`🎉 You've been awarded a special profile picture! Check your Special collection.`);
+                        }
                     } catch(e) {
                         console.warn('Error awarding friendship PFP:', e);
                     }
@@ -4589,13 +4599,16 @@
 
                 if (pfpToAward) {
                     try {
-                        await fetch(`${API_BASE}/award-pfp`, {
+                        const awardRes = await fetch(`${API_BASE}/award-pfp`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                             body: JSON.stringify({ pfp: pfpToAward })
                         });
-                        // Reload account data to get the new PFP
-                        await acctLoadData();
+                        if (awardRes.ok) {
+                            await acctLoadData();
+                            renderPfpPicker();
+                            alert(`🎉 You've been awarded a special profile picture! Check your Special collection.`);
+                        }
                     } catch(e) {
                         console.warn('Error awarding friendship PFP:', e);
                     }
@@ -6461,7 +6474,7 @@
     }
 
     async function checkWeeklyPfpPromotion() {
-        if (!_acctToken) return;
+        if (!_acctToken || _weeklyPfpPromptShown) return;  // Don't show popup multiple times
         try {
             const r = await fetch(`${API_BASE}/weekly-pfp-info`, {
                 headers: {'Authorization': `Bearer ${_acctToken}`}
@@ -6469,6 +6482,7 @@
             if (!r.ok) return;
             const data = await r.json();
             if (data.isActive && !data.hasClaimed) {
+                _weeklyPfpPromptShown = true;  // Mark that we've shown the popup
                 showWeeklyPfpPopup();
             }
         } catch (e) {
