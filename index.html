@@ -7,9 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
-    <link rel="icon" id="faviconEl" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png">
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-light.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" id="faviconEl" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png?timestamp=1">
+    <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png?timestamp=1">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png?timestamp=1" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-light.png?timestamp=1" media="(prefers-color-scheme: light)">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/powerhouse-icon-dark.png?timestamp=1">
     <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         /* ═══════════════════════════════════════════════════════
@@ -2464,7 +2466,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.2 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.4 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -6488,14 +6490,22 @@
     async function checkWeeklyPfpPromotion() {
         if (!_acctToken || _weeklyPfpPromptShown) return;  // Don't show popup multiple times
         // Also don't show if they already own the PFP
-        if (_acctLimitedEditionPfps && _acctLimitedEditionPfps.includes('classof26.jpg')) return;
+        if (_acctLimitedEditionPfps && _acctLimitedEditionPfps.includes('classof26.jpg')) {
+            _weeklyPfpPromptShown = true;  // Mark as shown so we don't check again this session
+            return;
+        }
         try {
             const r = await fetch(`${API_BASE}/weekly-pfp-info`, {
                 headers: {'Authorization': `Bearer ${_acctToken}`}
             });
             if (!r.ok) return;
             const data = await r.json();
-            if (data.isActive && !data.hasClaimed) {
+            // Don't show if they've already claimed (check both backend and local state)
+            if (data.hasClaimed || (data.limitedEditionPfps && data.limitedEditionPfps.includes('classof26.jpg'))) {
+                _weeklyPfpPromptShown = true;  // Mark as shown
+                return;
+            }
+            if (data.isActive) {
                 _weeklyPfpPromptShown = true;  // Mark that we've shown the popup
                 showWeeklyPfpPopup();
             }
