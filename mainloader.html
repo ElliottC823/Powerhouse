@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png?timestamp=1">
+    <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png?timestamp=1">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-icon.png?timestamp=1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent:   #0066FF;
-            --bg:       #0d0e12;
-            --surface:  #1e2028;
-            --surface2: #252830;
-            --text:     #f5f6fa;
-            --text-muted: rgba(245,246,250,0.45);
-            --border:   #35394a;
-            --radius:   16px;
-            --radius-sm: 10px;
+            --accent:      #0078D4;
+            --bg:          #1a1d2e;
+            --bg-gradient: linear-gradient(160deg, #1a1d2e 0%, #141620 100%);
+            --surface:     #22263a;
+            --surface2:    #2a2f47;
+            --text:        #e8eaf6;
+            --text-muted:  rgba(232,234,246,0.5);
+            --border:      #363a55;
+            --radius:      8px;
+            --radius-sm:   6px;
+            --sidebar-width: 220px;
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,162 +32,298 @@
             width: 100%; height: 100%;
             overflow: hidden;
             background: var(--bg);
-            background-image: linear-gradient(160deg, #0d0e12 0%, #13151b 100%);
+            background-image: var(--bg-gradient);
             font-family: 'Outfit', sans-serif;
             color: var(--text);
         }
 
-        /* ── subtle grid texture matching index.html's dark bg ── */
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background-image:
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.08;
-            pointer-events: none;
+        /* ── Sidebar skeleton ─────────────────────────────── */
+        .skeleton-sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e2235 0%, #1a1d2e 100%);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            z-index: 10;
         }
 
-        /* ── header bar — identical to index.html ── */
-        header {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 60px;
-            background: linear-gradient(90deg, #13151b 0%, #1a1c24 100%);
+        .skeleton-brand {
+            padding: 28px 20px 22px;
             border-bottom: 1px solid var(--border);
             display: flex;
+            justify-content: center;
             align-items: center;
-            padding: 0 20px;
-            z-index: 10;
-            /* Respect notch */
-            padding-top: env(safe-area-inset-top, 0px);
         }
 
         .logo-img {
-            height: 28px;
+            height: 32px;
             object-fit: contain;
             opacity: 0;
-            animation: fadeUp 0.5s ease 0.1s forwards;
+            animation: fadeIn 0.5s ease 0.15s forwards;
         }
 
-        /* ── centre stage ── */
-        main {
-            position: fixed; inset: 0;
+        .skeleton-nav {
+            padding: 12px 10px;
             display: flex;
             flex-direction: column;
+            gap: 4px;
+        }
+
+        .skeleton-nav-item {
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--surface2);
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .skeleton-nav-item:nth-child(1) { animation-delay: 0.25s; width: 65%; }
+        .skeleton-nav-item:nth-child(2) { animation-delay: 0.32s; width: 75%; }
+        .skeleton-nav-item:nth-child(3) { animation-delay: 0.39s; width: 55%; }
+        .skeleton-nav-item:nth-child(4) { animation-delay: 0.46s; width: 70%; }
+
+        .skeleton-spacer { flex: 1; }
+
+        .skeleton-acct {
+            margin: 12px 10px;
+            height: 46px;
+            border-radius: var(--radius-sm);
+            background: var(--surface2);
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.55s forwards;
+        }
+
+        /* ── Main content area ────────────────────────────── */
+        .skeleton-main {
+            margin-left: var(--sidebar-width);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .skeleton-topbar {
+            height: 50px;
+            background: rgba(26,29,46,0.85);
+            border-bottom: 1px solid var(--border);
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 32px;
-            padding-top: 60px; /* clear header */
+            padding: 0 24px;
+            flex-shrink: 0;
         }
 
-        /* ── card container ── */
-        .loader-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 36px 44px;
+        .skeleton-search {
+            width: min(600px, 70%);
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--surface2);
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.3s forwards;
+        }
+
+        /* Content body */
+        .skeleton-content {
+            flex: 1;
+            padding: 20px 24px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 28px;
-            box-shadow: 0 4px 40px rgba(0,0,0,0.5);
-            opacity: 0;
-            transform: translateY(12px);
-            animation: fadeUp 0.45s ease 0.2s forwards;
-            min-width: 280px;
+            gap: 20px;
         }
 
-        /* ── spinner — same border style as game proxy page ── */
-        .spinner-wrap {
-            position: relative;
-            width: 56px; height: 56px;
+        /* Shelf row */
+        .skeleton-shelf-label {
+            height: 12px;
+            width: 120px;
+            border-radius: 4px;
+            background: var(--surface2);
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.4s forwards;
+        }
+
+        .skeleton-shelf {
+            display: flex;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        .skeleton-card {
+            flex-shrink: 0;
+            width: 130px;
+            border-radius: var(--radius);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .skeleton-card .card-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--surface2);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        .skeleton-card .card-body {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .skeleton-card .card-line {
+            height: 9px;
+            border-radius: 3px;
+            background: var(--surface2);
+        }
+        .skeleton-card:nth-child(1) { animation-delay: 0.45s; }
+        .skeleton-card:nth-child(2) { animation-delay: 0.52s; }
+        .skeleton-card:nth-child(3) { animation-delay: 0.59s; }
+        .skeleton-card:nth-child(4) { animation-delay: 0.66s; }
+        .skeleton-card:nth-child(5) { animation-delay: 0.73s; }
+        .skeleton-card:nth-child(6) { animation-delay: 0.80s; }
+
+        /* Filter bar */
+        .skeleton-filter {
+            height: 38px;
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.5s forwards;
+            flex-shrink: 0;
+        }
+
+        .skeleton-filter-pill {
+            height: 22px;
+            border-radius: 99px;
+            background: var(--surface2);
+            flex-shrink: 0;
+        }
+        .skeleton-filter-pill:nth-child(1) { width: 36px; }
+        .skeleton-filter-pill:nth-child(2) { width: 80px; }
+        .skeleton-filter-pill:nth-child(3) { width: 60px; }
+        .skeleton-filter-pill:nth-child(4) { width: 70px; }
+        .skeleton-filter-pill:nth-child(5) { width: 55px; }
+
+        /* Game grid */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .skeleton-grid .skeleton-card { width: 100%; }
+
+        /* ── Loader overlay ───────────────────────────────── */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(20, 22, 32, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .loader-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            opacity: 0;
+            animation: slideUp 0.35s ease 0.1s forwards;
         }
 
         .spinner {
-            width: 56px; height: 56px;
-            border: 3px solid var(--border);
+            width: 18px; height: 18px;
+            border: 2px solid var(--border);
             border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.75s linear infinite;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
         }
 
-        /* accent glow behind spinner */
-        .spinner-wrap::after {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,102,255,0.18) 0%, transparent 70%);
-            animation: pulse 2s ease-in-out infinite;
+        .loader-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
         }
 
-        /* ── text block ── */
         .loader-label {
-            font-size: 0.7rem;
-            font-weight: 900;
-            letter-spacing: 0.18em;
+            font-size: 0.62rem;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.12em;
             color: var(--text-muted);
         }
 
         .loader-status {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.82rem;
+            font-weight: 600;
             color: var(--text);
-            text-align: center;
-            min-height: 1.4em;
-            transition: opacity 0.2s;
+            min-width: 140px;
         }
 
-        /* ── progress bar ── */
-        .progress-track {
-            width: 200px;
-            height: 3px;
+        /* Progress dot row */
+        .loader-dots {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .loader-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
             background: var(--border);
-            border-radius: 99px;
-            overflow: hidden;
+            transition: background 0.3s, transform 0.3s;
         }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
+        .loader-dot.active {
             background: var(--accent);
-            border-radius: 99px;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 8px rgba(0,102,255,0.6);
+            transform: scale(1.3);
+            box-shadow: 0 0 6px rgba(0,120,212,0.6);
         }
 
-        /* ── error state ── */
-        .error-card {
+        /* ── Error state ──────────────────────────────────── */
+        .error-pill {
+            background: var(--surface);
+            border: 1px solid rgba(255,80,80,0.35);
+            border-radius: var(--radius);
+            padding: 24px 28px;
             display: none;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             text-align: center;
+            max-width: 300px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
         .error-icon {
-            width: 44px; height: 44px;
+            width: 40px; height: 40px;
             background: rgba(255,59,59,0.12);
             border: 1px solid rgba(255,59,59,0.3);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem; color: #ff4444;
         }
 
-        .error-title {
-            font-size: 1rem;
-            font-weight: 900;
-            color: #ff4444;
-        }
-
-        .error-sub {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            max-width: 220px;
-            line-height: 1.6;
-        }
+        .error-title { font-size: .95rem; font-weight: 800; color: #ff5555; }
+        .error-sub   { font-size: .78rem; color: var(--text-muted); line-height: 1.6; }
 
         .retry-btn {
             margin-top: 4px;
@@ -191,117 +331,205 @@
             color: #fff;
             border: none;
             border-radius: var(--radius-sm);
-            padding: 10px 24px;
+            padding: 9px 22px;
             font-family: inherit;
-            font-weight: 900;
-            font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 0.82rem;
             cursor: pointer;
             transition: opacity 0.15s;
         }
-        .retry-btn:hover  { opacity: 0.85; }
-        .retry-btn:active { opacity: 0.65; }
+        .retry-btn:hover { opacity: 0.85; }
 
-        /* ── animations ── */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50%       { opacity: 1;   transform: scale(1.08); }
+        /* ── Mobile: hide sidebar skeleton ───────────────── */
+        @media (max-width: 680px) {
+            .skeleton-sidebar { display: none; }
+            .skeleton-main    { margin-left: 0; }
         }
 
-        /* ── hidden content container ── */
-        #content { display: none; }
+        /* ── Shimmer animation on skeleton elements ──────── */
+        @keyframes shimmer {
+            0%   { background-position: -400px 0; }
+            100% { background-position:  400px 0; }
+        }
+
+        .skeleton-card .card-thumb,
+        .skeleton-card .card-line,
+        .skeleton-nav-item,
+        .skeleton-acct,
+        .skeleton-search,
+        .skeleton-shelf-label,
+        .skeleton-filter-pill {
+            background: linear-gradient(90deg,
+                var(--surface2) 25%,
+                color-mix(in srgb, var(--surface2) 70%, var(--border) 30%) 50%,
+                var(--surface2) 75%
+            );
+            background-size: 800px 100%;
+            animation: shimmer 1.6s ease-in-out infinite, fadeIn 0.4s ease forwards;
+        }
+
+        /* Override shimmer for items with custom delays */
+        .skeleton-nav-item:nth-child(1) { animation: shimmer 1.6s ease-in-out infinite, fadeIn 0.4s ease 0.25s forwards; }
+        .skeleton-nav-item:nth-child(2) { animation: shimmer 1.6s ease-in-out infinite, fadeIn 0.4s ease 0.32s forwards; }
+        .skeleton-nav-item:nth-child(3) { animation: shimmer 1.6s ease-in-out infinite, fadeIn 0.4s ease 0.39s forwards; }
+        .skeleton-nav-item:nth-child(4) { animation: shimmer 1.6s ease-in-out infinite, fadeIn 0.4s ease 0.46s forwards; }
+
+        @keyframes fadeIn  { to { opacity: 1; } }
+        @keyframes spin    { to { transform: rotate(360deg); } }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <img class="logo-img"
-             id="headerLogo"
-             src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.png"
-             alt="Powerhouse">
-    </header>
-
-    <main>
-        <div class="loader-card" id="loaderCard">
-
-            <!-- loading state -->
-            <div id="loadingState" style="display:flex;flex-direction:column;align-items:center;gap:28px;">
-                <div class="spinner-wrap">
-                    <div class="spinner"></div>
-                </div>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-                    <div class="loader-label">Powerhouse</div>
-                    <div class="loader-status" id="loaderStatus">Connecting…</div>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
-
-            <!-- error state -->
-            <div class="error-card" id="errorState">
-                <div class="error-icon">✕</div>
-                <div class="error-title">Load Failed</div>
-                <div class="error-sub" id="errorSub">Could not reach GitHub. Check your connection and try again.</div>
-                <button class="retry-btn" onclick="retry()">Try Again</button>
-            </div>
-
+    <!-- ── Sidebar skeleton ── -->
+    <div class="skeleton-sidebar">
+        <div class="skeleton-brand">
+            <img class="logo-img"
+                 id="headerLogo"
+                 src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg"
+                 alt="Powerhouse">
         </div>
-    </main>
+        <div class="skeleton-nav">
+            <div class="skeleton-nav-item"></div>
+            <div class="skeleton-nav-item"></div>
+            <div class="skeleton-nav-item"></div>
+            <div class="skeleton-nav-item"></div>
+        </div>
+        <div class="skeleton-spacer"></div>
+        <div class="skeleton-acct"></div>
+    </div>
 
-    <div id="content"></div>
+    <!-- ── Main content skeleton ── -->
+    <div class="skeleton-main">
+        <!-- Topbar -->
+        <div class="skeleton-topbar">
+            <div class="skeleton-search"></div>
+        </div>
+        <!-- Content -->
+        <div class="skeleton-content">
+            <!-- Shelf -->
+            <div>
+                <div class="skeleton-shelf-label"></div>
+                <div class="skeleton-shelf">
+                    <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:55%"></div><div class="card-line" style="width:75%"></div></div></div>
+                    <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:45%"></div><div class="card-line" style="width:80%"></div></div></div>
+                    <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:60%"></div><div class="card-line" style="width:65%"></div></div></div>
+                    <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:50%"></div><div class="card-line" style="width:70%"></div></div></div>
+                    <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:65%"></div><div class="card-line" style="width:55%"></div></div></div>
+                    <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:40%"></div><div class="card-line" style="width:75%"></div></div></div>
+                </div>
+            </div>
+            <!-- Filter bar -->
+            <div class="skeleton-filter">
+                <div class="skeleton-filter-pill"></div>
+                <div class="skeleton-filter-pill"></div>
+                <div class="skeleton-filter-pill"></div>
+                <div class="skeleton-filter-pill"></div>
+                <div class="skeleton-filter-pill"></div>
+            </div>
+            <!-- Game grid -->
+            <div class="skeleton-grid">
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:55%"></div><div class="card-line" style="width:75%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:45%"></div><div class="card-line" style="width:80%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:60%"></div><div class="card-line" style="width:65%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:50%"></div><div class="card-line" style="width:70%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:65%"></div><div class="card-line" style="width:55%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:40%"></div><div class="card-line" style="width:75%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:55%"></div><div class="card-line" style="width:60%"></div></div></div>
+                <div class="skeleton-card"><div class="card-thumb"></div><div class="card-body"><div class="card-line" style="width:70%"></div><div class="card-line" style="width:50%"></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Loader overlay (floats above skeleton) ── -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <!-- Loading pill -->
+        <div class="loader-pill" id="loaderPill">
+            <div class="spinner" id="loaderSpinner"></div>
+            <div class="loader-text">
+                <div class="loader-label">Powerhouse</div>
+                <div class="loader-status" id="loaderStatus">Connecting…</div>
+            </div>
+            <div class="loader-dots">
+                <div class="loader-dot" id="dot0"></div>
+                <div class="loader-dot" id="dot1"></div>
+                <div class="loader-dot" id="dot2"></div>
+                <div class="loader-dot" id="dot3"></div>
+            </div>
+        </div>
+        <!-- Error pill -->
+        <div class="error-pill" id="errorPill">
+            <div class="error-icon">✕</div>
+            <div class="error-title">Load Failed</div>
+            <div class="error-sub" id="errorSub">Could not reach GitHub. Check your connection and try again.</div>
+            <button class="retry-btn" onclick="retry()">Try Again</button>
+        </div>
+    </div>
 
     <script>
         const statusEl  = document.getElementById('loaderStatus');
-        const fillEl    = document.getElementById('progressFill');
-        const loadingEl = document.getElementById('loadingState');
-        const errorEl   = document.getElementById('errorState');
-        const errorSub  = document.getElementById('errorSub');
+        const loaderPill = document.getElementById('loaderPill');
+        const errorPill  = document.getElementById('errorPill');
+        const errorSub   = document.getElementById('errorSub');
+        const dots       = [0,1,2,3].map(i => document.getElementById('dot'+i));
 
-        function setProgress(pct, label) {
-            fillEl.style.width = pct + '%';
-            if (label) statusEl.textContent = label;
+        let activeDot = 0;
+        let dotInterval = null;
+
+        function startDots() {
+            dotInterval = setInterval(() => {
+                dots.forEach(d => d.classList.remove('active'));
+                dots[activeDot % dots.length].classList.add('active');
+                activeDot++;
+            }, 350);
+        }
+
+        function stopDots() {
+            clearInterval(dotInterval);
+            dots.forEach(d => d.classList.remove('active'));
+            dots.forEach(d => d.classList.add('active')); // all lit = done
+        }
+
+        function setStatus(label) {
+            statusEl.textContent = label;
         }
 
         function showError(msg) {
-            loadingEl.style.display = 'none';
-            errorEl.style.display   = 'flex';
+            loaderPill.style.display = 'none';
+            errorPill.style.display  = 'flex';
             if (msg) errorSub.textContent = msg;
+            stopDots();
         }
 
         async function loadPowerhouse() {
-            // Reset to loading state in case of retry
-            loadingEl.style.display = 'flex';
-            errorEl.style.display   = 'none';
-            setProgress(0, 'Connecting…');
+            // Reset
+            loaderPill.style.display = 'flex';
+            errorPill.style.display  = 'none';
+            activeDot = 0;
+            dots.forEach(d => d.classList.remove('active'));
+            setStatus('Connecting…');
+            startDots();
 
             const repoURL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/index.html';
 
             try {
-                setProgress(15, 'Fetching Powerhouse…');
-
+                setStatus('Fetching Powerhouse…');
                 const response = await fetch(repoURL);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-                setProgress(55, 'Downloading…');
-
+                setStatus('Downloading…');
                 const html = await response.text();
 
-                setProgress(80, 'Preparing…');
-
-                // Inject <base> tag so relative assets resolve from GitHub
-                const baseTag      = `<base href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/">`;
+                setStatus('Preparing…');
+                const baseTag = `<base href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/">`;
                 const processedHtml = html.replace('<head>', `<head>${baseTag}`);
 
-                setProgress(100, 'Launching…');
-
-                // Small pause so the 100% state is visible
-                await new Promise(r => setTimeout(r, 280));
+                setStatus('Launching…');
+                stopDots();
+                await new Promise(r => setTimeout(r, 300));
 
                 document.open();
                 document.write(processedHtml);
@@ -314,12 +542,12 @@
         }
 
         function retry() {
+            errorPill.style.display  = 'none';
+            loaderPill.style.display = 'flex';
             loadPowerhouse();
         }
 
-        window.addEventListener('load', () => {
-            setTimeout(loadPowerhouse, 400);
-        });
+        window.addEventListener('load', () => setTimeout(loadPowerhouse, 300));
     </script>
 </body>
 </html>
