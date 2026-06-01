@@ -12,6 +12,29 @@
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/powerhouse-icon-dark.png" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/powerhouse-icon-light.png" media="(prefers-color-scheme: light)">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/powerhouse-icon-dark.png">
+    <script>
+        // Favicon fallback: if CDN version fails, use dark SVG data URI
+        (function() {
+            const darkFaviconSvg = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect fill="%231a1d2e" width="180" height="180"/><circle cx="90" cy="90" r="75" fill="%230078D4" opacity="0.9"/><path fill="%231a1d2e" d="M90 30c-33.1 0-60 26.9-60 60s26.9 60 60 60 60-26.9 60-60-26.9-60-60-60zm-27 72h54v8h-54zm0-24h36v8h-36z"/></svg>';
+            const timeoutId = setTimeout(() => {
+                const link = document.getElementById('faviconEl');
+                if (link && !link.complete) {
+                    link.href = darkFaviconSvg;
+                    document.querySelectorAll('link[rel="shortcut icon"]').forEach(el => el.href = darkFaviconSvg);
+                    document.querySelectorAll('link[rel="apple-touch-icon"]').forEach(el => el.href = darkFaviconSvg);
+                }
+            }, 3000);
+            if (document.getElementById('faviconEl')) {
+                document.getElementById('faviconEl').addEventListener('error', () => {
+                    clearTimeout(timeoutId);
+                    const link = document.getElementById('faviconEl');
+                    link.href = darkFaviconSvg;
+                    document.querySelectorAll('link[rel="shortcut icon"]').forEach(el => el.href = darkFaviconSvg);
+                    document.querySelectorAll('link[rel="apple-touch-icon"]').forEach(el => el.href = darkFaviconSvg);
+                });
+            }
+        })();
+    </script>
     <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         /* ═══════════════════════════════════════════════════════
@@ -2466,7 +2489,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.7 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.8 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
