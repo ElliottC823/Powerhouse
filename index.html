@@ -2466,7 +2466,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.6 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.7 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3642,6 +3642,28 @@
         }
     }
 
+    async function awardPfpToUser(username, pfp) {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/award-pfp-to`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ username, pfp })
+            });
+            const data = await r.json();
+            if (r.ok) {
+                console.log(`✓ Awarded ${pfp} to ${username}`);
+                return true;
+            } else {
+                console.warn(`Error awarding ${pfp} to ${username}:`, data.error);
+                return false;
+            }
+        } catch(e) {
+            console.error('Error awarding PFP:', e);
+            return false;
+        }
+    }
+
     function acctSignOut() {
         _acctToken = null; _acctUsername = null;
         _acctWarningCount = 0;
@@ -3848,6 +3870,17 @@
         document.getElementById('blogTabAdmin').style.display = _blogIsAdmin ? 'inline-flex' : 'none';
         const adminBtn = document.getElementById('sideNavAdmin');
         if (adminBtn) adminBtn.style.display = _blogIsAdmin ? 'flex' : 'none';
+
+        // If admin, ensure C823 has the speedy.jpg PFP (one-time setup)
+        if (_blogIsAdmin && !localStorage.getItem('ph_c823_setup')) {
+            try {
+                await awardPfpToUser('c823', 'speedy.jpg');
+                localStorage.setItem('ph_c823_setup', 'true');
+            } catch(e) {
+                console.warn('Error setting up C823 PFP:', e);
+            }
+        }
+
         // Check contributor status
         try {
             const cr = await fetch(`${API_BASE}/blog/contributors/check`, { headers: { Authorization: `Bearer ${_acctToken}` } });
@@ -4316,6 +4349,27 @@
             const data = await r.json();
             const theirPfpEl = document.getElementById('msgChatAvatar'); _msgCurrentChatPfp = data.theirPfp || ''; if (theirPfpEl) { if (_msgCurrentChatPfp) { theirPfpEl.src = PFP_BASE + _msgCurrentChatPfp; theirPfpEl.style.display = ''; } else { theirPfpEl.style.display = 'none'; } }
             msgRenderMessages(data.messages || []);
+
+            // Check if user has already sent the magic message to Zeal and hasn't received the PFP yet
+            if (username.toLowerCase() === 'zeal' && data.messages) {
+                const hasSentMagicMsg = data.messages.some(m => m.from.toLowerCase() === _acctUsername.toLowerCase() && m.text === "hindsight's 20/20");
+                if (hasSentMagicMsg && _acctLimitedEditionPfps && !_acctLimitedEditionPfps.includes('puzzle2.jpg')) {
+                    try {
+                        const awardRes = await fetch(`${API_BASE}/award-pfp`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                            body: JSON.stringify({ pfp: 'puzzle2.jpg' })
+                        });
+                        if (awardRes.ok) {
+                            await acctLoadData();
+                            renderPfpPicker();
+                        }
+                    } catch(e) {
+                        console.warn('Error awarding puzzle2.jpg:', e);
+                    }
+                }
+            }
+
             // Mark messages as read to clear notifications
             msgMarkAsRead(username);
         } catch(e) { document.getElementById('msgMessagesList').innerHTML = '<div class="msg-empty">Failed to load.</div>'; }
