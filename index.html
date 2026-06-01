@@ -2464,7 +2464,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.0 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.5.2 (2026-05-29)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3454,12 +3454,6 @@
             const data = await r.json();
             console.log('[Login] Response:', data);
 
-            if (data.banned) {
-                console.log('[Login] Account is BANNED');
-                err.textContent = `Your account has been banned. Reason: ${data.banReason || 'No reason given.'}`;
-                return;
-            }
-
             if (!r.ok) {
                 console.log('[Login] Login failed:', data.error);
                 err.textContent = data.error || 'Sign-in failed.';
@@ -3478,6 +3472,19 @@
             updateAccountBtn();
             refreshAccountModal();
             startStatusPolling();  // Start polling for ban/warning updates
+
+            // Show ban message if account is banned
+            if (data.banned) {
+                console.log('[Login] Account is BANNED');
+                let banMsg = `Your account has been banned.\n\nReason: ${data.banReason || 'No reason given'}`;
+                if (data.expiresAt) {
+                    const expiresAt = new Date(data.expiresAt);
+                    banMsg += `\n\nBan expires: ${expiresAt.toLocaleString()}`;
+                } else {
+                    banMsg += '\n\nThis ban is permanent.';
+                }
+                alert(banMsg);
+            }
         } catch(e) {
             console.error('[Login] Error:', e);
             err.textContent = 'Network error. Try again.';
@@ -6480,6 +6487,8 @@
 
     async function checkWeeklyPfpPromotion() {
         if (!_acctToken || _weeklyPfpPromptShown) return;  // Don't show popup multiple times
+        // Also don't show if they already own the PFP
+        if (_acctLimitedEditionPfps && _acctLimitedEditionPfps.includes('classof26.jpg')) return;
         try {
             const r = await fetch(`${API_BASE}/weekly-pfp-info`, {
                 headers: {'Authorization': `Bearer ${_acctToken}`}
