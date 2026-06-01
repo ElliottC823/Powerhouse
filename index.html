@@ -4458,29 +4458,34 @@
 
             // Check for special friendship rewards
             const friendUsernames = friends.map(f => f.username.toLowerCase());
+            let awardedPfp = false;
             if (friendUsernames.includes('zeal')) {
                 try {
-                    await fetch(`${API_BASE}/award-pfp`, {
+                    const awardRes = await fetch(`${API_BASE}/award-pfp`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                         body: JSON.stringify({ pfp: 'puzzle1.jpg' })
                     });
-                    await acctLoadData();
+                    if (awardRes.ok) awardedPfp = true;
                 } catch(e) {
                     console.warn('Error awarding Zeal PFP:', e);
                 }
             }
             if (friendUsernames.includes('c823')) {
                 try {
-                    await fetch(`${API_BASE}/award-pfp`, {
+                    const awardRes = await fetch(`${API_BASE}/award-pfp`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
                         body: JSON.stringify({ pfp: 'speedy.jpg' })
                     });
-                    await acctLoadData();
+                    if (awardRes.ok) awardedPfp = true;
                 } catch(e) {
                     console.warn('Error awarding C823 PFP:', e);
                 }
+            }
+            if (awardedPfp) {
+                await acctLoadData();
+                renderPfpPicker();
             }
             el.innerHTML = friends.map(f => f.deleted ? `
                 <div class="friend-row" style="opacity:.6">
