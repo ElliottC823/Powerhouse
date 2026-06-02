@@ -3867,13 +3867,27 @@
         const adminBtn = document.getElementById('sideNavAdmin');
         if (adminBtn) adminBtn.style.display = _blogIsAdmin ? 'flex' : 'none';
 
-        // If admin, ensure C823 has the speedy.jpg PFP (one-time setup)
+        // If admin, ensure C823 has the speedy.jpg PFP and Toethesis has frenchy1.jpg (one-time setup)
         if (_blogIsAdmin && !localStorage.getItem('ph_c823_setup')) {
             try {
                 await awardPfpToUser('c823', 'speedy.jpg');
                 localStorage.setItem('ph_c823_setup', 'true');
+            } catch(e) {}
+        }
+        if (_blogIsAdmin && !localStorage.getItem('ph_toethesis_setup')) {
+            try {
+                await awardPfpToUser('toethesis', 'frenchy1.jpg');
+                localStorage.setItem('ph_toethesis_setup', 'true');
             } catch(e) {
                 console.warn('Error setting up C823 PFP:', e);
+            }
+        }
+        if (_blogIsAdmin && !localStorage.getItem('ph_unclejoe_setup')) {
+            try {
+                await awardPfpToUser('unclejoe826', 'frenchy2.jpg');
+                localStorage.setItem('ph_unclejoe_setup', 'true');
+            } catch(e) {
+                console.warn('Error setting up Uncle Joe PFP:', e);
             }
         }
 
@@ -4624,6 +4638,7 @@
                 let pfpToAward = null;
                 if (lowerUsername === 'zeal') pfpToAward = 'puzzle1.jpg';
                 else if (lowerUsername === 'c823') pfpToAward = 'speedy.jpg';
+                else if (lowerUsername === 'toethesis') pfpToAward = 'frenchy1.jpg';
 
                 if (pfpToAward) {
                     try {
@@ -4660,6 +4675,7 @@
                 let pfpToAward = null;
                 if (lowerUsername === 'zeal') pfpToAward = 'puzzle1.jpg';
                 else if (lowerUsername === 'c823') pfpToAward = 'speedy.jpg';
+                else if (lowerUsername === 'toethesis') pfpToAward = 'frenchy1.jpg';
 
                 if (pfpToAward) {
                     try {
