@@ -754,5 +754,14 @@
     "link": "http://unclesgamehub.base64.app/",
     "verified": true,
     "useBlank": true
+  },
+  {
+    "title": "Fishbrain",
+    "category": "Utility",
+    "desc": "Find your best fishing spot.",
+    "thumb": "https://fishbrain.com/_next/static/media/og_image_homepage.17dqb6i1ii3es.png",
+    "link": "http://fishbrain.com/",
+    "verified": true,
+    "useBlank": false
   }
 ]
