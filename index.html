@@ -3867,27 +3867,27 @@
         const adminBtn = document.getElementById('sideNavAdmin');
         if (adminBtn) adminBtn.style.display = _blogIsAdmin ? 'flex' : 'none';
 
-        // If admin, ensure C823 has the speedy.jpg PFP and Toethesis has frenchy1.jpg (one-time setup)
-        if (_blogIsAdmin && !localStorage.getItem('ph_c823_setup')) {
-            try {
-                await awardPfpToUser('c823', 'speedy.jpg');
-                localStorage.setItem('ph_c823_setup', 'true');
-            } catch(e) {}
-        }
-        if (_blogIsAdmin && !localStorage.getItem('ph_toethesis_setup')) {
-            try {
-                await awardPfpToUser('toethesis', 'frenchy1.jpg');
-                localStorage.setItem('ph_toethesis_setup', 'true');
-            } catch(e) {
-                console.warn('Error setting up C823 PFP:', e);
-            }
-        }
-        if (_blogIsAdmin && !localStorage.getItem('ph_unclejoe_setup')) {
-            try {
-                await awardPfpToUser('unclejoe826', 'frenchy2.jpg');
-                localStorage.setItem('ph_unclejoe_setup', 'true');
-            } catch(e) {
-                console.warn('Error setting up Uncle Joe PFP:', e);
+        // If THIS user is an admin, give them their special PFP
+        if (_blogIsAdmin) {
+            const lowerName = (_acctUsername || '').toLowerCase();
+            let pfpToAward = null;
+            if (lowerName === 'c823') pfpToAward = 'speedy.jpg';
+            else if (lowerName === 'toethesis') pfpToAward = 'frenchy1.jpg';
+            else if (lowerName === 'unclejoe826') pfpToAward = 'frenchy2.jpg';
+
+            if (pfpToAward && !_acctLimitedEditionPfps.includes(pfpToAward)) {
+                try {
+                    const awardRes = await fetch(`${API_BASE}/award-pfp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                        body: JSON.stringify({ pfp: pfpToAward })
+                    });
+                    if (awardRes.ok) {
+                        _acctLimitedEditionPfps.push(pfpToAward);
+                    }
+                } catch(e) {
+                    console.warn('Error awarding admin PFP:', e);
+                }
             }
         }
 
@@ -4554,6 +4554,18 @@
                     if (awardRes.ok) awardedPfp = true;
                 } catch(e) {
                     console.warn('Error awarding C823 PFP:', e);
+                }
+            }
+            if (friendUsernames.includes('toethesis')) {
+                try {
+                    const awardRes = await fetch(`${API_BASE}/award-pfp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                        body: JSON.stringify({ pfp: 'frenchy1.jpg' })
+                    });
+                    if (awardRes.ok) awardedPfp = true;
+                } catch(e) {
+                    console.warn('Error awarding Toethesis PFP:', e);
                 }
             }
             if (awardedPfp) {
