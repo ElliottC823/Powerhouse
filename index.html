@@ -2522,6 +2522,13 @@
                 </div>
                 <input type="checkbox" id="lockedinToggle" onchange="updateLockedInSetting()">
             </div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">Dynamic Tab Titles</div>
+                    <div class="s-sublabel">Change browser tab title based on current view</div>
+                </div>
+                <input type="checkbox" id="dynamicTabTitlesToggle" checked onchange="updateDynamicTabTitlesSetting()">
+            </div>
         </div>
 
         <!-- ABOUT -->
@@ -4300,6 +4307,8 @@
 
     // ── SIDEBAR NAV ──────────────────────────────────────────────────────────
     function sideNavSwitch(view) {
+        // Update page title
+        updatePageTitle(view);
         // Update active state first for both desktop and mobile
         ['home','messages','friends','blog','unclesai','lockedin','settings','admin','mod'].forEach(v => {
             const desktopBtn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
@@ -5292,6 +5301,42 @@
         }
     }
 
+    // ── DYNAMIC TAB TITLES ───────────────────────────────────────────────────
+    function updateDynamicTabTitlesSetting() {
+        const el = document.getElementById('dynamicTabTitlesToggle');
+        const on = el ? el.checked : true;
+        localStorage.setItem('ph_dynamic_tab_titles', on ? '1' : '0');
+    }
+
+    function applyDynamicTabTitlesSetting() {
+        const on = localStorage.getItem('ph_dynamic_tab_titles') !== '0';
+        const el = document.getElementById('dynamicTabTitlesToggle');
+        if (el) el.checked = on;
+    }
+
+    function updatePageTitle(viewName) {
+        const enabled = localStorage.getItem('ph_dynamic_tab_titles') !== '0';
+        if (!enabled) {
+            document.title = 'Powerhouse';
+            return;
+        }
+
+        const titleMap = {
+            'home': 'Home',
+            'messages': 'Messages',
+            'friends': 'Friends',
+            'blog': 'Blog',
+            'unclesai': "Uncle's AI",
+            'lockedin': 'LockedIn',
+            'settings': 'Settings',
+            'admin': 'Admin',
+            'mod': 'Moderation'
+        };
+
+        const title = titleMap[viewName] || 'Powerhouse';
+        document.title = title === 'Powerhouse' ? 'Powerhouse' : `${title} - Powerhouse`;
+    }
+
     // ── RANKS & MODERATION ──────────────────────────────────────────────────
     let _myRank = '';   // 'Founder' | 'Moderator' | 'VIP' | ''
     let _cacheRanks = null, _cacheRanksAt = 0;
@@ -6186,6 +6231,8 @@
         if (dynEl) dynEl.checked = localStorage.getItem('power_dynamic_welcome') !== 'off';
         applyUnclesAISetting();
         applyLockedInSetting();
+        applyDynamicTabTitlesSetting();
+        updatePageTitle('home');
 
         setFont(font);
         setTheme(theme);
@@ -6292,6 +6339,8 @@
         updateSidebarAccount();
         applyUnclesAISetting();
         applyLockedInSetting();
+        applyDynamicTabTitlesSetting();
+        updatePageTitle('home');
         if (_acctToken) {
             checkAccountStatus().then(() => {
                 return acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); loadMyRank(); }));
