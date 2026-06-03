@@ -1172,6 +1172,57 @@
         .admin-confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
         #adminConfirmInput { margin-top: 4px; width: 100%; }
 
+        /* ══ LOCKEDIN PANEL ═════════════════════════════════════════════════════ */
+        .lockedin-panel {
+            display: none;
+            position: fixed; inset: 0;
+            z-index: 2100;
+            background: transparent;
+            animation: slideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .lockedin-panel.show {
+            display: flex;
+            flex-direction: column;
+        }
+        .lockedin-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            gap: 12px;
+        }
+        .lockedin-title { font-size: .88rem; font-weight: 700; flex: 1; display: flex; align-items: center; gap: 7px; }
+        .lockedin-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            transition: color 0.1s;
+        }
+        .lockedin-close:hover { color: var(--text); }
+        .lockedin-close svg { width: 16px; height: 16px; }
+        .lockedin-iframe {
+            flex: 1;
+            border: none;
+            background: var(--bg);
+        }
+        .lockedin-backdrop {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 2099;
+            backdrop-filter: blur(2px);
+        }
+        .lockedin-backdrop.show { display: block; }
+
         /* ══ UNCLE'S AI PANEL ════════════════════════════════════════════════════ */
         .unclesai-panel {
             position: fixed;
@@ -2253,6 +2304,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="11" y1="2" x2="11" y2="4"/><line x1="13" y1="2" x2="13" y2="4"/></svg>
             <span>Uncle's AI</span>
         </button>
+        <button class="mobile-nav-btn" id="mobileNavLockedIn" onclick="sideNavSwitch('lockedin'); toggleMobileNav()" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <span>LockedIn</span>
+        </button>
         <div style="height:1px;background:var(--border);margin:8px 0"></div>
         <button class="mobile-nav-btn" id="mobileNavAdmin" onclick="sideNavSwitch('admin'); toggleMobileNav()" style="display:none;color:#e8a000">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2292,6 +2347,10 @@
         <button class="sidebar-nav-btn" id="sideNavUnclesai" onclick="sideNavSwitch('unclesai')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="11" y1="2" x2="11" y2="4"/><line x1="13" y1="2" x2="13" y2="4"/></svg>
             Uncle's AI
+        </button>
+        <button class="sidebar-nav-btn" id="sideNavLockedIn" onclick="sideNavSwitch('lockedin')" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            LockedIn
         </button>
         <button class="sidebar-nav-btn" id="sideNavSettings" onclick="sideNavSwitch('settings')">
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/><path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
@@ -2455,6 +2514,13 @@
                     <div class="s-sublabel">Show the Uncle's AI button in the sidebar</div>
                 </div>
                 <input type="checkbox" id="unclesaiToggle" checked onchange="updateUnclesAISetting()">
+            </div>
+            <div class="s-row">
+                <div>
+                    <div class="s-label">LockedIn</div>
+                    <div class="s-sublabel">Show the LockedIn button in the sidebar</div>
+                </div>
+                <input type="checkbox" id="lockedinToggle" onchange="updateLockedInSetting()">
             </div>
         </div>
 
@@ -3096,6 +3162,24 @@
             <button class="admin-btn danger" id="adminConfirmBtn" onclick="adminConfirmDelete()" disabled style="opacity:.4;cursor:not-allowed">Delete Account</button>
         </div>
     </div>
+</div>
+
+<!-- ── LOCKEDIN PANEL ── -->
+<div class="lockedin-backdrop" id="lockedinBackdrop" onclick="toggleLockedIn()"></div>
+<div class="lockedin-panel" id="lockedinPanel">
+    <div class="lockedin-header">
+        <span class="lockedin-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--accent)"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            LockedIn
+        </span>
+        <a href="https://lockedin.c1120.workers.dev/" target="_blank" rel="noopener" title="Open in new tab" style="color:var(--muted);display:flex;align-items:center;padding:4px;transition:color .1s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <button class="lockedin-close" onclick="toggleLockedIn()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </div>
+    <iframe class="lockedin-iframe" id="lockedinFrame" src="" title="LockedIn" allow="clipboard-write"></iframe>
 </div>
 
 <!-- ── UNCLE'S AI PANEL ── -->
@@ -4217,7 +4301,7 @@
     // ── SIDEBAR NAV ──────────────────────────────────────────────────────────
     function sideNavSwitch(view) {
         // Update active state first for both desktop and mobile
-        ['home','messages','friends','blog','unclesai','settings','admin','mod'].forEach(v => {
+        ['home','messages','friends','blog','unclesai','lockedin','settings','admin','mod'].forEach(v => {
             const desktopBtn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             const mobileBtn = document.getElementById('mobileNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (desktopBtn) desktopBtn.classList.toggle('active', v === view);
@@ -4227,6 +4311,7 @@
         if (view === 'friends')  { toggleFriends();  return; }
         if (view === 'blog')     { toggleBlog();     return; }
         if (view === 'unclesai') { toggleUnclesAI(); return; }
+        if (view === 'lockedin') { toggleLockedIn(); return; }
         if (view === 'settings') { toggleSettings(); return; }
         if (view === 'admin')    { toggleAdmin();    return; }
         if (view === 'mod')      { toggleMod();      return; }
@@ -4234,7 +4319,7 @@
 
     // Reset sidebar active to Home when panels close
     function sideNavResetToHome() {
-        ['home','messages','friends','blog','unclesai','settings','admin','mod'].forEach(v => {
+        ['home','messages','friends','blog','unclesai','lockedin','settings','admin','mod'].forEach(v => {
             const btn = document.getElementById('sideNav' + v.charAt(0).toUpperCase() + v.slice(1));
             if (btn) btn.classList.toggle('active', v === 'home');
         });
@@ -5157,6 +5242,56 @@
         }
     }
 
+    // ── LOCKEDIN SETTING ─────────────────────────────────────────────────────
+    function updateLockedInSetting() {
+        const el  = document.getElementById('lockedinToggle');
+        const on  = el ? el.checked : false;
+        localStorage.setItem('ph_lockedin', on ? '1' : '0');
+        const btn = document.getElementById('sideNavLockedIn');
+        const mobBtn = document.getElementById('mobileNavLockedIn');
+        if (btn) btn.style.display = on ? 'flex' : 'none';
+        if (mobBtn) mobBtn.style.display = on ? 'flex' : 'none';
+        if (!on) {
+            // Close the panel if it's open
+            const panel    = document.getElementById('lockedinPanel');
+            const backdrop = document.getElementById('lockedinBackdrop');
+            if (panel?.classList.contains('show')) {
+                panel.classList.remove('show');
+                backdrop.classList.remove('show');
+                sideNavResetToHome();
+            }
+        }
+    }
+
+    function applyLockedInSetting() {
+        const on  = localStorage.getItem('ph_lockedin') === '1';
+        const btn = document.getElementById('sideNavLockedIn');
+        const mobBtn = document.getElementById('mobileNavLockedIn');
+        const el  = document.getElementById('lockedinToggle');
+        if (btn) btn.style.display = on ? 'flex' : 'none';
+        if (mobBtn) mobBtn.style.display = on ? 'flex' : 'none';
+        if (el)  el.checked = on;
+    }
+
+    // ── LOCKEDIN ─────────────────────────────────────────────────────────────
+    function toggleLockedIn() {
+        const panel    = document.getElementById('lockedinPanel');
+        const backdrop = document.getElementById('lockedinBackdrop');
+        const isOpen   = panel.classList.contains('show');
+        panel.classList.toggle('show', !isOpen);
+        backdrop.classList.toggle('show', !isOpen);
+        if (!isOpen) {
+            // Lazy-load iframe on first open
+            const frame = document.getElementById('lockedinFrame');
+            if (!frame.dataset.loaded) {
+                frame.src = 'https://lockedin.c1120.workers.dev/';
+                frame.dataset.loaded = '1';
+            }
+        } else {
+            sideNavResetToHome();
+        }
+    }
+
     // ── RANKS & MODERATION ──────────────────────────────────────────────────
     let _myRank = '';   // 'Founder' | 'Moderator' | 'VIP' | ''
     let _cacheRanks = null, _cacheRanksAt = 0;
@@ -6050,6 +6185,7 @@
         const dynEl = document.getElementById('dynamicWelcomeToggle');
         if (dynEl) dynEl.checked = localStorage.getItem('power_dynamic_welcome') !== 'off';
         applyUnclesAISetting();
+        applyLockedInSetting();
 
         setFont(font);
         setTheme(theme);
@@ -6155,6 +6291,7 @@
         updateAccountBtn();
         updateSidebarAccount();
         applyUnclesAISetting();
+        applyLockedInSetting();
         if (_acctToken) {
             checkAccountStatus().then(() => {
                 return acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); loadMyRank(); }));
