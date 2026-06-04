@@ -1172,6 +1172,72 @@
         .admin-confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
         #adminConfirmInput { margin-top: 4px; width: 100%; }
 
+        /* ══ CALM-DOWN POPUP ════════════════════════════════════════════════════ */
+        .calmdown-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .calmdown-overlay.show {
+            display: flex;
+            flex-direction: column;
+        }
+        .calmdown-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            max-width: 600px;
+            width: 90%;
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .calmdown-message {
+            text-align: center;
+            color: var(--text);
+        }
+        .calmdown-message h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            color: var(--accent);
+        }
+        .calmdown-message p {
+            font-size: 1.1rem;
+            margin: 0;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+        .calmdown-video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius);
+            background: #000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .calmdown-video-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .calmdown-video-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s linear;
+            z-index: 1;
+        }
+
         /* ══ LOCKEDIN PANEL ═════════════════════════════════════════════════════ */
         .lockedin-panel {
             display: none;
@@ -3171,6 +3237,23 @@
     </div>
 </div>
 
+<!-- ── CALM-DOWN POPUP ── -->
+<div class="calmdown-overlay" id="calmdownOverlay">
+    <div class="calmdown-container">
+        <div class="calmdown-message">
+            <h2>Take a Deep Breath</h2>
+            <p>We think you are very stressed. Enjoy this beaver eating cabbage. 🦫</p>
+        </div>
+        <div class="calmdown-video-wrap">
+            <div class="calmdown-video-progress" id="calmdownProgress"></div>
+            <video class="calmdown-video" id="calmdownVideo" controlsList="nodownload" preload="metadata">
+                <source src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/cabbage.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+</div>
+
 <!-- ── LOCKEDIN PANEL ── -->
 <div class="lockedin-backdrop" id="lockedinBackdrop" onclick="toggleLockedIn()"></div>
 <div class="lockedin-panel" id="lockedinPanel">
@@ -3645,6 +3728,26 @@
             if (data.limitedEditionPfps && Array.isArray(data.limitedEditionPfps)) {
                 _acctLimitedEditionPfps = data.limitedEditionPfps;
             }
+
+            // Check if user needs calm-down popup
+            if (data.calmDownNeeded) {
+                localStorage.setItem('ph_needs_calmdown', '1');
+                // Clear the flag from backend
+                try {
+                    await fetch(`${API_BASE}/auth/save`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                        body: JSON.stringify({
+                            settings: data.settings || {},
+                            history: data.history || [],
+                            favorites: data.favorites || [],
+                            limitedEditionPfps: data.limitedEditionPfps || [],
+                            calmDownNeeded: false
+                        })
+                    });
+                } catch(e) { console.warn('Error clearing calm-down flag:', e); }
+            }
+
             loadSettings();
             renderGames();
             const st = document.getElementById('acctSyncStatus');
@@ -4945,6 +5048,7 @@
                     </div>
                     <div class="admin-user-actions">
                         ${u.username.toLowerCase() !== (_acctUsername||'').toLowerCase() ? `
+                        <button class="admin-btn" onclick="triggerCalmDownForUser('${escHtmlAcct(u.username)}')" title="Make user watch calming video on next login">Calm Down</button>
                         ${['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? '' : `<button class="admin-btn danger" onclick="adminDeleteUser('${escHtmlAcct(u.username)}')">Delete</button>`}
                         ${isAdm
                             ? (['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? '<span style="font-size:.65rem;color:var(--muted)">Protected</span>' : `<button class="admin-btn" onclick="adminToggleAdmin('${escHtmlAcct(u.username)}', false)">Revoke Admin</button>`)
@@ -5298,6 +5402,83 @@
             }
         } else {
             sideNavResetToHome();
+        }
+    }
+
+    // ── CALM-DOWN POPUP ─────────────────────────────────────────────────────────
+    function initCalmDownPopup() {
+        const overlay = document.getElementById('calmdownOverlay');
+        const video = document.getElementById('calmdownVideo');
+        const progress = document.getElementById('calmdownProgress');
+
+        if (!overlay || !video) return;
+
+        // Check if user needs calm-down popup
+        if (localStorage.getItem('ph_needs_calmdown') === '1') {
+            showCalmDownPopup();
+            localStorage.removeItem('ph_needs_calmdown');
+        }
+
+        // Update progress bar as video plays
+        video.addEventListener('timeupdate', () => {
+            if (video.duration) {
+                const percent = (video.currentTime / video.duration) * 100;
+                progress.style.width = percent + '%';
+            }
+        });
+
+        // Close popup when video ends
+        video.addEventListener('ended', () => {
+            setTimeout(() => {
+                overlay.classList.remove('show');
+            }, 500);
+        });
+
+        // Prevent user from closing the popup by blocking clicks outside video area
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        // Disable context menu on video
+        video.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    function showCalmDownPopup() {
+        const overlay = document.getElementById('calmdownOverlay');
+        const video = document.getElementById('calmdownVideo');
+
+        if (!overlay || !video) return;
+
+        overlay.classList.add('show');
+
+        // Auto-play video and ensure it plays
+        video.play().catch(err => {
+            console.log('Auto-play prevented, attempting muted play');
+            video.muted = true;
+            video.play().catch(err2 => console.error('Video play failed:', err2));
+        });
+    }
+
+    async function triggerCalmDownForUser(username) {
+        if (!_acctToken) return;
+        try {
+            const r = await fetch(`${API_BASE}/admin/calm-user`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${_acctToken}` },
+                body: JSON.stringify({ targetUsername: username })
+            });
+            if (r.ok) {
+                alert(`Calm-down popup queued for ${username}! They will see it on next login.`);
+            } else {
+                const data = await r.json();
+                alert('Error: ' + (data.error || 'Failed to queue calm-down popup'));
+            }
+        } catch(e) {
+            console.error('Error triggering calm-down:', e);
+            alert('Failed to queue calm-down popup');
         }
     }
 
@@ -6341,6 +6522,7 @@
         applyLockedInSetting();
         applyDynamicTabTitlesSetting();
         updatePageTitle('home');
+        initCalmDownPopup();
         if (_acctToken) {
             checkAccountStatus().then(() => {
                 return acctLoadData().then(() => checkBlogAdmin().then(() => { updateAccountBtn(); refreshAccountModal(); loadMyRank(); }));
