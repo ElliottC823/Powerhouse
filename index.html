@@ -3242,12 +3242,12 @@
     <div class="calmdown-container">
         <div class="calmdown-message">
             <h2>Take a Deep Breath</h2>
-            <p>We think you are very stressed. Enjoy this beaver eating cabbage. 🦫</p>
+            <p id="calmdownCustomMessage">We think you are very stressed. Enjoy this beaver eating cabbage. 🦫</p>
         </div>
         <div class="calmdown-video-wrap">
             <div class="calmdown-video-progress" id="calmdownProgress"></div>
             <video class="calmdown-video" id="calmdownVideo" controlsList="nodownload" preload="metadata">
-                <source src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/cabbage.mp4" type="video/mp4">
+                <source src="" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
@@ -5449,8 +5449,50 @@
     function showCalmDownPopup() {
         const overlay = document.getElementById('calmdownOverlay');
         const video = document.getElementById('calmdownVideo');
+        const messageEl = document.getElementById('calmdownCustomMessage');
 
         if (!overlay || !video) return;
+
+        // Video mapping with custom messages
+        const videoMap = {
+            'lettuce.mp4': {
+                url: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/videos/lettuce.mp4',
+                message: 'We think you are very stressed. Enjoy this beaver eating cabbage. 🦫'
+            },
+            'burrito.mp4': {
+                url: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/videos/burrito.mp4',
+                message: 'Bubba loves his burritos.'
+            },
+            'chicken.mp4': {
+                url: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/videos/chicken.mp4',
+                message: 'jablinski'
+            },
+            'george.mp4': {
+                url: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/videos/george.mp4',
+                message: 'george'
+            },
+            'water.mp4': {
+                url: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/videos/water.mp4',
+                message: 'how to become the next mrbeast'
+            }
+        };
+
+        // Randomly select a video
+        const videoKeys = Object.keys(videoMap);
+        const selectedKey = videoKeys[Math.floor(Math.random() * videoKeys.length)];
+        const selected = videoMap[selectedKey];
+
+        // Set the video source
+        const sourceEl = video.querySelector('source');
+        if (sourceEl) {
+            sourceEl.src = selected.url;
+        }
+        video.src = selected.url;
+
+        // Update the message
+        if (messageEl) {
+            messageEl.textContent = selected.message;
+        }
 
         overlay.classList.add('show');
 
