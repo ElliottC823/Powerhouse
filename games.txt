@@ -763,5 +763,14 @@
     "link": "http://fishbrain.com/",
     "verified": true,
     "useBlank": false
+  },
+  {
+    "title": "Granny",
+    "category": "Arcade",
+    "desc": "I see you...",
+    "thumb": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.8Zj-pyDen7gsxjFf0lnnLgHaEK%3Fr%3D0%26pid%3DApi&sp=1780672936T6e26f1581d3f37b59ea60e45433e1008fb1e5674c612c71a7e1936cb19dabb5d",
+    "link": "https://learn-duck.firebaseapp.com/class/granny",
+    "verified": true,
+    "useBlank": false
   }
 ]
