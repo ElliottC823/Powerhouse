@@ -696,7 +696,7 @@
     "title": "Jackbox.TV",
     "category": "Arcade",
     "desc": "game required.",
-    "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/331670/capsule_616x353.jpg?t=1728584088",
+    "thumb": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.i0s5_O9SauF_Gl6IBhubRAHaE8%3Fr%3D0%26pid%3DApi&sp=1780673009Tc4c456dcfbecacee2c97b3c3cc24789e8baa3166a8ce3b8ceceff9360c949b63",
     "link": "https://jackbox.tv",
     "verified": true,
     "useBlank": true
