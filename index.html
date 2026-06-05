@@ -332,17 +332,17 @@
 
         .sidebar-nav { padding: 10px 10px; flex-shrink: 0; }
         .sidebar-nav-btn {
-            display: flex; align-items: center; gap: 10px;
-            width: 100%; padding: 9px 12px;
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 10px 14px;
             background: none; border: none; border-radius: var(--radius-sm);
             color: var(--text-muted); font-family: inherit;
-            font-size: 0.82rem; font-weight: 500;
+            font-size: 0.85rem; font-weight: 500;
             cursor: pointer; text-align: left;
-            transition: background 0.1s, color 0.1s;
+            transition: all 0.2s ease;
         }
-        .sidebar-nav-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-        .sidebar-nav-btn:hover { background: color-mix(in srgb, var(--text) 7%, transparent); color: var(--text); }
-        .sidebar-nav-btn.active { background: var(--accent-light,rgba(0,120,212,0.12)); color: var(--accent); font-weight: 600; }
+        .sidebar-nav-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .sidebar-nav-btn:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+        .sidebar-nav-btn.active { background: var(--accent-light, rgba(0,120,212,0.15)); color: var(--accent); font-weight: 700; }
         .nav-notif {
             margin-left: auto; background: var(--accent); color: #fff;
             font-size: 0.55rem; font-weight: 700; min-width: 16px; height: 16px;
@@ -555,60 +555,66 @@
 
         /* ── HEADER — W11 title bar style with acrylic (mobile fallback only) ── */
         header {
-            background: color-mix(in srgb, var(--bg) 60%, transparent);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            padding: 0 clamp(12px,3%,24px);
+            background: color-mix(in srgb, var(--bg) 70%, transparent);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            padding: 0 clamp(16px, 3%, 28px);
             padding-top: var(--safe-top);
-            height: calc(var(--header-height) + var(--safe-top));
-            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            height: calc(56px + var(--safe-top));
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
             position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid var(--border);
-            transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         }
-        .logo-img { height: 24px; flex-shrink: 0; max-width: 110px; object-fit: contain; }
+        .logo-img { height: 28px; flex-shrink: 0; max-width: 120px; object-fit: contain; }
         .search-container { flex-grow: 1; min-width: 0; max-width: 340px; }
 
-        /* W11 search box with bottom underline focus style */
+        /* Professional search box */
         #searchInput {
-            width: 100%; padding: 6px 12px;
+            width: 100%; padding: 10px 16px;
             border-radius: var(--radius);
             border: 1px solid var(--border);
             background: color-mix(in srgb, var(--surface) 90%, transparent);
             color: var(--text);
-            font-family: inherit; font-weight: 400; font-size: 16px; outline: none;
-            transition: border-color 0.1s, box-shadow 0.1s;
+            font-family: inherit; font-weight: 400; font-size: 15px; outline: none;
+            transition: all 0.2s ease;
+        }
+        #searchInput:hover {
+            border-color: var(--accent);
+            background: color-mix(in srgb, var(--surface) 95%, transparent);
         }
         #searchInput:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+            background: var(--surface);
         }
-        #searchInput::placeholder { color: var(--text-muted); }
+        #searchInput::placeholder { color: var(--text-muted); opacity: 0.7; }
         .controls { flex-shrink: 0; display: flex; align-items: center; gap: 4px; }
 
-        /* W11 icon button */
+        /* Professional icon button */
         .settings-btn {
             background: transparent;
             border: 1px solid transparent;
-            padding: 6px 8px; border-radius: var(--radius-sm);
+            padding: 8px 10px; border-radius: var(--radius-sm);
             cursor: pointer; color: var(--text-muted); font-size: 1rem; line-height: 1;
-            min-width: 36px; min-height: 36px;
+            min-width: 40px; min-height: 40px;
             display: flex; align-items: center; justify-content: center;
-            transition: color 0.1s, background 0.1s;
+            transition: all 0.2s ease;
         }
-        .settings-btn:hover { color: var(--text); background: color-mix(in srgb, var(--text) 8%, transparent); }
-        .settings-btn:active { background: color-mix(in srgb, var(--text) 14%, transparent); opacity: 1; }
+        .settings-btn:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+        .settings-btn:active { background: color-mix(in srgb, var(--accent) 20%, transparent); }
 
         /* ── SHELVES ── */
         .shelf-container { padding: 16px clamp(12px,3%,24px) 6px; display: none; }
         .shelf-title {
-            font-weight: 600; font-size: 0.82rem; margin-bottom: 10px;
-            letter-spacing: 0.005em; opacity: 0.7;
-            display: flex; align-items: center; gap: 8px;
-            text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem;
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 14px;
+            letter-spacing: 0.05em;
+            display: flex; align-items: center; gap: 10px;
+            text-transform: capitalize; font-size: 0.85rem;
+            color: var(--text);
         }
-        .shelf-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .shelf-title::after { content: ''; flex: 1; height: 1px; background: var(--border); opacity: 0.5; }
         .shelf-scroll {
             display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
             scrollbar-width: thin; scrollbar-color: var(--border) transparent;
@@ -1926,17 +1932,17 @@
         }
         .filter-bar::-webkit-scrollbar { display: none; }
         .filter-btn {
-            background: transparent; border: none; border-bottom: 2px solid transparent;
-            padding: 8px 14px; font-weight: 400; font-family: inherit;
+            background: transparent; border: 1px solid transparent; border-bottom: 2px solid transparent;
+            padding: 10px 16px; font-weight: 500; font-family: inherit;
             cursor: pointer; color: var(--text-muted); white-space: nowrap;
-            font-size: 0.8rem; min-height: 38px; flex-shrink: 0;
+            font-size: 0.85rem; min-height: 42px; flex-shrink: 0;
             margin-bottom: -1px;
-            transition: color 0.1s, border-color 0.1s;
-            border-radius: 0;
+            transition: all 0.2s ease;
+            border-radius: 4px 4px 0 0;
         }
         .filter-btn:hover { color: var(--text); background: color-mix(in srgb, var(--text) 5%, transparent); }
-        .filter-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
-        .filter-btn:active { opacity: 0.7; }
+        .filter-btn.active { color: var(--accent); border-bottom-color: var(--accent); border-bottom-width: 3px; font-weight: 700; margin-bottom: -2px; }
+        .filter-btn:active { opacity: 0.8; }
 
         /* ── GAME GRID — W11 card style ── */
         /* Center content in main-content area */
@@ -1956,49 +1962,52 @@
         #game-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: clamp(6px,1.5vw,12px);
-            padding: clamp(10px,2.5%,18px) clamp(12px,3%,24px);
+            gap: 16px;
+            padding: 24px clamp(16px,3%,32px);
         }
-        @media (min-width: 600px)  { #game-grid { grid-template-columns: repeat(3,1fr); } }
-        @media (min-width: 900px)  { #game-grid { grid-template-columns: repeat(auto-fill,minmax(210px,1fr)); } }
+        @media (min-width: 600px)  { #game-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 900px)  { #game-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1200px) { #game-grid { grid-template-columns: repeat(5, 1fr); } }
 
         /* W11 card: subtle shadow, thin border, smooth hover lift */
         .game-card {
             background: var(--surface); border-radius: var(--radius);
             overflow: hidden; text-decoration: none; color: inherit;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
             border: 1px solid var(--border); display: block;
-            transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-user-select: none; user-select: none;
         }
         @media (hover: hover) {
             .game-card:hover {
-                transform: translateY(-1px);
-                border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
-                box-shadow: 0 4px 16px rgba(0,0,0,0.18), 0 0 0 1px var(--accent);
+                transform: translateY(-4px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+                border-color: var(--accent);
             }
         }
-        .game-card:active { transform: scale(0.99); opacity: 0.9; }
-        .thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative; }
-        .thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s ease; }
-        @media (hover: hover) { .game-card:hover .thumb { transform: scale(1.03); } }
+        .game-card:active { transform: scale(0.98); }
+        .thumb-wrap { width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative; background: var(--surface2); }
+        .thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        @media (hover: hover) { .game-card:hover .thumb { transform: scale(1.05); } }
         .game-info {
-            padding: 8px 10px;
+            padding: 12px 14px;
             background: var(--surface);
-            display: flex; justify-content: space-between; align-items: center; gap: 6px;
+            display: flex; justify-content: space-between; align-items: center; gap: 8px;
         }
-        .game-title-container { display: flex; align-items: center; gap: 4px; min-width: 0; }
-        .game-title { font-weight: 400; font-size: clamp(0.7rem,2.2vw,0.84rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .game-title-container { display: flex; align-items: center; gap: 6px; min-width: 0; }
+        .game-title { font-weight: 600; font-size: clamp(0.75rem, 2.5vw, 0.9rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* W11 filled accent button */
+        /* Professional play button */
         .play-btn {
-            background: var(--accent); color: #fff; padding: 4px 10px;
-            border-radius: var(--radius-xs); font-weight: 600; font-size: 0.62rem;
-            white-space: nowrap; flex-shrink: 0; min-height: 24px;
-            display: flex; align-items: center; letter-spacing: 0.02em;
-            transition: background 0.1s, opacity 0.1s;
+            background: var(--accent); color: #fff; padding: 6px 14px;
+            border-radius: var(--radius-sm); font-weight: 700; font-size: 0.7rem;
+            white-space: nowrap; flex-shrink: 0; min-height: 28px;
+            display: flex; align-items: center; letter-spacing: 0.03em;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
         }
-        .play-btn:hover { background: var(--accent2); }
+        .play-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3); }
         .verified-badge { width: 12px; height: 12px; cursor: help; flex-shrink: 0; opacity: 0.85; }
 
         /* ── FAVORITE BUTTON ── */
@@ -2335,8 +2344,8 @@
         <input type="text" id="searchInputMobile" placeholder="Search…" oninput="debouncedRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="controls">
-        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/><path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg></button>
-        <button class="settings-btn" onclick="toggleAccountModal()" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="settings-btn" onclick="toggleSettings()" aria-label="Settings"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/settings.svg" alt="Settings" style="width:18px;height:18px"></button>
+        <button class="settings-btn" onclick="toggleAccountModal()" aria-label="Account"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/user.svg" alt="Account" style="width:18px;height:18px"></button>
     </div>
 </header>
 
@@ -2348,30 +2357,30 @@
     </button>
     <div class="mobile-nav-content">
         <button class="mobile-nav-btn active" id="mobileNavHome" onclick="sideNavSwitch('home'); toggleMobileNav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/home.svg" alt="Home" style="width:20px;height:20px">
             <span>Home</span>
         </button>
         <button class="mobile-nav-btn" id="mobileNavFriends" onclick="sideNavSwitch('friends'); toggleMobileNav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/friends.svg" alt="Friends" style="width:20px;height:20px">
             <span>Friends</span>
             <span class="nav-notif" id="mobileNavFriendBadge" style="display:none;background:#c42b1c"></span>
         </button>
         <button class="mobile-nav-btn" id="mobileNavMessages" onclick="sideNavSwitch('messages'); toggleMobileNav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/messages.svg" alt="Messages" style="width:20px;height:20px">
             <span>Messages</span>
             <span class="nav-notif" id="mobileNavMsgBadge" style="display:none"></span>
         </button>
         <button class="mobile-nav-btn" id="mobileNavBlog" onclick="sideNavSwitch('blog'); toggleMobileNav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/blog.svg" alt="Blog" style="width:20px;height:20px">
             <span>Blog</span>
             <span class="nav-notif" id="mobileNavBlogBadge" style="display:none"></span>
         </button>
         <button class="mobile-nav-btn" id="mobileNavUnclesai" onclick="sideNavSwitch('unclesai'); toggleMobileNav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="11" y1="2" x2="11" y2="4"/><line x1="13" y1="2" x2="13" y2="4"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/ai.svg" alt="Uncle's AI" style="width:20px;height:20px">
             <span>Uncle's AI</span>
         </button>
         <button class="mobile-nav-btn" id="mobileNavLockedIn" onclick="sideNavSwitch('lockedin'); toggleMobileNav()" style="display:none">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/lockedin.svg" alt="LockedIn" style="width:20px;height:20px">
             <span>LockedIn</span>
         </button>
         <div style="height:1px;background:var(--border);margin:8px 0"></div>
@@ -2394,32 +2403,32 @@
 
     <nav class="sidebar-nav">
         <button class="sidebar-nav-btn active" id="sideNavHome" onclick="sideNavSwitch('home')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/home.svg" alt="Home" style="width:20px;height:20px">
             Home
         </button>
         <button class="sidebar-nav-btn" id="sideNavFriends" onclick="sideNavSwitch('friends')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/friends.svg" alt="Friends" style="width:20px;height:20px">
             Friends<span class="nav-notif" id="friendReqBadge" style="display:none;background:#c42b1c"></span>
         </button>
         <button class="sidebar-nav-btn" id="sideNavMessages" onclick="sideNavSwitch('messages')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/messages.svg" alt="Messages" style="width:20px;height:20px">
             Messages<span class="nav-notif" id="msgUnreadBadge" style="display:none"></span>
         </button>
         <button class="sidebar-nav-btn" id="sideNavBlog" onclick="sideNavSwitch('blog')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/blog.svg" alt="Blog" style="width:20px;height:20px">
             Blog
             <span class="nav-notif" id="blogNotif" style="display:none"></span>
         </button>
         <button class="sidebar-nav-btn" id="sideNavUnclesai" onclick="sideNavSwitch('unclesai')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="11" y1="2" x2="11" y2="4"/><line x1="13" y1="2" x2="13" y2="4"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/ai.svg" alt="Uncle's AI" style="width:20px;height:20px">
             Uncle's AI
         </button>
         <button class="sidebar-nav-btn" id="sideNavLockedIn" onclick="sideNavSwitch('lockedin')" style="display:none">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/lockedin.svg" alt="LockedIn" style="width:20px;height:20px">
             LockedIn
         </button>
         <button class="sidebar-nav-btn" id="sideNavSettings" onclick="sideNavSwitch('settings')">
-            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"/><path d="M13.3 9.4l.9-.5a6 6 0 000-1.8l-.9-.5a5.4 5.4 0 00-.4-1l.4-1a6 6 0 00-1.3-1.3l-1 .4a5.4 5.4 0 00-1-.4l-.5-.9a6 6 0 00-1.8 0l-.5.9a5.4 5.4 0 00-1 .4l-1-.4A6 6 0 002.8 4.6l.4 1a5.4 5.4 0 00-.4 1l-.9.5a6 6 0 000 1.8l.9.5c.1.4.2.7.4 1l-.4 1A6 6 0 004.1 12.7l1-.4c.3.2.6.3 1 .4l.5.9a6 6 0 001.8 0l.5-.9c.4-.1.7-.2 1-.4l1 .4a6 6 0 001.3-1.3l-.4-1c.2-.3.3-.6.4-1z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/settings.svg" alt="Settings" style="width:20px;height:20px">
             Settings
         </button>
         <button class="sidebar-nav-btn" id="sideNavAdmin" onclick="sideNavSwitch('admin')" style="display:none;color:#e8a000">
@@ -2437,7 +2446,7 @@
     <div class="sidebar-bottom">
         <button class="sidebar-acct-btn" id="acctBtn" onclick="toggleAccountModal()">
             <div class="sidebar-acct-avatar" id="sidebarAvatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/user.svg" alt="Account" style="width:16px;height:16px;opacity:0.8">
             </div>
             <span class="sidebar-acct-name" id="sidebarAcctName">Sign In</span>
         </button>
@@ -2601,7 +2610,7 @@
         <div class="settings-pane" id="pane-about">
             <div style="text-align:center; padding: 10px 0 20px;">
                 <img id="aboutLogo" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" alt="Powerhouse" style="height:28px; object-fit:contain; display:block; margin:0 auto 6px;">
-                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.6.0 (2026-05-29)</span>
+                <span id="versionDisplay" style="font-size:0.65rem; font-weight:600; color:var(--text-muted); letter-spacing:0.06em;">V2.7.0 (2026-06-05)</span>
             </div>
 
             <div class="s-section-title">About</div>
@@ -3295,7 +3304,7 @@
     <div class="blog-panel" id="blogPanel">
         <div class="blog-panel-header">
             <span class="blog-panel-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:6px;vertical-align:-3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Powerhouse Blog
+                <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/blog.svg" alt="Blog" style="width:16px;height:16px;margin-right:6px;vertical-align:-3px">Powerhouse Blog
             </span>
             <button class="blog-panel-close" onclick="toggleBlog()" aria-label="Close">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
