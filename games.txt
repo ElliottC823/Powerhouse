@@ -768,9 +768,18 @@
     "title": "Granny",
     "category": "Arcade",
     "desc": "I see you...",
-    "thumb": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.8Zj-pyDen7gsxjFf0lnnLgHaEK%3Fr%3D0%26pid%3DApi&sp=1780672936T6e26f1581d3f37b59ea60e45433e1008fb1e5674c612c71a7e1936cb19dabb5d",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.YAaTxHm6aymfanh02qsv3QHaEK%3Fr%3D0%26pid%3DApi&f=1&ipt=2211bdec874b4688727aed72992c689b0e93e4fc315b16b6b4d659d9155902b3&ipo=images",
     "link": "https://learn-duck.firebaseapp.com/class/granny",
     "verified": true,
-    "useBlank": false
+    "useBlank": true
+  },
+  {
+    "title": "LarpTube",
+    "category": "Media",
+    "desc": "Larp.",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fthfvnext.bing.com%2Fth%2Fid%2FOIP.lY68gRpqdbm-T_NsYvKC-gAAAA%3Fcb%3Dthfvnextfalcon4%26pid%3DApi&f=1&ipt=0e7027d9714858b14f1e9c570fd59c5804eb1391acf98c479dc3aaf11b14589f&ipo=images",
+    "link": "https://https://larptube.com/",
+    "verified": false,
+    "useBlank": true
   }
 ]
