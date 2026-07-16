@@ -513,18 +513,31 @@
             setStatus('Connecting…');
             startDots();
 
-            const repoURL = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/index.html';
+            const baseRepo  = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/';
+            const primaryURL  = baseRepo + 'index.html';
+            const fallbackURL = baseRepo + 'shield.html';
+
+            async function fetchPage(url) {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.text();
+            }
 
             try {
-                setStatus('Fetching Powerhouse…');
-                const response = await fetch(repoURL);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                let html;
+                try {
+                    setStatus('Fetching Powerhouse…');
+                    html = await fetchPage(primaryURL);
+                } catch (primaryError) {
+                    console.warn('index.html failed, falling back to shield.html:', primaryError);
+                    setStatus('Retrying…');
+                    html = await fetchPage(fallbackURL);
+                }
 
                 setStatus('Downloading…');
-                const html = await response.text();
 
                 setStatus('Preparing…');
-                const baseTag = `<base href="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/">`;
+                const baseTag = `<base href="${baseRepo}">`;
                 const processedHtml = html.replace('<head>', `<head>${baseTag}`);
 
                 setStatus('Launching…');
