@@ -7,8 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
-    <meta name="powerhouse-routing" content="spa-clean-paths">
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" id="faviconEl" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png">
     <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
 
 <!-- Windows-esque Powerhouse styling -->
@@ -1068,860 +1067,6 @@
         .shelf-img { height: 74px; }
     }
 
-
-
-    /* Keep every legacy modal / utility panel out of normal page flow. */
-    .eula-backdrop,
-    .welcome-backdrop,
-    .admin-confirm-backdrop,
-    .calmdown-overlay,
-    .lockedin-backdrop,
-    .unclesai-backdrop,
-    .friends-backdrop {
-        position: fixed;
-        inset: 0;
-        z-index: 1300;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 18px;
-        background: rgba(0,0,0,.62);
-        backdrop-filter: blur(7px);
-        -webkit-backdrop-filter: blur(7px);
-    }
-
-    .eula-backdrop.show,
-    .welcome-backdrop.show,
-    .admin-confirm-backdrop.show,
-    .calmdown-overlay.show,
-    .friends-backdrop.show {
-        display: flex;
-    }
-
-    .lockedin-backdrop.show,
-    .unclesai-backdrop.show {
-        display: block;
-    }
-
-    .lockedin-panel,
-    .unclesai-panel {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        z-index: 1310;
-        width: min(1000px, calc(100vw - 36px));
-        height: min(760px, calc(100vh - 50px));
-        display: none;
-        overflow: hidden;
-        transform: translate(-50%, -50%);
-    }
-
-    .lockedin-panel.show,
-    .unclesai-panel.show {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .lockedin-iframe,
-    .unclesai-iframe {
-        width: 100%;
-        flex: 1;
-        min-height: 0;
-        border: 0;
-    }
-
-    .eula-modal,
-    .welcome-modal,
-    .admin-confirm-modal,
-    .calmdown-container,
-    .friends-panel {
-        width: min(720px, 100%);
-        max-height: calc(100vh - 36px);
-        overflow: auto;
-        background: var(--surface-strong);
-        color: var(--text);
-        border: 1px solid var(--border);
-        border-radius: 22px;
-        box-shadow: var(--shadow);
-    }
-
-    .welcome-modal,
-    .admin-confirm-modal {
-        width: min(520px, 100%);
-    }
-
-    /* Legacy auxiliary panels remain hidden unless explicitly opened. */
-    body.route-page .lockedin-backdrop,
-    body.route-page .lockedin-panel,
-    body.route-page .unclesai-backdrop,
-    body.route-page .unclesai-panel,
-    body.route-page .friends-backdrop { display:none !important; }
-
-
-    /* ================================================================
-       ROUTED UI REPAIR LAYER
-       Keeps the original controls/functionality, but makes every routed
-       section render as a coherent app page instead of a half-styled modal.
-       ================================================================ */
-
-    :root {
-        --panel-max: 1120px;
-        --control-bg: rgba(255,255,255,.055);
-        --control-bg-hover: rgba(255,255,255,.09);
-        --danger: #d64545;
-        --success: #34a853;
-    }
-
-    /* Legacy overlays should never take up document flow by accident. */
-    .settings-backdrop,
-    .acct-backdrop,
-    .msg-backdrop,
-    .blog-backdrop,
-    .admin-backdrop,
-    .mod-backdrop,
-    .friends-backdrop,
-    .eula-backdrop,
-    .welcome-backdrop,
-    .admin-confirm-backdrop,
-    .calmdown-overlay,
-    .lockedin-backdrop,
-    .unclesai-backdrop {
-        display: none;
-    }
-
-    .settings-backdrop.show,
-    .acct-backdrop.show,
-    .msg-backdrop.show,
-    .blog-backdrop.show,
-    .admin-backdrop.show,
-    .mod-backdrop.show,
-    .friends-backdrop.show,
-    .eula-backdrop.show,
-    .welcome-backdrop.show,
-    .admin-confirm-backdrop.show,
-    .calmdown-overlay.show {
-        display: flex;
-    }
-
-    /* Generic non-routed modal behaviour, retained for terms/welcome/friends. */
-    body:not(.route-page) .msg-backdrop.show,
-    body:not(.route-page) .blog-backdrop.show,
-    body:not(.route-page) .admin-backdrop.show,
-    body:not(.route-page) .mod-backdrop.show,
-    body:not(.route-page) .acct-backdrop.show {
-        position: fixed;
-        inset: 0;
-        z-index: 1200;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        background: rgba(0,0,0,.62);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-    }
-
-    /* Route pages */
-    body.route-page {
-        min-height: 100vh;
-    }
-
-    body.route-page #main-content {
-        width: min(var(--panel-max), calc(100vw - 40px));
-        min-height: auto;
-        margin: 0 auto;
-        padding: 24px 0 0;
-    }
-
-    body.route-page #homeDashboard {
-        display: none !important;
-    }
-
-    body.route-page .settings-backdrop,
-    body.route-page .acct-backdrop,
-    body.route-page .msg-backdrop,
-    body.route-page .blog-backdrop,
-    body.route-page .admin-backdrop,
-    body.route-page .mod-backdrop {
-        position: relative !important;
-        inset: auto !important;
-        z-index: 1 !important;
-        width: min(var(--panel-max), calc(100vw - 40px));
-        margin: 0 auto 42px !important;
-        padding: 0 !important;
-        align-items: stretch !important;
-        justify-content: stretch !important;
-        background: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-    }
-
-    body.route-page #settingsBackdrop,
-    body.route-page #acctBackdrop,
-    body.route-page #msgBackdrop,
-    body.route-page #blogBackdrop,
-    body.route-page #adminBackdrop,
-    body.route-page #modBackdrop {
-        display: none !important;
-    }
-
-    body.route-settings #settingsBackdrop,
-    body.route-profile #acctBackdrop,
-    body.route-users #acctBackdrop,
-    body.route-messages #msgBackdrop,
-    body.route-blog #blogBackdrop,
-    body.route-admin #adminBackdrop,
-    body.route-moderation #modBackdrop {
-        display: flex !important;
-    }
-
-    body.route-page .settings-menu,
-    body.route-page .acct-modal,
-    body.route-page .msg-panel,
-    body.route-page .blog-panel,
-    body.route-page .admin-panel,
-    body.route-page .mod-panel {
-        position: relative !important;
-        inset: auto !important;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        bottom: auto !important;
-        display: block !important;
-        width: 100% !important;
-        max-width: none !important;
-        height: auto !important;
-        max-height: none !important;
-        min-height: 0 !important;
-        margin: 0 !important;
-        transform: none !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        overflow: hidden !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 20px !important;
-        background: rgba(8,18,30,.92) !important;
-        box-shadow: 0 24px 60px rgba(0,0,0,.32) !important;
-    }
-
-    [data-theme="light"] body.route-page .settings-menu,
-    [data-theme="light"] body.route-page .acct-modal,
-    [data-theme="light"] body.route-page .msg-panel,
-    [data-theme="light"] body.route-page .blog-panel,
-    [data-theme="light"] body.route-page .admin-panel,
-    [data-theme="light"] body.route-page .mod-panel {
-        background: rgba(255,255,255,.94) !important;
-    }
-
-    body.route-page .settings-body,
-    body.route-page .acct-modal-scrollable,
-    body.route-page .blog-body,
-    body.route-page .admin-body,
-    body.route-page .mod-body,
-    body.route-page .msg-convos,
-    body.route-page .msg-chat {
-        max-height: none !important;
-        overflow: visible !important;
-    }
-
-    body.route-page .acct-modal-close,
-    body.route-page .blog-panel-close,
-    body.route-page .msg-close-btn,
-    body.route-page .admin-panel-close,
-    body.route-page .mod-close {
-        display: none !important;
-    }
-
-    .route-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 42px;
-        margin: 0 0 14px;
-        padding: 0 14px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--control-bg);
-        color: var(--text);
-        cursor: pointer;
-        font-weight: 600;
-    }
-    .route-back:hover { background: var(--control-bg-hover); }
-
-    /* Shared headers */
-    .settings-header,
-    .blog-panel-header,
-    .friends-panel-header,
-    .admin-panel-header,
-    .mod-header,
-    .msg-header {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        min-height: 72px;
-        padding: 18px 22px;
-        border-bottom: 1px solid var(--border);
-        background: rgba(255,255,255,.025);
-    }
-
-    .settings-header { display: block; }
-
-    .settings-title,
-    .blog-panel-title,
-    .friends-panel-title,
-    .admin-panel-title,
-    .mod-title,
-    .msg-header-title {
-        margin: 0;
-        color: var(--text);
-        font-size: 1.35rem;
-        line-height: 1.2;
-        font-weight: 700;
-    }
-
-    /* Tabs */
-    .settings-tabs,
-    .blog-tabs,
-    .friends-tabs,
-    .admin-tabs,
-    .mod-tabs,
-    .acct-tabs,
-    .acct-nav-tabs {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    .settings-tabs::-webkit-scrollbar,
-    .blog-tabs::-webkit-scrollbar,
-    .friends-tabs::-webkit-scrollbar,
-    .admin-tabs::-webkit-scrollbar,
-    .mod-tabs::-webkit-scrollbar { display:none; }
-
-    .settings-tab,
-    .blog-tab,
-    .friends-tab,
-    .admin-tab,
-    .mod-tab,
-    .acct-tab,
-    .acct-nav-tab {
-        appearance: none;
-        border: 1px solid transparent;
-        border-radius: 10px;
-        background: transparent;
-        color: var(--text-muted);
-        min-height: 40px;
-        padding: 0 13px;
-        font-weight: 600;
-        white-space: nowrap;
-        cursor: pointer;
-    }
-
-    .settings-tab:hover,
-    .blog-tab:hover,
-    .friends-tab:hover,
-    .admin-tab:hover,
-    .mod-tab:hover,
-    .acct-tab:hover,
-    .acct-nav-tab:hover {
-        color: var(--text);
-        background: var(--control-bg);
-    }
-
-    .settings-tab.active,
-    .blog-tab.active,
-    .friends-tab.active,
-    .admin-tab.active,
-    .mod-tab.active,
-    .acct-tab.active,
-    .acct-nav-tab.active {
-        color: #fff;
-        background: var(--accent);
-        border-color: transparent;
-    }
-
-    /* Settings */
-    .settings-header {
-        padding: 20px 22px 0;
-    }
-    .settings-title { margin-bottom: 16px; }
-    .settings-tabs { padding-bottom: 14px; }
-    .settings-body { padding: 22px; }
-    .settings-pane { display:none; }
-    .settings-pane.active { display:block; }
-
-    .s-section-title,
-    .acct-section-label,
-    .admin-section-title,
-    .mod-section-title {
-        margin: 24px 0 10px;
-        color: var(--text);
-        font-size: .78rem;
-        font-weight: 700;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-    }
-    .settings-pane > .s-section-title:first-child { margin-top: 0; }
-
-    .s-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        min-height: 58px;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,.07);
-    }
-    .s-label { color:var(--text); font-weight:600; }
-    .s-sublabel { margin-top:4px; color:var(--text-muted); font-size:.82rem; line-height:1.45; }
-
-    .theme-picker,
-    .sidebar-pos-picker,
-    .accent-controls {
-        display:flex;
-        align-items:center;
-        flex-wrap:wrap;
-        gap:10px;
-        margin: 8px 0 16px;
-    }
-
-    .theme-swatch {
-        width: 58px;
-        height: 42px;
-        border-radius: 11px;
-        border: 2px solid var(--border);
-        cursor:pointer;
-        box-shadow: inset 0 0 0 2px rgba(255,255,255,.08);
-    }
-    .swatch-dark { background: linear-gradient(135deg,#07101a 50%,#15283a 50%); }
-    .swatch-light { background: linear-gradient(135deg,#fff 50%,#dfe9f3 50%); }
-    .swatch-aero { background: linear-gradient(135deg,#0d6efd,#65d2ff); }
-
-    .sidebar-pos-btn,
-    .mirror-btn,
-    .s-btn,
-    .admin-btn,
-    .mod-btn,
-    .blog-submit-btn,
-    .blog-tb-btn,
-    .msg-send-btn,
-    .msg-back-btn,
-    .acct-btn-primary,
-    .acct-action-btn,
-    .acct-search-btn {
-        appearance:none;
-        min-height:42px;
-        border:1px solid var(--border);
-        border-radius:10px;
-        background:var(--control-bg);
-        color:var(--text);
-        padding:0 14px;
-        font-weight:600;
-        cursor:pointer;
-    }
-    .sidebar-pos-btn:hover,
-    .mirror-btn:hover,
-    .s-btn:hover,
-    .admin-btn:hover,
-    .mod-btn:hover,
-    .blog-submit-btn:hover,
-    .blog-tb-btn:hover,
-    .msg-send-btn:hover,
-    .msg-back-btn:hover,
-    .acct-action-btn:hover,
-    .acct-search-btn:hover { background:var(--control-bg-hover); }
-
-    .sidebar-pos-btn {
-        min-width: 92px;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        gap:6px;
-        padding:10px 12px;
-    }
-    .sidebar-pos-btn svg { width:24px; height:24px; }
-    .sidebar-pos-btn.active { border-color:var(--accent); box-shadow:0 0 0 2px rgba(42,114,255,.15); }
-
-    .s-btn.primary,
-    .admin-btn.primary,
-    .blog-submit-btn,
-    .msg-send-btn,
-    .acct-btn-primary { background:var(--accent); color:#fff; border-color:transparent; }
-    .s-btn.danger,
-    .admin-btn.danger,
-    .acct-action-btn.danger { color:#ffb2b2; border-color:rgba(255,90,90,.26); background:rgba(198,54,54,.12); }
-
-    .font-list,
-    .contributor-grid {
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-        gap:10px;
-    }
-    .font-option,
-    .contributor-chip {
-        border:1px solid var(--border);
-        border-radius:12px;
-        padding:12px;
-        background:var(--control-bg);
-        cursor:pointer;
-    }
-    .font-option.active { border-color:var(--accent); }
-    .font-option-name { display:block; font-weight:700; }
-    .font-option-preview { display:block; margin-top:4px; color:var(--text-muted); }
-
-    .bg-preview {
-        min-height:130px;
-        margin-top:10px;
-        border:1px solid var(--border);
-        border-radius:14px;
-        background-position:center;
-        background-size:cover;
-        overflow:hidden;
-    }
-
-    /* Account / profile */
-    .acct-modal { width:100%; }
-    .acct-modal-header { position:relative; min-height:8px; }
-    .acct-modal-scrollable { padding:24px; }
-    .acct-modal h2 { margin:0 0 6px; font-size:1.7rem; }
-    .acct-sub { margin:0; color:var(--text-muted); line-height:1.5; }
-
-    .acct-field { margin:0 0 14px; }
-    .acct-field label { display:block; margin-bottom:6px; color:var(--text); font-size:.86rem; font-weight:600; }
-    .acct-input,
-    .acct-search-input,
-    .blog-input,
-    .blog-select,
-    .blog-textarea,
-    .admin-search-input,
-    .mod-search-input,
-    .msg-input {
-        width:100%;
-        min-height:44px;
-        border:1px solid var(--border);
-        border-radius:10px;
-        background:rgba(0,0,0,.2);
-        color:var(--text);
-        padding:10px 12px;
-        outline:none;
-    }
-    [data-theme="light"] .acct-input,
-    [data-theme="light"] .acct-search-input,
-    [data-theme="light"] .blog-input,
-    [data-theme="light"] .blog-select,
-    [data-theme="light"] .blog-textarea,
-    [data-theme="light"] .admin-search-input,
-    [data-theme="light"] .mod-search-input,
-    [data-theme="light"] .msg-input { background:rgba(0,0,0,.035); }
-
-    .acct-input:focus,
-    .acct-search-input:focus,
-    .blog-input:focus,
-    .blog-select:focus,
-    .blog-textarea:focus,
-    .admin-search-input:focus,
-    .mod-search-input:focus,
-    .msg-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(42,114,255,.13); }
-
-    .acct-btn-primary { width:100%; }
-    .acct-error { min-height:18px; margin-top:8px; color:#ff7d7d; font-size:.82rem; }
-    .acct-success { margin-top:8px; color:#67d980; font-size:.82rem; }
-
-    .acct-profile-row {
-        display:flex;
-        align-items:center;
-        gap:16px;
-        margin-bottom:22px;
-    }
-    .acct-big-avatar {
-        width:76px;
-        height:76px;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        overflow:hidden;
-        background:rgba(255,255,255,.1);
-        font-size:1.2rem;
-        font-weight:700;
-        flex:0 0 auto;
-    }
-    .acct-uname { font-size:1.35rem; font-weight:700; }
-    .acct-since { margin-top:4px; color:var(--text-muted); font-size:.84rem; }
-    .acct-action-row { display:flex; gap:10px; flex-wrap:wrap; margin:16px 0; }
-    .acct-divider { height:1px; margin:22px 0; background:var(--border); }
-    .acct-warning-box {
-        display:flex;
-        gap:10px;
-        padding:12px 14px;
-        margin:12px 0;
-        border:1px solid rgba(255,186,64,.23);
-        border-radius:12px;
-        background:rgba(255,174,40,.08);
-        color:var(--text-muted);
-    }
-    .acct-warning-box svg { width:20px; height:20px; flex:0 0 auto; color:#ffc35c; }
-    .acct-warning-box p { margin:0; line-height:1.45; }
-
-    .pfp-picker-grid {
-        display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(58px,1fr));
-        gap:10px;
-        margin-top:10px;
-    }
-    .pfp-option,
-    .pfp-item {
-        aspect-ratio:1;
-        border-radius:50%;
-        overflow:hidden;
-        border:2px solid transparent;
-        background:var(--control-bg);
-        cursor:pointer;
-    }
-    .pfp-option img,
-    .pfp-item img { width:100%; height:100%; object-fit:cover; }
-
-    .acct-search-wrap,
-    .admin-search-row,
-    .mod-search-row,
-    .msg-input-row {
-        display:flex;
-        align-items:center;
-        gap:10px;
-    }
-    .acct-search-wrap .acct-search-input,
-    .admin-search-row .admin-search-input,
-    .mod-search-row .mod-search-input,
-    .msg-input-row .msg-input { flex:1; min-width:0; }
-    .acct-search-results { margin-top:14px; }
-
-    /* Blog */
-    .blog-panel-header { justify-content:space-between; flex-wrap:wrap; }
-    .blog-body { padding:22px; }
-    .blog-field { margin-bottom:14px; }
-    .blog-field label { display:block; margin-bottom:6px; font-weight:600; }
-    .blog-textarea { min-height:180px; resize:vertical; }
-    .blog-toolbar { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
-    .blog-tb-btn { min-height:34px; padding:0 10px; }
-    .blog-tb-sep { width:1px; height:28px; background:var(--border); margin:3px 3px; }
-    .blog-row,
-    .acct-result-row,
-    .friend-row,
-    .msg-convo-row {
-        display:flex;
-        align-items:center;
-        gap:12px;
-        padding:12px 0;
-        border-bottom:1px solid rgba(255,255,255,.07);
-    }
-    .blog-post-list { display:grid; gap:10px; }
-    .blog-post-view-title { font-size:clamp(1.6rem,3vw,2.25rem); font-weight:750; margin-bottom:8px; }
-    .blog-post-view-meta { color:var(--text-muted); margin-bottom:18px; }
-    .blog-post-view-body { line-height:1.65; color:var(--text); }
-    .blog-empty,.admin-empty,.mod-empty,.msg-empty,.friends-empty {
-        padding:22px;
-        text-align:center;
-        color:var(--text-muted);
-        border:1px dashed var(--border);
-        border-radius:12px;
-    }
-
-    /* Messages */
-    .msg-panel { min-height:560px; }
-    .msg-header { justify-content:space-between; }
-    .msg-convos,
-    .msg-chat { padding:18px 22px; }
-    .msg-messages { min-height:300px; max-height:55vh; overflow-y:auto; padding:8px 0 16px; }
-    .msg-chat-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-    .msg-chat-avatar,
-    .friend-avatar,
-    .acct-result-avatar {
-        width:42px;
-        height:42px;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        overflow:hidden;
-        flex:0 0 auto;
-        background:rgba(255,255,255,.1);
-        font-weight:700;
-    }
-    .msg-chat-avatar img,
-    .friend-avatar img,
-    .acct-result-avatar img { width:100%; height:100%; object-fit:cover; }
-
-    /* Admin / moderation */
-    .admin-panel-header,
-    .mod-header { flex-wrap:wrap; }
-    .admin-panel-header .admin-tabs,
-    .mod-header .mod-tabs { flex:1 1 100%; }
-    .admin-body,
-    .mod-body { padding:22px; }
-    .admin-stat-grid {
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-        gap:12px;
-    }
-    .admin-stat,
-    .admin-announce-box {
-        padding:16px;
-        border:1px solid var(--border);
-        border-radius:14px;
-        background:var(--control-bg);
-    }
-    .admin-stat-val { font-size:1.5rem; font-weight:750; }
-    .admin-stat-lbl { margin-top:4px; color:var(--text-muted); font-size:.82rem; }
-
-    /* User search route only; never show it inside profile management. */
-    body.route-profile #liPaneUsers,
-    body.route-profile #liTabUsers { display:none !important; }
-    body.route-users .acct-nav-tabs,
-    body.route-users #liPaneProfile { display:none !important; }
-    body.route-users #liPaneUsers { display:block !important; }
-
-    /* Keep nested policy/confirmation dialogs available above routed pages. */
-    body.route-page .eula-backdrop.show,
-    body.route-page .welcome-backdrop.show,
-    body.route-page .admin-confirm-backdrop.show,
-    body.route-page .calmdown-overlay.show {
-        position:fixed !important;
-        inset:0 !important;
-        z-index:1600 !important;
-        display:flex !important;
-        align-items:center;
-        justify-content:center;
-        padding:18px;
-        background:rgba(0,0,0,.7) !important;
-        backdrop-filter:blur(8px);
-    }
-
-    @media (max-width: 720px) {
-        body.route-page #main-content,
-        body.route-page .settings-backdrop,
-        body.route-page .acct-backdrop,
-        body.route-page .msg-backdrop,
-        body.route-page .blog-backdrop,
-        body.route-page .admin-backdrop,
-        body.route-page .mod-backdrop {
-            width:calc(100vw - 20px);
-        }
-        body.route-page #main-content { padding-top:14px; }
-        body.route-page .settings-menu,
-        body.route-page .acct-modal,
-        body.route-page .msg-panel,
-        body.route-page .blog-panel,
-        body.route-page .admin-panel,
-        body.route-page .mod-panel { border-radius:16px !important; }
-
-        .settings-header,
-        .blog-panel-header,
-        .admin-panel-header,
-        .mod-header,
-        .msg-header { padding:16px; }
-        .settings-body,
-        .acct-modal-scrollable,
-        .blog-body,
-        .admin-body,
-        .mod-body,
-        .msg-convos,
-        .msg-chat { padding:16px; }
-
-        .acct-search-wrap,
-        .admin-search-row,
-        .mod-search-row,
-        .msg-input-row { align-items:stretch; flex-direction:column; }
-        .acct-search-btn,
-        .msg-send-btn { width:100%; }
-        .admin-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    }
-
-
-/* ===== HOME PAGE HARD RESET / ORDER FIX ===== */
-body:not(.route-page) #main-content {
-    display: block !important;
-}
-body:not(.route-page) #homeDashboard {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-}
-body:not(.route-page) #dashboardHero {
-    order: 1 !important;
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-}
-body:not(.route-page) #historyShelf {
-    order: 2 !important;
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-}
-body:not(.route-page) #gamesPanel {
-    order: 3 !important;
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-}
-
-/* Nothing from the old modal/navigation system is allowed to consume
-   document flow on the home page. It only appears when explicitly opened. */
-body:not(.route-page) > #settingsMenu,
-body:not(.route-page) > #settingsBackdrop,
-body:not(.route-page) > #acctBackdrop,
-body:not(.route-page) > #adminBackdrop,
-body:not(.route-page) > #msgBackdrop,
-body:not(.route-page) > #modBackdrop,
-body:not(.route-page) > #blogBackdrop,
-body:not(.route-page) > #friendsBackdrop,
-body:not(.route-page) > #eulaBackdrop,
-body:not(.route-page) > #cocBackdrop,
-body:not(.route-page) > #privacyBackdrop,
-body:not(.route-page) > #cookieBackdrop,
-body:not(.route-page) > #welcomeBackdrop,
-body:not(.route-page) > #adminConfirmBackdrop,
-body:not(.route-page) > #calmdownOverlay,
-body:not(.route-page) > #lockedinBackdrop,
-body:not(.route-page) > #lockedinPanel,
-body:not(.route-page) > #unclesaiBackdrop,
-body:not(.route-page) > #unclesaiPanel,
-body:not(.route-page) > #friendProfileBackdrop {
-    display: none !important;
-}
-
-body:not(.route-page) > #acctBackdrop.show,
-body:not(.route-page) > #friendsBackdrop.show,
-body:not(.route-page) > #eulaBackdrop.show,
-body:not(.route-page) > #cocBackdrop.show,
-body:not(.route-page) > #privacyBackdrop.show,
-body:not(.route-page) > #cookieBackdrop.show,
-body:not(.route-page) > #welcomeBackdrop.show,
-body:not(.route-page) > #adminConfirmBackdrop.show,
-body:not(.route-page) > #calmdownOverlay.show,
-body:not(.route-page) > #friendProfileBackdrop.show {
-    display: flex !important;
-}
-body:not(.route-page) > #lockedinBackdrop.show,
-body:not(.route-page) > #lockedinPanel.show,
-body:not(.route-page) > #unclesaiBackdrop.show,
-body:not(.route-page) > #unclesaiPanel.show {
-    display: block !important;
-}
-
-/* Keep generated game cards confined to the games panel. */
-body:not(.route-page) #gamesPanel #game-grid {
-    position: static !important;
-    inset: auto !important;
-    transform: none !important;
-    width: auto !important;
-}
 </style>
 
 </head>
@@ -2085,14 +1230,14 @@ body:not(.route-page) #gamesPanel #game-grid {
 <div id="homeDashboard">
     <section id="dashboardHero">
         <div class="panel-shell" id="dashboardProfileCard">
-            <button id="dashboardProfileBtn" onclick="openProfileRoute()" aria-label="Open your profile"></button>
+            <button id="dashboardProfileBtn" onclick="navigateRoute('profile')" aria-label="Open your profile"></button>
         </div>
 
         <div id="dashboardCenterCol">
             <div class="panel-shell" id="dashboardGreetingCard">
                 <h1 id="dashboardGreeting">Hello, <span class="dashboard-username">USERNAME</span></h1>
                 <div id="dashboardSubLabel">Welcome back to Powerhouse</div>
-                <button id="dashboardSignInBtn" onclick="openSignInRoute()">Sign In</button>
+                <button id="dashboardSignInBtn" onclick="navigateRoute('profile')">Sign In</button>
             </div>
 
             <div class="panel-shell" id="dashboardFriendsPanel">
@@ -2324,17 +1469,6 @@ body:not(.route-page) #gamesPanel #game-grid {
                 <div class="contributor-chip">Norwegian<span class="role">Contributor</span></div>
                 <div class="contributor-chip">nate<span class="role">Moderator</span></div>
             </div>
-
-            <div class="s-section-title">Mirrors</div>
-            <a href="https://powerhouse.c823.workers.dev/" target="_blank" rel="noopener" class="mirror-btn">
-                Cloudflare (Main)
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;opacity:0.5;flex-shrink:0;margin-left:auto"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-            </a>
-            <a href="https://kraftpaket.c1120.workers.dev/" target="_blank" rel="noopener" class="mirror-btn">
-                Cloudflare (Backup)
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;opacity:0.5;flex-shrink:0;margin-left:auto"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-            </a>
-            <p class="mirror-disclaimer">Cloudflare (Backup) may not always be up to date.</p>
 
             <div class="s-section-title">Legal</div>
             <div style="display:flex;flex-direction:column;gap:6px">
@@ -3409,7 +2543,6 @@ body:not(.route-page) #gamesPanel #game-grid {
             updateAccountBtn();
             refreshAccountModal();
             startStatusPolling();  // Start polling for ban/warning updates
-            if (getRouteFromPath() === 'profile') renderRoute('profile');
 
             // Show ban message if account is banned
             if (data.banned) {
@@ -3470,7 +2603,6 @@ body:not(.route-page) #gamesPanel #game-grid {
             await checkBlogAdmin();
             updateAccountBtn();
             refreshAccountModal();
-            if (getRouteFromPath() === 'profile') renderRoute('profile');
         } catch(e) { err.textContent = 'Network error. Try again.'; }
         finally { btn.disabled = false; btn.textContent = 'Create Account'; }
     }
@@ -3505,7 +2637,6 @@ body:not(.route-page) #gamesPanel #game-grid {
 
         updateAccountBtn();
         refreshAccountModal();
-        if (getRouteFromPath() === 'profile') renderRoute('profile');
 
         if (btn) { btn.disabled = false; btn.textContent = 'Create Local Account'; }
     }
@@ -3683,7 +2814,6 @@ body:not(.route-page) #gamesPanel #game-grid {
         updateAccountBtn();
         const bd = document.getElementById('acctBackdrop');
         if (bd) bd.classList.remove('show');
-        if (getRouteFromPath() !== 'home') navigateRoute('home', true);
     }
 
     async function acctChangePassword() {
@@ -4247,44 +3377,10 @@ body:not(.route-page) #gamesPanel #game-grid {
 
     function navigateRoute(route, replace = false) {
         route = ROUTE_PATHS[route] ? route : 'home';
-
-        // User search requires a signed-in cloud account. If someone clicks the
-        // Friends + button while signed out, take them to the Sign In page.
-        if (route === 'users' && !_acctToken) {
-            openSignInRoute(replace);
-            return;
-        }
-
         const url = ROUTE_PATHS[route];
-        try {
-            if (replace) history.replaceState({route}, '', url);
-            else if (location.pathname !== url) history.pushState({route}, '', url);
-        } catch (e) {
-            // history.pushState should work on Cloudflare Workers, but rendering
-            // the route should never fail just because the URL could not update.
-            console.warn('Route URL update failed:', e);
-        }
+        if (replace) history.replaceState({route}, '', url);
+        else if (location.pathname !== url) history.pushState({route}, '', url);
         renderRoute(route);
-    }
-
-    function openSignInRoute(replace = false) {
-        const url = ROUTE_PATHS.profile;
-        try {
-            if (replace) history.replaceState({route:'profile'}, '', url);
-            else if (location.pathname !== url) history.pushState({route:'profile'}, '', url);
-        } catch (e) {
-            console.warn('Profile URL update failed:', e);
-        }
-        renderRoute('profile', 'signin');
-    }
-
-    function openProfileRoute(replace = false) {
-        // Signed-out users should always land directly on Sign In.
-        if (!(_acctUsername && (_acctToken || _isLocalAccount))) {
-            openSignInRoute(replace);
-            return;
-        }
-        navigateRoute('profile', replace);
     }
 
     function resetRoutePanels() {
@@ -4296,7 +3392,7 @@ body:not(.route-page) #gamesPanel #game-grid {
         const routeBack = document.getElementById('routeBackBtn'); if (routeBack) routeBack.style.display = 'none';
     }
 
-    function renderRoute(route, profileMode = null) {
+    function renderRoute(route) {
         resetRoutePanels();
         updatePageTitle(route === 'moderation' ? 'mod' : route);
         if (route === 'home') {
@@ -4313,37 +3409,24 @@ body:not(.route-page) #gamesPanel #game-grid {
             const menu = document.getElementById('settingsMenu'); if (menu) menu.classList.add('show');
         } else if (route === 'profile') {
             refreshAccountModal();
-            const signedIn = !!(_acctUsername && (_acctToken || _isLocalAccount));
-            const auth = document.getElementById('acctAuthPanel');
-            const logged = document.getElementById('acctLoggedInPanel');
-            const bd = document.getElementById('acctBackdrop');
-            if (bd) bd.classList.add('show');
-
-            if (!signedIn || profileMode === 'signin') {
-                if (auth) auth.style.display = 'block';
-                if (logged) logged.style.display = 'none';
-                acctSwitchTab('signin');
-                setTimeout(() => document.getElementById('siUsername')?.focus(), 60);
-            } else {
-                if (auth) auth.style.display = 'none';
-                if (logged) logged.style.display = 'block';
-                const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display = '';
-                liSwitchTab('profile');
-                const users = document.getElementById('liPaneUsers'); if (users) users.style.display = 'none';
-            }
+            const bd = document.getElementById('acctBackdrop'); if (bd) bd.classList.add('show');
+            const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display = '';
+            const profile = document.getElementById('liPaneProfile'); if (profile) profile.style.display = 'block';
+            const users = document.getElementById('liPaneUsers'); if (users) users.style.display = 'none';
+            const profileTab = document.getElementById('liTabProfile'); if (profileTab) profileTab.classList.add('active');
         } else if (route === 'users') {
             if (!_acctToken) {
-                openSignInRoute(true);
-                return;
+                refreshAccountModal();
+            } else {
+                refreshAccountModal();
+                const auth = document.getElementById('acctAuthPanel'); if (auth) auth.style.display='none';
+                const logged = document.getElementById('acctLoggedInPanel'); if (logged) logged.style.display='block';
+                const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display='none';
+                const profile = document.getElementById('liPaneProfile'); if (profile) profile.style.display='none';
+                const users = document.getElementById('liPaneUsers'); if (users) users.style.display='block';
+                setTimeout(() => document.getElementById('acctSearchInput')?.focus(), 60);
             }
-            refreshAccountModal();
-            const auth = document.getElementById('acctAuthPanel'); if (auth) auth.style.display='none';
-            const logged = document.getElementById('acctLoggedInPanel'); if (logged) logged.style.display='block';
-            const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display='none';
-            const profile = document.getElementById('liPaneProfile'); if (profile) profile.style.display='none';
-            const users = document.getElementById('liPaneUsers'); if (users) users.style.display='block';
             const bd = document.getElementById('acctBackdrop'); if (bd) bd.classList.add('show');
-            setTimeout(() => document.getElementById('acctSearchInput')?.focus(), 60);
         } else if (route === 'messages') {
             const bd = document.getElementById('msgBackdrop'); if (bd) bd.classList.add('show');
             msgShowConvos(); msgLoadConvos();
@@ -4489,7 +3572,7 @@ body:not(.route-page) #gamesPanel #game-grid {
         if (_acctUsername && (_acctToken || _isLocalAccount)) {
             if (confirm('Sign out of Powerhouse?')) acctSignOut();
         } else {
-            openSignInRoute();
+            navigateRoute('profile');
         }
     }
 
@@ -6111,7 +5194,7 @@ body:not(.route-page) #gamesPanel #game-grid {
             '  <iframe id="frame" src="' + url + '" allowfullscreen></iframe>',
             '</div>',
             '<script>',
-            'document.getElementById("ph-logo").addEventListener("click",function(){window.open("https://powerhousemirrors.c823.workers.dev","_blank");});',
+            'document.getElementById("ph-logo").addEventListener("click",function(){window.open("https://powerhouse.c823.workers.dev","_blank");});',
             'var frame=document.getElementById("frame"),loading=document.getElementById("loading"),blocked=document.getElementById("blocked");',
             'var settled=false;',
             'function showBlocked(){if(settled)return;settled=true;loading.style.display="none";blocked.style.display="flex";frame.style.display="none";}',
