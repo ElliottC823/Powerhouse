@@ -1067,6 +1067,102 @@
         .shelf-img { height: 74px; }
     }
 
+
+
+    /* Keep every legacy modal / utility panel out of normal page flow. */
+    .eula-backdrop,
+    .welcome-backdrop,
+    .admin-confirm-backdrop,
+    .calmdown-overlay,
+    .lockedin-backdrop,
+    .unclesai-backdrop,
+    .friends-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1300;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        background: rgba(0,0,0,.62);
+        backdrop-filter: blur(7px);
+        -webkit-backdrop-filter: blur(7px);
+    }
+
+    .eula-backdrop.show,
+    .welcome-backdrop.show,
+    .admin-confirm-backdrop.show,
+    .calmdown-overlay.show,
+    .friends-backdrop.show {
+        display: flex;
+    }
+
+    .lockedin-backdrop.show,
+    .unclesai-backdrop.show {
+        display: block;
+    }
+
+    .lockedin-panel,
+    .unclesai-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 1310;
+        width: min(1000px, calc(100vw - 36px));
+        height: min(760px, calc(100vh - 50px));
+        display: none;
+        overflow: hidden;
+        transform: translate(-50%, -50%);
+    }
+
+    .lockedin-panel.show,
+    .unclesai-panel.show {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .lockedin-iframe,
+    .unclesai-iframe {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        border: 0;
+    }
+
+    .eula-modal,
+    .welcome-modal,
+    .admin-confirm-modal,
+    .calmdown-container,
+    .friends-panel {
+        width: min(720px, 100%);
+        max-height: calc(100vh - 36px);
+        overflow: auto;
+        background: var(--surface-strong);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+    }
+
+    .welcome-modal,
+    .admin-confirm-modal {
+        width: min(520px, 100%);
+    }
+
+    /* Route pages render their own supported panel as content. Other legacy
+       overlays must stay hidden so they cannot appear below the page. */
+    body.route-page .eula-backdrop,
+    body.route-page .welcome-backdrop,
+    body.route-page .admin-confirm-backdrop,
+    body.route-page .calmdown-overlay,
+    body.route-page .lockedin-backdrop,
+    body.route-page .lockedin-panel,
+    body.route-page .unclesai-backdrop,
+    body.route-page .unclesai-panel,
+    body.route-page .friends-backdrop {
+        display: none !important;
+    }
+
 </style>
 
 </head>
