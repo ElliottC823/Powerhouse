@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Powerhouse</title>
+    <meta name="powerhouse-routing" content="spa-clean-paths">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
 
@@ -1326,14 +1327,14 @@
 <div id="homeDashboard">
     <section id="dashboardHero">
         <div class="panel-shell" id="dashboardProfileCard">
-            <button id="dashboardProfileBtn" onclick="navigateRoute('profile')" aria-label="Open your profile"></button>
+            <button id="dashboardProfileBtn" onclick="openProfileRoute()" aria-label="Open your profile"></button>
         </div>
 
         <div id="dashboardCenterCol">
             <div class="panel-shell" id="dashboardGreetingCard">
                 <h1 id="dashboardGreeting">Hello, <span class="dashboard-username">USERNAME</span></h1>
                 <div id="dashboardSubLabel">Welcome back to Powerhouse</div>
-                <button id="dashboardSignInBtn" onclick="navigateRoute('profile')">Sign In</button>
+                <button id="dashboardSignInBtn" onclick="openSignInRoute()">Sign In</button>
             </div>
 
             <div class="panel-shell" id="dashboardFriendsPanel">
@@ -2650,6 +2651,7 @@
             updateAccountBtn();
             refreshAccountModal();
             startStatusPolling();  // Start polling for ban/warning updates
+            if (getRouteFromPath() === 'profile') renderRoute('profile');
 
             // Show ban message if account is banned
             if (data.banned) {
@@ -2710,6 +2712,7 @@
             await checkBlogAdmin();
             updateAccountBtn();
             refreshAccountModal();
+            if (getRouteFromPath() === 'profile') renderRoute('profile');
         } catch(e) { err.textContent = 'Network error. Try again.'; }
         finally { btn.disabled = false; btn.textContent = 'Create Account'; }
     }
@@ -2744,6 +2747,7 @@
 
         updateAccountBtn();
         refreshAccountModal();
+        if (getRouteFromPath() === 'profile') renderRoute('profile');
 
         if (btn) { btn.disabled = false; btn.textContent = 'Create Local Account'; }
     }
@@ -2921,6 +2925,7 @@
         updateAccountBtn();
         const bd = document.getElementById('acctBackdrop');
         if (bd) bd.classList.remove('show');
+        if (getRouteFromPath() !== 'home') navigateRoute('home', true);
     }
 
     async function acctChangePassword() {
@@ -3484,10 +3489,44 @@
 
     function navigateRoute(route, replace = false) {
         route = ROUTE_PATHS[route] ? route : 'home';
+
+        // User search requires a signed-in cloud account. If someone clicks the
+        // Friends + button while signed out, take them to the Sign In page.
+        if (route === 'users' && !_acctToken) {
+            openSignInRoute(replace);
+            return;
+        }
+
         const url = ROUTE_PATHS[route];
-        if (replace) history.replaceState({route}, '', url);
-        else if (location.pathname !== url) history.pushState({route}, '', url);
+        try {
+            if (replace) history.replaceState({route}, '', url);
+            else if (location.pathname !== url) history.pushState({route}, '', url);
+        } catch (e) {
+            // history.pushState should work on Cloudflare Workers, but rendering
+            // the route should never fail just because the URL could not update.
+            console.warn('Route URL update failed:', e);
+        }
         renderRoute(route);
+    }
+
+    function openSignInRoute(replace = false) {
+        const url = ROUTE_PATHS.profile;
+        try {
+            if (replace) history.replaceState({route:'profile'}, '', url);
+            else if (location.pathname !== url) history.pushState({route:'profile'}, '', url);
+        } catch (e) {
+            console.warn('Profile URL update failed:', e);
+        }
+        renderRoute('profile', 'signin');
+    }
+
+    function openProfileRoute(replace = false) {
+        // Signed-out users should always land directly on Sign In.
+        if (!(_acctUsername && (_acctToken || _isLocalAccount))) {
+            openSignInRoute(replace);
+            return;
+        }
+        navigateRoute('profile', replace);
     }
 
     function resetRoutePanels() {
@@ -3499,7 +3538,7 @@
         const routeBack = document.getElementById('routeBackBtn'); if (routeBack) routeBack.style.display = 'none';
     }
 
-    function renderRoute(route) {
+    function renderRoute(route, profileMode = null) {
         resetRoutePanels();
         updatePageTitle(route === 'moderation' ? 'mod' : route);
         if (route === 'home') {
@@ -3516,24 +3555,37 @@
             const menu = document.getElementById('settingsMenu'); if (menu) menu.classList.add('show');
         } else if (route === 'profile') {
             refreshAccountModal();
-            const bd = document.getElementById('acctBackdrop'); if (bd) bd.classList.add('show');
-            const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display = '';
-            const profile = document.getElementById('liPaneProfile'); if (profile) profile.style.display = 'block';
-            const users = document.getElementById('liPaneUsers'); if (users) users.style.display = 'none';
-            const profileTab = document.getElementById('liTabProfile'); if (profileTab) profileTab.classList.add('active');
+            const signedIn = !!(_acctUsername && (_acctToken || _isLocalAccount));
+            const auth = document.getElementById('acctAuthPanel');
+            const logged = document.getElementById('acctLoggedInPanel');
+            const bd = document.getElementById('acctBackdrop');
+            if (bd) bd.classList.add('show');
+
+            if (!signedIn || profileMode === 'signin') {
+                if (auth) auth.style.display = 'block';
+                if (logged) logged.style.display = 'none';
+                acctSwitchTab('signin');
+                setTimeout(() => document.getElementById('siUsername')?.focus(), 60);
+            } else {
+                if (auth) auth.style.display = 'none';
+                if (logged) logged.style.display = 'block';
+                const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display = '';
+                liSwitchTab('profile');
+                const users = document.getElementById('liPaneUsers'); if (users) users.style.display = 'none';
+            }
         } else if (route === 'users') {
             if (!_acctToken) {
-                refreshAccountModal();
-            } else {
-                refreshAccountModal();
-                const auth = document.getElementById('acctAuthPanel'); if (auth) auth.style.display='none';
-                const logged = document.getElementById('acctLoggedInPanel'); if (logged) logged.style.display='block';
-                const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display='none';
-                const profile = document.getElementById('liPaneProfile'); if (profile) profile.style.display='none';
-                const users = document.getElementById('liPaneUsers'); if (users) users.style.display='block';
-                setTimeout(() => document.getElementById('acctSearchInput')?.focus(), 60);
+                openSignInRoute(true);
+                return;
             }
+            refreshAccountModal();
+            const auth = document.getElementById('acctAuthPanel'); if (auth) auth.style.display='none';
+            const logged = document.getElementById('acctLoggedInPanel'); if (logged) logged.style.display='block';
+            const nav = document.querySelector('#acctLoggedInPanel .acct-nav-tabs'); if (nav) nav.style.display='none';
+            const profile = document.getElementById('liPaneProfile'); if (profile) profile.style.display='none';
+            const users = document.getElementById('liPaneUsers'); if (users) users.style.display='block';
             const bd = document.getElementById('acctBackdrop'); if (bd) bd.classList.add('show');
+            setTimeout(() => document.getElementById('acctSearchInput')?.focus(), 60);
         } else if (route === 'messages') {
             const bd = document.getElementById('msgBackdrop'); if (bd) bd.classList.add('show');
             msgShowConvos(); msgLoadConvos();
@@ -3679,7 +3731,7 @@
         if (_acctUsername && (_acctToken || _isLocalAccount)) {
             if (confirm('Sign out of Powerhouse?')) acctSignOut();
         } else {
-            navigateRoute('profile');
+            openSignInRoute();
         }
     }
 
