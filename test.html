@@ -1839,6 +1839,89 @@
         .admin-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
 
+
+/* ===== HOME PAGE HARD RESET / ORDER FIX ===== */
+body:not(.route-page) #main-content {
+    display: block !important;
+}
+body:not(.route-page) #homeDashboard {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+}
+body:not(.route-page) #dashboardHero {
+    order: 1 !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+}
+body:not(.route-page) #historyShelf {
+    order: 2 !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+}
+body:not(.route-page) #gamesPanel {
+    order: 3 !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+}
+
+/* Nothing from the old modal/navigation system is allowed to consume
+   document flow on the home page. It only appears when explicitly opened. */
+body:not(.route-page) > #settingsMenu,
+body:not(.route-page) > #settingsBackdrop,
+body:not(.route-page) > #acctBackdrop,
+body:not(.route-page) > #adminBackdrop,
+body:not(.route-page) > #msgBackdrop,
+body:not(.route-page) > #modBackdrop,
+body:not(.route-page) > #blogBackdrop,
+body:not(.route-page) > #friendsBackdrop,
+body:not(.route-page) > #eulaBackdrop,
+body:not(.route-page) > #cocBackdrop,
+body:not(.route-page) > #privacyBackdrop,
+body:not(.route-page) > #cookieBackdrop,
+body:not(.route-page) > #welcomeBackdrop,
+body:not(.route-page) > #adminConfirmBackdrop,
+body:not(.route-page) > #calmdownOverlay,
+body:not(.route-page) > #lockedinBackdrop,
+body:not(.route-page) > #lockedinPanel,
+body:not(.route-page) > #unclesaiBackdrop,
+body:not(.route-page) > #unclesaiPanel,
+body:not(.route-page) > #friendProfileBackdrop {
+    display: none !important;
+}
+
+body:not(.route-page) > #acctBackdrop.show,
+body:not(.route-page) > #friendsBackdrop.show,
+body:not(.route-page) > #eulaBackdrop.show,
+body:not(.route-page) > #cocBackdrop.show,
+body:not(.route-page) > #privacyBackdrop.show,
+body:not(.route-page) > #cookieBackdrop.show,
+body:not(.route-page) > #welcomeBackdrop.show,
+body:not(.route-page) > #adminConfirmBackdrop.show,
+body:not(.route-page) > #calmdownOverlay.show,
+body:not(.route-page) > #friendProfileBackdrop.show {
+    display: flex !important;
+}
+body:not(.route-page) > #lockedinBackdrop.show,
+body:not(.route-page) > #lockedinPanel.show,
+body:not(.route-page) > #unclesaiBackdrop.show,
+body:not(.route-page) > #unclesaiPanel.show {
+    display: block !important;
+}
+
+/* Keep generated game cards confined to the games panel. */
+body:not(.route-page) #gamesPanel #game-grid {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: auto !important;
+}
 </style>
 
 </head>
