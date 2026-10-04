@@ -594,7 +594,7 @@
     "useBlank": false
   },
   {
-    "title": "Geommetry Dash",
+    "title": "Geometry Dash",
     "category": "Arcade",
     "desc": "Geometry Dash is a high-octane, rhythm-based platformer developed by RobTop Games. It\u2019s famous for its simple mechanics, punishing difficulty, and an iconic soundtrack that is synced directly to the gameplay.",
     "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCd8DHW4zOb9QqjJ59t9FpV8LnEeKwIttiaw&s",
@@ -779,6 +779,15 @@
     "desc": "Larp.",
     "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fthfvnext.bing.com%2Fth%2Fid%2FOIP.lY68gRpqdbm-T_NsYvKC-gAAAA%3Fcb%3Dthfvnextfalcon4%26pid%3DApi&f=1&ipt=0e7027d9714858b14f1e9c570fd59c5804eb1391acf98c479dc3aaf11b14589f&ipo=images",
     "link": "https://larptube.com/",
+    "verified": false,
+    "useBlank": true
+  },
+  {
+    "title": "Sword Fights on the Heights IV",
+    "category": "Arcade",
+    "desc": "Death before dishonor.",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.sftcdn.net%2Fimages%2Ft_app-cover-l%2Cf_auto%2Fp%2F5cbced38-e912-4cc9-998f-86e3df009972%2F653554917%2Fsword-fights-on-the-heights-iv-screenshot.png&f=1&nofb=1&ipt=9f3d9feaf7b2ae223e9be659c3d2b4cccbeb12fda080ac956fcb26166cfa3503&ipo=images",
+    "link": "https://shedletsky.com/SFOTH/",
     "verified": false,
     "useBlank": true
   }
