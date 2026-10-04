@@ -778,7 +778,7 @@
     "category": "Media",
     "desc": "Larp.",
     "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fthfvnext.bing.com%2Fth%2Fid%2FOIP.lY68gRpqdbm-T_NsYvKC-gAAAA%3Fcb%3Dthfvnextfalcon4%26pid%3DApi&f=1&ipt=0e7027d9714858b14f1e9c570fd59c5804eb1391acf98c479dc3aaf11b14589f&ipo=images",
-    "link": "https://https://larptube.com/",
+    "link": "https://larptube.com/",
     "verified": false,
     "useBlank": true
   },
