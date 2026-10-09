@@ -3,161 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Vortex | Dashboard</title>
+    <title>Powerhouse</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #a855f7;
-            --accent-hover: #9333ea;
-            --bg-main: #060608;
-            --bg-side: #0f0f12;
-            --surface: #16161a;
-            --border: rgba(255, 255, 255, 0.05);
+            --accent: #4d7fff;
+            --accent2: #2f5fe0;
+            --accent-light: rgba(77, 127, 255, 0.1);
+            --bg-main: #0a0b10;
+            --bg-side: #131419;
+            --surface: #191b22;
+            --border: rgba(255, 255, 255, 0.08);
             --text: #f4f5f9;
             --text-muted: rgba(244, 245, 249, 0.5);
-            --radius: 12px;
+            --radius: 14px;
             --sidebar-width: 260px;
-            --danger: #e34c4c;
+            --danger: #c42b1c;
         }
 
         [data-theme="light"] {
-            --bg-main: #f3f4f6;
+            --bg-main: #f6f7fb;
             --bg-side: #ffffff;
-            --surface: #f9fafb;
-            --border: rgba(0, 0, 0, 0.08);
-            --text: #111827;
-            --text-muted: #6b7280;
+            --surface: #f2f3f8;
+            --border: rgba(20, 21, 31, 0.08);
+            --text: #14151f;
+            --text-muted: rgba(20, 21, 31, 0.46);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; }
+        body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- LANDING / AUTH PAGE --- */
-        #landing-page { position: fixed; inset: 0; background: var(--bg-main); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; }
+        /* --- AUTH PAGE --- */
+        #landing-page { position: fixed; inset: 0; background: var(--bg-main); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; }
         .auth-container { width: 100%; max-width: 400px; padding: 20px; }
-        .auth-logo { height: 60px; margin-bottom: 40px; display: block; margin-left: auto; margin-right: auto; }
-        .auth-container h2 { font-size: 28px; font-weight: 800; margin-bottom: 30px; }
+        .auth-logo { height: 50px; margin-bottom: 40px; display: block; margin-left: auto; margin-right: auto; }
+        .auth-container h2 { font-size: 28px; font-weight: 800; margin-bottom: 30px; text-align: center; }
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
-        .form-group input { width: 100%; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: white; outline: none; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
+        .form-group input { width: 100%; padding: 14px; background: var(--bg-side); border: 1px solid var(--border); border-radius: 10px; color: white; outline: none; font-family: inherit; }
         .landing-btn { width: 100%; padding: 14px; background: var(--accent); border: none; color: white; font-weight: 700; border-radius: 10px; cursor: pointer; font-size: 16px; }
-        .auth-footer-links { margin-top: 20px; font-size: 14px; color: var(--text-muted); }
-        .auth-footer-links a { color: var(--text); text-decoration: none; font-weight: 600; }
-        .global-footer { position: absolute; bottom: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
 
         /* --- DASHBOARD UI --- */
-        #sidebar { width: var(--sidebar-width); background: var(--bg-side); padding: 24px 16px; display: flex; flex-direction: column; position: fixed; height: 100vh; border-right: 1px solid var(--border); z-index: 1000; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; color: var(--text-muted); text-decoration: none; font-weight: 600; cursor: pointer; margin-bottom: 4px; }
-        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+        #sidebar { width: var(--sidebar-width); background: var(--bg-side); padding: 24px 16px; display: none; flex-direction: column; position: fixed; height: 100vh; border-right: 1px solid var(--border); z-index: 1000; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-muted); text-decoration: none; font-weight: 600; cursor: pointer; margin-bottom: 4px; position: relative; transition: 0.2s; }
+        .nav-item:hover { background: var(--accent-light); color: var(--text); }
         .nav-item.active { background: var(--accent); color: white; }
-        .nav-item svg { width: 20px; height: 20px; }
+        .nav-item svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .badge { position: absolute; right: 12px; background: var(--accent2); padding: 2px 8px; border-radius: 20px; font-size: 10px; color: white; font-weight: 800; }
 
         #main-wrapper { margin-left: var(--sidebar-width); flex: 1; padding: 24px 48px; display: none; }
-        header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative; }
-        .search-container { width: 450px; }
-        .search-container input { width: 100%; background: var(--bg-side); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text); outline: none; }
-        .header-right { position: absolute; right: 0; display: flex; align-items: center; gap: 15px; }
-
-        /* --- USER PILL & DROPDOWN --- */
+        header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative; min-height: 44px; }
+        .header-right { position: absolute; right: 0; top: 0; display: flex; align-items: center; z-index: 10; }
         .user-pill-container { position: relative; }
-        .user-pill { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: 0.2s; }
-        .user-pill:hover { background: rgba(255,255,255,0.05); }
-        .user-pill img { width: 32px; height: 32px; border-radius: 6px; background: var(--surface); object-fit: cover; border: 1px solid var(--border); }
+        @media (max-width: 850px) {
+            #main-wrapper { padding: 20px 24px; }
+            header { justify-content: flex-start; gap: 16px; flex-wrap: wrap; }
+            .search-container { width: min(100%, 450px); max-width: calc(100% - 155px); }
+            .header-right { position: relative; margin-left: auto; }
+        }
+        @media (max-width: 600px) {
+            header { justify-content: flex-end; }
+            .header-right { order: 0; }
+            .search-container { order: 1; max-width: 100%; width: 100%; }
+        }
+        .search-container { width: 450px; }
+        .search-container input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; color: var(--text); outline: none; font-family: inherit; }
         
-        #user-dropdown {
-            position: absolute; top: calc(100% + 10px); right: 0;
-            width: 220px; background: var(--bg-side);
-            border: 1px solid var(--border); border-radius: 12px;
-            padding: 8px; display: none; flex-direction: column;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5); z-index: 2000;
-        }
+        /* --- USER PILL & DROPDOWN --- */
+        .user-pill { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 12px; border-radius: 30px; background: var(--surface); border: 1px solid var(--border); }
+        .user-pill img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+        #user-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: 220px; background: var(--bg-side); border: 1px solid var(--border); border-radius: 16px; padding: 8px; display: none; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.4); z-index: 2000; }
         #user-dropdown.show { display: flex; }
-        .dropdown-item {
-            padding: 12px 16px; border-radius: 8px; color: white;
-            font-weight: 600; cursor: pointer; transition: 0.2s;
-            font-size: 15px;
-        }
-        .dropdown-item:hover:not(.sign-out) { background: rgba(255,255,255,0.05); }
-        .dropdown-item.sign-out {
-            background: var(--danger); margin-top: 8px;
-            text-align: left;
-        }
-        .dropdown-item.sign-out:hover { filter: brightness(0.9); }
+        .dropdown-item { padding: 12px 16px; border-radius: 10px; color: var(--text); font-weight: 600; cursor: pointer; font-size: 14px; }
+        .dropdown-item.sign-out { background: var(--danger); margin-top: 8px; color: white; }
 
         /* --- VIEWS --- */
         .view-section { display: none; }
         .view-section.active { display: block; }
         .hero { display: flex; align-items: center; gap: 30px; margin-bottom: 60px; }
-        .hero-avatar-container { width: 160px; height: 160px; background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+        .hero-avatar-container { width: 160px; height: 160px; background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; }
         .hero-avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        
+
+        /* Home friends preview */
+        .hero { align-items:flex-start; }
+        .hero-info { min-width:0; flex:1; }
+        .hero-info h1 { margin:0 0 18px; font-size:clamp(28px,3vw,40px); letter-spacing:-.8px; }
+        .home-friends-heading { display:inline-flex; align-items:center; gap:9px; background:none; border:0; padding:0; margin:0 0 10px; color:var(--text); font:700 18px 'Outfit',sans-serif; cursor:pointer; transition:color .18s ease,transform .18s ease; }
+        .home-friends-heading:hover { color:var(--accent); transform:translateX(2px); }
+        .home-friends-count { display:inline-flex; min-width:23px; height:23px; justify-content:center; align-items:center; padding:0 8px; border-radius:100px; color:white; background:#a344ed; font-size:11px; }
+        .home-friends-grid { display:flex; flex-wrap:wrap; align-items:flex-start; gap:12px; }
+        .home-friend-card { display:flex; flex-direction:column; align-items:flex-start; width:82px; max-width:100%; min-width:0; animation:socialIn .35s ease both; }
+        .home-friend-card img { display:block; width:80px; height:80px; border-radius:12px; object-fit:cover; background:var(--surface); border:1px solid var(--border); transition:transform .2s ease,box-shadow .2s ease; }
+        .home-friend-card:hover img { transform:translateY(-3px); box-shadow:0 8px 22px rgba(0,0,0,.23); }
+        .home-friend-name { display:block; max-width:100%; margin-top:7px; font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .home-friends-message { color:var(--text-muted); font-size:14px; margin:0; }
+        @media(max-width:650px) { .hero { gap:18px; } .hero-avatar-container { width:96px; height:120px; } .home-friend-card { width:72px; } .home-friend-card img { width:70px; height:70px; } .home-friends-heading { font-size:18px; } }
+
         /* --- PROFILE --- */
         .profile-layout { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
         .profile-char-card { background: var(--bg-side); border: 1px solid var(--border); border-radius: 24px; padding: 40px; display: flex; align-items: center; justify-content: space-between; }
-        .stat-box { background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
-        .stat-box .val { display: block; font-size: 24px; font-weight: 900; color: var(--accent); }
+        .stat-box { background: var(--surface); padding: 24px; border-radius: 20px; border: 1px solid var(--border); text-align: center; flex: 1; }
+        .stat-box .val { display: block; font-size: 28px; font-weight: 900; color: var(--accent); }
+        .profile-render { height: 400px; object-fit: contain; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6)); }
 
         /* --- SETTINGS --- */
-        .settings-grid { display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
-        .settings-card { background: var(--bg-side); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-        .s-nav-btn { padding: 12px 16px; border-radius: 8px; color: var(--text-muted); font-weight: 600; cursor: pointer; }
+        .settings-grid { display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
+        .settings-card { background: var(--bg-side); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+        .s-nav-btn { padding: 14px 18px; border-radius: 12px; color: var(--text-muted); font-weight: 700; cursor: pointer; margin-bottom: 6px; }
         .s-nav-btn.active { background: var(--accent); color: white; }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-top: 10px; }
-        .status-good { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-
-        /* --- TOGGLE --- */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--surface); transition: .4s; border-radius: 34px; border: 1px solid var(--border); }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        .settings-input { width: 100%; padding: 12px; background: var(--bg-main); border: 1px solid var(--border); color: white; border-radius: 10px; margin-top: 10px; font-family: inherit; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-top: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
         /* --- GRID --- */
         #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
         .game-card { text-decoration: none; color: inherit; }
-        .game-thumb { width: 100%; aspect-ratio: 1; border-radius: 14px; object-fit: cover; background: var(--surface); margin-bottom: 12px; border: 1px solid var(--border); }
+        .game-thumb { width: 100%; aspect-ratio: 1; border-radius: 18px; object-fit: cover; background: var(--surface); margin-bottom: 12px; border: 1px solid var(--border); }
+
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--surface); transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .game-filter-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:22px; }
+        .filter-title { font-weight:800; font-size:21px; margin-right:5px; }
+        .game-filter-options { display:flex; gap:5px; padding:4px; background:var(--surface); border:1px solid var(--border); border-radius:12px; }
+        .game-filter { border:0; background:transparent; color:var(--text-muted); padding:9px 15px; border-radius:9px; cursor:pointer; font:600 13px 'Outfit',sans-serif; transition:background .2s,color .2s,transform .2s; }
+        .game-filter:hover { color:var(--text); }
+        .game-filter.active { background:var(--accent); color:white; }
+        .filter-count { font-size:12px; color:var(--text-muted); margin-left:auto; }
+        .game-card { animation:socialIn .3s ease both; }
+        /* Social page */
+        .view-section.active { animation: viewEnter .32s cubic-bezier(.2,.8,.2,1) both; }
+        @keyframes viewEnter { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        .social-title { font-size:28px; letter-spacing:-.7px; margin:0 0 22px; font-weight:700; }
+        .social-tabs { display:flex; gap:9px; border-bottom:1px solid var(--border); margin-bottom:20px; overflow-x:auto; scrollbar-width:none; }
+        .social-tabs::-webkit-scrollbar { display:none; }
+        .social-tab { appearance:none; background:none; border:0; color:var(--text-muted); padding:12px 14px 15px; font:600 13px 'Outfit',sans-serif; white-space:nowrap; cursor:pointer; position:relative; transition:color .2s ease; }
+        .social-tab:hover { color:var(--text); }
+        .social-tab.active { color:var(--text); }
+        .social-tab.active::after { content:''; position:absolute; bottom:0; left:11px; right:11px; height:2px; border-radius:2px; background:var(--accent); animation: tabIn .2s ease both; }
+        @keyframes tabIn { from { transform:scaleX(.25); opacity:0; } to { transform:scaleX(1); opacity:1; } }
+        .social-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,325px),325px)); gap:12px; align-content:start; }
+        .social-card { display:flex; align-items:center; min-width:0; height:58px; background:var(--bg-side); border:1px solid var(--border); border-radius:15px; overflow:hidden; animation: socialIn .35s cubic-bezier(.2,.8,.2,1) both; transition:transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+        .social-card:hover { transform:translateY(-3px); border-color:rgba(120,145,255,.25); box-shadow:0 9px 24px rgba(0,0,0,.12); }
+        .social-card img { width:54px; height:54px; object-fit:cover; flex-shrink:0; background:var(--surface); }
+        .social-card-name { font-size:13px; font-weight:700; margin:0 8px 0 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+        .social-action { border:0; background:transparent; color:#ff4c67; padding:10px 12px 10px 4px; font:600 10px 'Outfit',sans-serif; cursor:pointer; white-space:nowrap; transition:color .2s ease, transform .2s ease; }
+        .social-action:hover { color:#ff8c9b; transform:translateY(-1px); }
+        .social-action:disabled { opacity:.5; cursor:wait; }
+        .social-empty { grid-column:1/-1; padding:44px 20px; border:1px dashed var(--border); border-radius:16px; text-align:center; color:var(--text-muted); font-size:14px; }
+        .social-error { color:#ff7f90; }
+        @keyframes socialIn { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+        .user-pill, .game-card, .dropdown-item, .s-nav-btn, .landing-btn { transition:transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+        .user-pill:hover { border-color:var(--accent); transform:translateY(-1px); }
+        .dropdown-item:hover { background:var(--accent-light); }
+        .game-card:hover { transform:translateY(-4px); }
+        .game-card { display:block; }
+        .landing-btn:hover { filter:brightness(1.09); transform:translateY(-1px); }
+        #user-dropdown.show { animation:viewEnter .2s ease both; }
+        @media (max-width:600px) { .social-title { font-size:25px; } .social-tabs { gap:0; } .social-tab { padding-inline:11px; } .social-grid { grid-template-columns:1fr; } }
+        @media (prefers-reduced-motion:reduce) { .view-section.active,.social-card,#user-dropdown.show,.social-tab.active::after { animation:none; } *,*::before,*::after { transition-duration:.01ms !important; } }
     </style>
 </head>
 <body>
 
-    <!-- GATED LANDING PAGE -->
-    <div id="landing-page" style="display:none;">
+    <!-- AUTH PAGE -->
+    <div id="landing-page">
         <div class="auth-container">
-            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" alt="Vortex">
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo">
             <h2>Sign in</h2>
-            <div class="form-group"><label>Username or email</label><input type="text" id="loginUser"></div>
+            <div class="form-group"><label>Username</label><input type="text" id="loginUser"></div>
             <div class="form-group"><label>Password</label><input type="password" id="loginPass"></div>
-            <button class="landing-btn" onclick="login()">Sign in</button>
-            <div class="auth-footer-links">No account? <a href="#">Create one</a><br><br><a href="#">Forgot password?</a></div>
+            <button class="landing-btn" id="loginBtn" onclick="login()">Sign in</button>
         </div>
-        <footer class="global-footer"><div class="footer-left"><span>Wiki</span><span>Forum</span><span>ToS</span><span>Privacy</span></div></footer>
     </div>
 
-    <!-- LOGGED IN UI -->
-    <aside id="sidebar" style="display:none;">
-        <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:30px;" alt="Vortex"></div>
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+        <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;"></div>
         <nav class="nav-group">
-            <div class="nav-item active" id="side-home" onclick="showPage('home')">Home</div>
-            <div class="nav-item" id="side-profile" onclick="showPage('profile')">Profile</div>
-            <div class="nav-item" id="side-friends" onclick="showPage('friends')">Friends</div>
-            <div class="nav-item" id="side-settings" onclick="showPage('settings')">Settings</div>
+            <div class="nav-item active" id="side-home" onclick="showPage('home')">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Home <span class="badge">12</span>
+            </div>
+            <div class="nav-item" id="side-profile" onclick="showPage('profile')">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg> Profile
+            </div>
+            <div class="nav-item" id="side-friends" onclick="showPage('friends')">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Friends
+            </div>
+            <div class="nav-item" id="side-settings" onclick="showPage('settings')">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82"/></svg> Settings
+            </div>
+            <div style="height:20px; border-bottom: 1px solid var(--border); margin: 10px 0 20px;"></div>
+            <!-- Replacement for Studio -->
+            <a href="https://home.c823.workers.dev" class="nav-item" style="text-decoration: none;">
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Home
+            </a>
         </nav>
     </aside>
 
     <main id="main-wrapper">
         <header>
-            <div class="search-container"><input type="text" placeholder="Search players..."></div>
+            <div class="search-container"><input type="text" id="searchInput" placeholder="Search..." oninput="renderGames()"></div>
             <div class="header-right">
                 <div class="user-pill-container">
                     <div class="user-pill" onclick="toggleDropdown(event)">
-                        <span id="nav-username">User</span>
+                        <span id="nav-username" style="font-weight:700;">User</span>
                         <img id="nav-pfp" src="">
                     </div>
                     <div id="user-dropdown">
                         <div class="dropdown-item" onclick="showPage('profile')">Profile</div>
-                        <div class="dropdown-item" onclick="showPage('settings')">Customize avatar</div>
                         <div class="dropdown-item" onclick="showPage('settings')">Settings</div>
                         <div class="dropdown-item sign-out" onclick="logout()">Sign out</div>
                     </div>
@@ -165,16 +222,55 @@
             </div>
         </header>
 
+        <!-- HOME VIEW -->
         <section id="home-view" class="view-section active">
-            <div class="hero"><div class="hero-avatar-container"><img id="hero-avatar" src=""></div><div class="hero-info"><h1 id="welcome-text">Hello!</h1></div></div>
+            <div class="hero">
+                <div class="hero-avatar-container"><img id="hero-avatar" src=""></div>
+                <div class="hero-info">
+                    <h1 id="welcome-text">Hello!</h1>
+                    <div class="home-friends-preview">
+                        <button type="button" class="home-friends-heading" onclick="showPage('friends')" aria-label="Go to Friends page">
+                            Friends <span id="home-friends-count" class="home-friends-count">0</span>
+                        </button>
+                        <div id="home-friends-grid" class="home-friends-grid" aria-live="polite"><p class="home-friends-message">Loading friends…</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-filter-toolbar" aria-label="Game filters">
+                <span class="filter-title">Games</span>
+                <div class="game-filter-options" role="group" aria-label="Filter games">
+                    <button type="button" class="game-filter active" data-game-filter="all" aria-pressed="true" onclick="setGameFilter('all')">All</button>
+                    <button type="button" class="game-filter" data-game-filter="verified" aria-pressed="false" onclick="setGameFilter('verified')">Unblocked</button>
+                </div>
+                <span class="filter-count" id="game-filter-count" aria-live="polite"></span>
+            </div>
             <div id="game-grid"></div>
         </section>
 
+        <!-- PROFILE VIEW -->
         <section id="profile-view" class="view-section">
-            <h1 id="profile-name-header">User</h1>
-            <div class="profile-layout"><div class="profile-char-card"><div><h2 style="font-size:40px;" id="profile-name-big">User</h2><div class="stat-box"><span class="val">0</span><span>Friends</span></div></div><img id="profile-render" style="width:200px;" src=""></div></div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px;">
+                <h1 id="profile-name-header" style="font-size:36px; margin:0; font-weight:900;">User</h1>
+                <button style="background:var(--surface); border:1px solid var(--border); color:white; padding:12px 24px; border-radius:12px; cursor:pointer; font-weight:700;" onclick="showPage('settings')">Edit Profile</button>
+            </div>
+            <div class="profile-layout">
+                <div class="profile-char-card">
+                    <div>
+                        <h2 style="font-size:48px; margin:0;" id="profile-name-big">User</h2>
+                        <div style="display:flex; gap:15px; margin-top:20px;">
+                            <div class="stat-box"><span class="val">0</span><span class="lbl">Friends</span></div>
+                            <div class="stat-box"><span class="val">0</span><span class="lbl">Playtime</span></div>
+                        </div>
+                    </div>
+                    <img id="profile-render" class="profile-render" src="">
+                </div>
+                <div style="background:var(--bg-side); border:1px solid var(--border); border-radius:28px; padding:32px;">
+                    <h3>About</h3><p style="color:var(--text-muted);">Welcome to my profile!</p>
+                </div>
+            </div>
         </section>
 
+        <!-- SETTINGS VIEW (RESTORED SECURITY) -->
         <section id="settings-view" class="view-section">
             <h1>Settings</h1>
             <div class="settings-grid">
@@ -185,10 +281,45 @@
                         <div class="s-nav-btn" id="btn-cust" onclick="switchSettings('customization')">Customization</div>
                     </div>
                 </div>
-                <div class="settings-card pane" id="pane-account"><h2>Account Info</h2><p id="val-username" style="font-weight:600;">User</p></div>
-                <div class="settings-card pane" id="pane-security" style="display:none;"><h2>Security</h2><div class="status-badge status-good">Good Standing</div></div>
-                <div class="settings-card pane" id="pane-customization" style="display:none;"><h2>Customization</h2><div style="display:flex;justify-content:space-between;"><span>Light Mode</span><label class="switch"><input type="checkbox" id="themeToggle" onchange="toggleTheme()"><span class="slider"></span></label></div></div>
+
+                <div class="settings-card pane" id="pane-account">
+                    <h2>Account Info</h2>
+                    <label class="info-label">Username</label>
+                    <p id="val-username" style="font-weight:700; font-size:18px;"></p>
+                </div>
+
+                <div class="settings-card pane" id="pane-security" style="display:none;">
+                    <h2>Security</h2>
+                    <label class="info-label">Account Status</label>
+                    <div class="status-badge">Good Standing</div>
+                    <div style="margin-top:30px;">
+                        <label class="info-label">Change Password</label>
+                        <input type="password" class="settings-input" placeholder="Current Password">
+                        <input type="password" class="settings-input" placeholder="New Password">
+                        <button class="landing-btn" style="margin-top:15px; width:auto; padding:10px 30px;">Update</button>
+                    </div>
+                </div>
+
+                <div class="settings-card pane" id="pane-customization" style="display:none;">
+                    <h2>Customization</h2>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>Light Mode</span>
+                        <label class="switch"><input type="checkbox" id="themeToggle" onchange="toggleTheme()"><span class="slider"></span></label>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <!-- FRIENDS VIEW -->
+        <section id="friends-view" class="view-section">
+            <h1 class="social-title">Social</h1>
+            <div class="social-tabs" role="tablist" aria-label="Social connections">
+                <button class="social-tab active" type="button" role="tab" aria-selected="true" data-social-tab="friends" onclick="switchSocialTab('friends')">Friends</button>
+                <button class="social-tab" type="button" role="tab" aria-selected="false" data-social-tab="followers" onclick="switchSocialTab('followers')">Followers</button>
+                <button class="social-tab" type="button" role="tab" aria-selected="false" data-social-tab="following" onclick="switchSocialTab('following')">Following</button>
+                <button class="social-tab" type="button" role="tab" aria-selected="false" data-social-tab="requests" onclick="switchSocialTab('requests')">Requests</button>
+            </div>
+            <div class="social-grid" id="friends-pane" role="tabpanel" aria-live="polite"><div class="social-empty">Loading friends…</div></div>
         </section>
     </main>
 
@@ -199,67 +330,290 @@
         
         let user = { token: localStorage.getItem('ph_token'), username: localStorage.getItem('ph_username'), pfp: localStorage.getItem('ph_pfp') };
 
-        window.onload = () => {
-            if (user.token) unlockDashboard();
-            else document.getElementById('landing-page').style.display = 'flex';
+        window.onload = async () => {
+            routeFromURL(true);
             if (localStorage.getItem('vortex_theme') === 'light') { document.body.setAttribute('data-theme', 'light'); document.getElementById('themeToggle').checked = true; }
-            fetchGames(); updateUI();
+            await fetchGames();
+            if (user.token) { await fetchUserData(); fetchHomeFriends(); }
+            updateUI();
         };
-
-        function toggleDropdown(e) { e.stopPropagation(); document.getElementById('user-dropdown').classList.toggle('show'); }
-        window.onclick = () => { document.getElementById('user-dropdown').classList.remove('show'); };
 
         function unlockDashboard() { document.getElementById('landing-page').style.display = 'none'; document.getElementById('sidebar').style.display = 'flex'; document.getElementById('main-wrapper').style.display = 'block'; }
 
-        async function login() {
-            const u = document.getElementById('loginUser').value;
-            const p = document.getElementById('loginPass').value;
+        async function fetchUserData() {
             try {
-                const r = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
-                const data = await r.json();
-                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); if(data.pfp) localStorage.setItem('ph_pfp', data.pfp); location.reload(); }
-                else alert(data.error);
-            } catch(e) { alert("Login failed"); }
+                const r = await fetch(`${API_BASE}/auth/load`, { headers: {'Authorization': `Bearer ${user.token}`} });
+                if (r.ok) {
+                    const { data } = await r.json();
+                    if (data.settings?.pfp) {
+                        user.pfp = data.settings.pfp;
+                        localStorage.setItem('ph_pfp', user.pfp);
+                        updateUI();
+                    }
+                }
+            } catch(e) {}
         }
 
         function updateUI() {
             if (!user.username) return;
-            const pfpUrl = user.pfp ? PFP_BASE + user.pfp : DEFAULT_PFP;
+            const pfpSource = (user.pfp && user.pfp.length > 1) ? PFP_BASE + user.pfp : DEFAULT_PFP;
             document.querySelectorAll('img[id*="pfp"], img[id*="avatar"], img[id*="render"]').forEach(img => { 
-                img.src = pfpUrl; 
-                img.onerror = () => { img.src = DEFAULT_PFP; };
+                img.src = pfpSource; 
+                img.onerror = function() { this.src = DEFAULT_PFP; this.onerror = null; };
             });
             document.getElementById('welcome-text').textContent = `Hello, ${user.username}!`;
             document.getElementById('nav-username').textContent = user.username;
-            document.getElementById('profile-name-big').textContent = user.username;
             document.getElementById('val-username').textContent = user.username;
+            document.getElementById('profile-name-header').textContent = user.username;
+            document.getElementById('profile-name-big').textContent = user.username;
+        }
+
+        async function login() {
+            const u = document.getElementById('loginUser').value.trim();
+            const p = document.getElementById('loginPass').value;
+            try {
+                const r = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
+                const data = await r.json();
+                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; unlockDashboard(); updateUI(); navigateTo((sessionStorage.getItem('ph_return_to') || '/home').slice(1), true); sessionStorage.removeItem('ph_return_to'); fetchUserData(); fetchHomeFriends(); }
+                else alert(data.error);
+            } catch(e) { alert("Login failed"); }
         }
 
         async function fetchGames() {
             try {
                 const r = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
-                const games = await r.json();
-                document.getElementById('game-grid').innerHTML = games.map(g => `<a href="${g.link}" class="game-card" target="_blank"><img src="${g.thumb}" class="game-thumb"><p style="font-weight:700;margin:0;">${g.title}</p></a>`).join('');
+                window.allGames = await r.json();
+                renderGames();
             } catch(e) {}
         }
 
-        function showPage(p) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            document.getElementById(`${p}-view`).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(`side-${p}`).classList.add('active');
-            document.getElementById('user-dropdown').classList.remove('show');
+        let activeGameFilter = 'all';
+        function isVerifiedGame(game) {
+            // The internal games.txt field is `verified`; the UI calls it Unblocked.
+            return game.verified === true || game.verified === 1 || game.verified === 'true' || game.verified === '1';
         }
+        function setGameFilter(filter) {
+            activeGameFilter = filter === 'verified' ? 'verified' : 'all';
+            document.querySelectorAll('[data-game-filter]').forEach(button => {
+                const active = button.dataset.gameFilter === activeGameFilter;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-pressed', String(active));
+            });
+            renderGames();
+        }
+        function renderGames() {
+            const search = document.getElementById('searchInput').value.trim().toLowerCase();
+            const grid = document.getElementById('game-grid');
+            if (!Array.isArray(window.allGames)) return;
+            const games = window.allGames.filter(g =>
+                String(g.title || '').toLowerCase().includes(search) &&
+                (activeGameFilter !== 'verified' || isVerifiedGame(g))
+            );
+            document.getElementById('game-filter-count').textContent = `${games.length} game${games.length === 1 ? '' : 's'}`;
+            grid.replaceChildren();
+            games.forEach(g => {
+                const link = document.createElement('a');
+                link.className = 'game-card';
+                link.href = g.link || '#';
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                const img = document.createElement('img');
+                img.className = 'game-thumb';
+                img.src = g.thumb || '';
+                img.alt = '';
+                const title = document.createElement('p');
+                title.style.cssText = 'font-weight:700;margin:0;';
+                title.textContent = g.title || 'Untitled';
+                link.append(img,title);
+                grid.append(link);
+            });
+            if (!games.length) grid.innerHTML = '<p style="color:var(--text-muted)">No matching games found.</p>';
+        }
+
+        let activeSocialTab = 'friends';
+        const socialCache = {};
+        const socialPaths = {
+            friends: '/social/friends', followers: '/social/followers',
+            following: '/social/following', requests: '/social/requests'
+        };
+        function escapeText(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+        function socialAvatar(pfp) {
+            if (!pfp) return DEFAULT_PFP;
+            if (/^https:\/\//i.test(pfp)) return pfp;
+            return PFP_BASE + encodeURIComponent(pfp);
+        }
+        async function switchSocialTab(tab, updateRoute = true) {
+            if (updateRoute && user.token && location.pathname !== '/' + tab) {
+                history.pushState({page:tab}, '', '/' + tab);
+                document.title = tab[0].toUpperCase() + tab.slice(1) + ' | Powerhouse';
+            }
+            if (!socialPaths[tab]) return;
+            activeSocialTab = tab;
+            document.querySelectorAll('[data-social-tab]').forEach(el => {
+                const selected = el.dataset.socialTab === tab;
+                el.classList.toggle('active', selected);
+                el.setAttribute('aria-selected', String(selected));
+            });
+            const panel = document.getElementById('friends-pane');
+            panel.innerHTML = '<div class="social-empty">Loading ' + tab + '…</div>';
+            if (socialCache[tab]) { renderSocialCards(tab, socialCache[tab]); return; }
+            try {
+                const response = await fetch(`${API_BASE}${socialPaths[tab]}`, {headers:{Authorization:`Bearer ${user.token}`}});
+                if (!response.ok) throw Error(response.status === 404 ? 'This section is not available on the API yet.' : 'Unable to load this section.');
+                const data = await response.json();
+                if (activeSocialTab !== tab) return;
+                const entries = Array.isArray(data) ? data : (data[tab] || data.users || data.data || []);
+                if (!Array.isArray(entries)) throw Error('Unexpected response from the API.');
+                socialCache[tab] = entries;
+                if (tab === 'friends') renderHomeFriends(entries);
+                renderSocialCards(tab, entries);
+            } catch(e) {
+                if (activeSocialTab === tab) panel.innerHTML = `<div class="social-empty social-error">${escapeText(e.message || 'Unable to load social data.')}</div>`;
+            }
+        }
+        function renderSocialCards(tab, entries) {
+            const panel = document.getElementById('friends-pane');
+            if (!entries.length) {
+                panel.innerHTML = `<div class="social-empty">No ${escapeText(tab)} to show yet.</div>`;
+                return;
+            }
+            panel.innerHTML = entries.map((item, i) => {
+                const name = typeof item === 'string' ? item : (item.username || item.user?.username || item.name || 'Unknown');
+                const pfp = typeof item === 'object' ? (item.pfp || item.user?.pfp) : null;
+                const action = tab === 'friends' ? `<button type="button" class="social-action" data-remove-friend="${i}">Remove Friend</button>` : '';
+                return `<div class="social-card" style="animation-delay:${Math.min(i,12)*35}ms"><img alt="" src="${escapeText(socialAvatar(pfp))}" onerror="this.onerror=null;this.src='${DEFAULT_PFP}'"><span class="social-card-name">${escapeText(name)}</span>${action}</div>`;
+            }).join('');
+            panel.querySelectorAll('[data-remove-friend]').forEach(btn => btn.addEventListener('click', () => {
+                const entry = entries[Number(btn.dataset.removeFriend)];
+                const name = typeof entry === 'string' ? entry : (entry.username || entry.user?.username);
+                removeFriend(name, btn);
+            }));
+        }
+        async function removeFriend(username, button) {
+            if (!username || !confirm(`Remove ${username} from your friends?`)) return;
+            button.disabled = true;
+            try {
+                // Update this route if your Worker uses a different remove-friend endpoint.
+                const response = await fetch(`${API_BASE}/social/friends`, {
+                    method:'DELETE', headers:{'Content-Type':'application/json',Authorization:`Bearer ${user.token}`},
+                    body:JSON.stringify({username})
+                });
+                if (!response.ok) throw Error('Your API did not accept the remove-friend request.');
+                delete socialCache.friends;
+                await switchSocialTab('friends');
+            } catch(e) { alert(e.message); button.disabled = false; }
+        }
+        function renderHomeFriends(entries) {
+            const count = document.getElementById('home-friends-count');
+            const grid = document.getElementById('home-friends-grid');
+            count.textContent = String(entries.length);
+            grid.replaceChildren();
+            if (!entries.length) {
+                const msg = document.createElement('p');
+                msg.className = 'home-friends-message';
+                msg.textContent = 'No friends yet.';
+                grid.append(msg);
+                return;
+            }
+            entries.forEach((item,i) => {
+                const obj = typeof item === 'object' && item !== null ? item : {};
+                const profile = obj.user || obj;
+                const name = typeof item === 'string' ? item : (profile.username || obj.username || obj.name || 'Unknown');
+                const avatar = profile.pfp || obj.pfp;
+                const card = document.createElement('div');
+                card.className = 'home-friend-card';
+                card.style.animationDelay = Math.min(i,12)*35 + 'ms';
+                const img = document.createElement('img');
+                img.src = socialAvatar(avatar);
+                img.alt = name + ' avatar';
+                img.loading = 'lazy';
+                img.onerror = () => { img.onerror = null; img.src = DEFAULT_PFP; };
+                const label = document.createElement('span');
+                label.className = 'home-friend-name';
+                label.textContent = name;
+                card.append(img,label);
+                grid.append(card);
+            });
+        }
+        async function fetchHomeFriends() {
+            const grid = document.getElementById('home-friends-grid');
+            try {
+                const response = await fetch(`${API_BASE}/social/friends`, {headers:{Authorization:`Bearer ${user.token}`}});
+                if (!response.ok) throw Error('Friends unavailable');
+                const data = await response.json();
+                const entries = Array.isArray(data) ? data : (data.friends || data.users || data.data || []);
+                if (!Array.isArray(entries)) throw Error('Invalid friends response');
+                socialCache.friends = entries;
+                renderHomeFriends(entries);
+            } catch(e) {
+                grid.innerHTML = '<p class="home-friends-message">Unable to load friends.</p>';
+            }
+        }
+        function fetchSocialData() { return switchSocialTab('friends'); }
+
+        // Route the entire application using browser History API.
+        // Every route uses the same HTML shell; the hosting Worker must serve it for these paths.
+        const ROUTE_PAGES = new Set(['home', 'profile', 'friends', 'followers', 'following', 'requests', 'settings']);
+        const SOCIAL_ROUTES = new Set(['friends', 'followers', 'following', 'requests']);
+        function routeFromURL(replace = false) {
+            const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+            let page = decodeURIComponent(pathname.slice(1)).toLowerCase();
+            if (!ROUTE_PAGES.has(page) && page !== 'sign-in') page = user.token ? 'home' : 'sign-in';
+            if (!user.token && page !== 'sign-in') {
+                sessionStorage.setItem('ph_return_to', '/' + page);
+                page = 'sign-in';
+            } else if (user.token && page === 'sign-in') page = 'home';
+            const canonical = '/' + page;
+            if (replace || window.location.pathname !== canonical) history.replaceState({page}, '', canonical);
+            if (page === 'sign-in') {
+                document.getElementById('landing-page').style.display = 'flex';
+                document.getElementById('sidebar').style.display = 'none';
+                document.getElementById('main-wrapper').style.display = 'none';
+                document.title = 'Sign in | Powerhouse';
+                return;
+            }
+            unlockDashboard();
+            renderRoute(page);
+        }
+        function navigateTo(page, replace = false) {
+            if (!ROUTE_PAGES.has(page) && page !== 'sign-in') return;
+            if (!user.token && page !== 'sign-in') {
+                sessionStorage.setItem('ph_return_to', '/' + page);
+                page = 'sign-in';
+            }
+            const path = '/' + page;
+            if (location.pathname !== path) {
+                if (replace) history.replaceState({page}, '', path);
+                else history.pushState({page}, '', path);
+            }
+            routeFromURL(false);
+        }
+        function renderRoute(page) {
+            const socialPage = SOCIAL_ROUTES.has(page);
+            const view = socialPage ? 'friends' : page;
+            document.querySelectorAll('.view-section').forEach(v => v.classList.toggle('active', v.id === view + '-view'));
+            document.querySelectorAll('#sidebar .nav-item').forEach(i => i.classList.remove('active'));
+            const sideBtn = document.getElementById('side-' + view);
+            if (sideBtn) sideBtn.classList.add('active');
+            if (socialPage) switchSocialTab(page, false);
+            document.getElementById('user-dropdown').classList.remove('show');
+            document.title = (page === 'friends' ? 'Social' : page[0].toUpperCase() + page.slice(1)) + ' | Powerhouse';
+        }
+        function showPage(page) { navigateTo(page); }
+        window.addEventListener('popstate', () => routeFromURL(false));
 
         function switchSettings(p) {
             document.querySelectorAll('.pane').forEach(v => v.style.display = 'none');
             document.getElementById(`pane-${p}`).style.display = 'block';
             document.querySelectorAll('.s-nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${p.substring(0,3)}`).classList.add('active');
+            const map = { account: 'btn-acc', security: 'btn-sec', customization: 'btn-cust' };
+            document.getElementById(map[p]).classList.add('active');
         }
 
+        function toggleDropdown(e) { e.stopPropagation(); document.getElementById('user-dropdown').classList.toggle('show'); }
+        window.onclick = () => { if(document.getElementById('user-dropdown')) document.getElementById('user-dropdown').classList.remove('show'); };
         function toggleTheme() { const isL = document.getElementById('themeToggle').checked; document.body.setAttribute('data-theme', isL ? 'light' : 'dark'); localStorage.setItem('vortex_theme', isL ? 'light' : 'dark'); }
-        function logout() { localStorage.clear(); location.reload(); }
+        function logout() { localStorage.removeItem('ph_token'); localStorage.removeItem('ph_username'); localStorage.removeItem('ph_pfp'); user = {token:null,username:null,pfp:null}; navigateTo('sign-in', true); }
     </script>
 </body>
 </html>
