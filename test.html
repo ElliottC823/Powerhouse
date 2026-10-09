@@ -187,16 +187,16 @@
     <aside id="sidebar">
         <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;"></div>
         <nav class="nav-group">
-            <a href="/home" onclick="event.preventDefault(); showPage('home')" class="nav-item active" id="side-home">
+            <a href="/home" class="nav-item active" id="side-home">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Home <span class="badge">12</span>
             </a>
-            <a href="/profile" onclick="event.preventDefault(); showPage('profile')" class="nav-item" id="side-profile">
+            <a href="/profile" class="nav-item" id="side-profile">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg> Profile
             </a>
-            <a href="/friends" onclick="event.preventDefault(); showPage('friends')" class="nav-item" id="side-friends">
+            <a href="/friends" class="nav-item" id="side-friends">
                 <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Friends
             </a>
-            <a href="/settings" onclick="event.preventDefault(); showPage('settings')" class="nav-item" id="side-settings">
+            <a href="/settings" class="nav-item" id="side-settings">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82"/></svg> Settings
             </a>
             <div style="height:20px; border-bottom: 1px solid var(--border); margin: 10px 0 20px;"></div>
@@ -411,6 +411,8 @@
             document.getElementById('nav-username').textContent = user.username;
             const ownLink = document.getElementById('side-profile');
             if (ownLink) ownLink.href = profileURL(user.username);
+            const dropdownProfile = document.querySelector('#user-dropdown a[href="/profile"]');
+            if (dropdownProfile) dropdownProfile.href = profileURL(user.username);
             document.getElementById('val-username').textContent = user.username;
             // Profile view is updated separately by renderProfile().
             if (typeof parseRoute === 'function') {
