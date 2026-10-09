@@ -17,387 +17,249 @@
             --text-muted: rgba(244, 245, 249, 0.5);
             --radius: 12px;
             --sidebar-width: 260px;
+            --danger: #e34c4c;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f3f4f6;
+            --bg-side: #ffffff;
+            --surface: #f9fafb;
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #111827;
+            --text-muted: #6b7280;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        body {
-            margin: 0;
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text);
-            display: flex;
-            min-height: 100vh;
-        }
+        body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; }
 
-        /* --- SIDEBAR --- */
-        #sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-side);
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            border-right: 1px solid var(--border);
-        }
+        /* --- LANDING / AUTH PAGE --- */
+        #landing-page { position: fixed; inset: 0; background: var(--bg-main); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; }
+        .auth-container { width: 100%; max-width: 400px; padding: 20px; }
+        .auth-logo { height: 60px; margin-bottom: 40px; display: block; margin-left: auto; margin-right: auto; }
+        .auth-container h2 { font-size: 28px; font-weight: 800; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: white; outline: none; }
+        .landing-btn { width: 100%; padding: 14px; background: var(--accent); border: none; color: white; font-weight: 700; border-radius: 10px; cursor: pointer; font-size: 16px; }
+        .auth-footer-links { margin-top: 20px; font-size: 14px; color: var(--text-muted); }
+        .auth-footer-links a { color: var(--text); text-decoration: none; font-weight: 600; }
+        .global-footer { position: absolute; bottom: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
 
-        .logo-area { padding: 0 12px 32px; display: flex; align-items: center; }
-        .logo-img { height: 32px; }
-
-        .nav-group { display: flex; flex-direction: column; gap: 4px; }
-        
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+        /* --- DASHBOARD UI --- */
+        #sidebar { width: var(--sidebar-width); background: var(--bg-side); padding: 24px 16px; display: flex; flex-direction: column; position: fixed; height: 100vh; border-right: 1px solid var(--border); z-index: 1000; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; color: var(--text-muted); text-decoration: none; font-weight: 600; cursor: pointer; margin-bottom: 4px; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text); }
         .nav-item.active { background: var(--accent); color: white; }
         .nav-item svg { width: 20px; height: 20px; }
 
-        /* --- MAIN CONTENT --- */
-        #main-wrapper {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 24px 48px;
-            max-width: 1600px;
-        }
-
-        header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .search-container { width: 450px; position: relative; }
-        .search-container input {
-            width: 100%;
-            background: var(--bg-side);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 16px;
-            color: white;
-            outline: none;
-        }
-
+        #main-wrapper { margin-left: var(--sidebar-width); flex: 1; padding: 24px 48px; display: none; }
+        header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative; }
+        .search-container { width: 450px; }
+        .search-container input { width: 100%; background: var(--bg-side); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text); outline: none; }
         .header-right { position: absolute; right: 0; display: flex; align-items: center; gap: 15px; }
 
-        .user-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 8px;
+        /* --- USER PILL & DROPDOWN --- */
+        .user-pill-container { position: relative; }
+        .user-pill { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: 0.2s; }
+        .user-pill:hover { background: rgba(255,255,255,0.05); }
+        .user-pill img { width: 32px; height: 32px; border-radius: 6px; background: var(--surface); object-fit: cover; border: 1px solid var(--border); }
+        
+        #user-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            width: 220px; background: var(--bg-side);
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 8px; display: none; flex-direction: column;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5); z-index: 2000;
         }
+        #user-dropdown.show { display: flex; }
+        .dropdown-item {
+            padding: 12px 16px; border-radius: 8px; color: white;
+            font-weight: 600; cursor: pointer; transition: 0.2s;
+            font-size: 15px;
+        }
+        .dropdown-item:hover:not(.sign-out) { background: rgba(255,255,255,0.05); }
+        .dropdown-item.sign-out {
+            background: var(--danger); margin-top: 8px;
+            text-align: left;
+        }
+        .dropdown-item.sign-out:hover { filter: brightness(0.9); }
 
-        .user-pill img { width: 32px; height: 32px; border-radius: 6px; background: var(--surface); }
+        /* --- VIEWS --- */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        .hero { display: flex; align-items: center; gap: 30px; margin-bottom: 60px; }
+        .hero-avatar-container { width: 160px; height: 160px; background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+        .hero-avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* --- PROFILE --- */
+        .profile-layout { display: grid; grid-template-columns: 1fr 350px; gap: 40px; }
+        .profile-char-card { background: var(--bg-side); border: 1px solid var(--border); border-radius: 24px; padding: 40px; display: flex; align-items: center; justify-content: space-between; }
+        .stat-box { background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
+        .stat-box .val { display: block; font-size: 24px; font-weight: 900; color: var(--accent); }
 
-        /* --- HERO --- */
-        .hero { display: flex; align-items: center; gap: 40px; margin-bottom: 60px; }
-        .hero-avatar { width: 180px; height: 180px; object-fit: contain; }
-        
-        .hero-info h1 { font-size: 32px; font-weight: 800; margin: 0 0 10px; }
-        
-        .friends-row { display: flex; gap: 15px; margin-top: 15px; }
-        .friend-item { text-align: center; width: 70px; }
-        .friend-item img { width: 64px; height: 64px; border-radius: 12px; background: var(--surface); margin-bottom: 8px; }
-        .friend-name { font-size: 12px; font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; }
-        .status-dot { color: var(--text-muted); font-size: 10px; }
+        /* --- SETTINGS --- */
+        .settings-grid { display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
+        .settings-card { background: var(--bg-side); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+        .s-nav-btn { padding: 12px 16px; border-radius: 8px; color: var(--text-muted); font-weight: 600; cursor: pointer; }
+        .s-nav-btn.active { background: var(--accent); color: white; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-top: 10px; }
+        .status-good { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+
+        /* --- TOGGLE --- */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--surface); transition: .4s; border-radius: 34px; border: 1px solid var(--border); }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
         /* --- GRID --- */
-        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
-        #game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
+        #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
         .game-card { text-decoration: none; color: inherit; }
-        .game-thumb {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 12px;
-            object-fit: cover;
-            background: var(--surface);
-            margin-bottom: 10px;
-            transition: transform 0.2s;
-        }
-        .game-card:hover .game-thumb { transform: translateY(-5px); }
-        .game-name { font-weight: 700; font-size: 15px; display: block; margin-bottom: 4px; }
-        .game-stats { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
-
-        /* --- SETTINGS VIEW (The New Section) --- */
-        #settings-view { display: none; }
-        .settings-grid { display: grid; grid-template-columns: 300px 1fr; gap: 30px; margin-top: 30px; }
-        .settings-card { background: var(--bg-side); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-        
-        .settings-profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .settings-profile-header img { width: 40px; height: 40px; border-radius: 8px; }
-
-        .settings-nav { display: flex; flex-direction: column; gap: 5px; }
-        .s-nav-btn {
-            padding: 12px 16px; border-radius: 8px; color: var(--text-muted); 
-            font-weight: 600; cursor: pointer;
-        }
-        .s-nav-btn.active { background: var(--accent); color: white; }
-
-        .info-table { width: 100%; border-collapse: collapse; }
-        .info-row { border-bottom: 1px solid var(--border); }
-        .info-row td { padding: 20px 0; }
-        .info-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-        .info-val { font-weight: 600; }
-        
-        .edit-btn { 
-            background: var(--surface); border: 1px solid var(--border); color: white;
-            padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;
-        }
-
-        .danger-text { color: #ff4d4d; text-align: center; margin-top: 40px; cursor: pointer; font-weight: 700; }
-
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            display: none; align-items: center; justify-content: center; z-index: 2000;
-        }
-        .modal-overlay.show { display: flex; }
-        .auth-modal { background: var(--bg-side); padding: 30px; border-radius: 16px; width: 350px; border: 1px solid var(--border); }
-        .auth-modal input { width: 100%; padding: 12px; margin-bottom: 10px; background: var(--bg-main); border: 1px solid var(--border); color: white; border-radius: 8px; }
-        .auth-btn { width: 100%; padding: 12px; background: var(--accent); border: none; color: white; font-weight: 700; border-radius: 8px; cursor: pointer; }
-
-        @media (max-width: 1000px) {
-            #sidebar { display: none; }
-            #main-wrapper { margin-left: 0; padding: 20px; }
-            .settings-grid { grid-template-columns: 1fr; }
-        }
+        .game-thumb { width: 100%; aspect-ratio: 1; border-radius: 14px; object-fit: cover; background: var(--surface); margin-bottom: 12px; border: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
-    <aside id="sidebar">
-        <div class="logo-area">
-            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="logo-img" alt="Vortex">
+    <!-- GATED LANDING PAGE -->
+    <div id="landing-page" style="display:none;">
+        <div class="auth-container">
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" alt="Vortex">
+            <h2>Sign in</h2>
+            <div class="form-group"><label>Username or email</label><input type="text" id="loginUser"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="loginPass"></div>
+            <button class="landing-btn" onclick="login()">Sign in</button>
+            <div class="auth-footer-links">No account? <a href="#">Create one</a><br><br><a href="#">Forgot password?</a></div>
         </div>
+        <footer class="global-footer"><div class="footer-left"><span>Wiki</span><span>Forum</span><span>ToS</span><span>Privacy</span></div></footer>
+    </div>
+
+    <!-- LOGGED IN UI -->
+    <aside id="sidebar" style="display:none;">
+        <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:30px;" alt="Vortex"></div>
         <nav class="nav-group">
-            <div class="nav-item active" onclick="showPage('home')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Friends
-            </div>
-            <div class="nav-item" onclick="showPage('settings')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings
-            </div>
+            <div class="nav-item active" id="side-home" onclick="showPage('home')">Home</div>
+            <div class="nav-item" id="side-profile" onclick="showPage('profile')">Profile</div>
+            <div class="nav-item" id="side-friends" onclick="showPage('friends')">Friends</div>
+            <div class="nav-item" id="side-settings" onclick="showPage('settings')">Settings</div>
         </nav>
     </aside>
 
     <main id="main-wrapper">
         <header>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search players..." oninput="renderGames()">
-            </div>
+            <div class="search-container"><input type="text" placeholder="Search players..."></div>
             <div class="header-right">
-                <div class="user-pill" onclick="handleUserClick()">
-                    <span id="nav-username">Sign In</span>
-                    <img id="nav-pfp" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/user.svg">
+                <div class="user-pill-container">
+                    <div class="user-pill" onclick="toggleDropdown(event)">
+                        <span id="nav-username">User</span>
+                        <img id="nav-pfp" src="">
+                    </div>
+                    <div id="user-dropdown">
+                        <div class="dropdown-item" onclick="showPage('profile')">Profile</div>
+                        <div class="dropdown-item" onclick="showPage('settings')">Customize avatar</div>
+                        <div class="dropdown-item" onclick="showPage('settings')">Settings</div>
+                        <div class="dropdown-item sign-out" onclick="logout()">Sign out</div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- HOME VIEW -->
-        <div id="home-view">
-            <section class="hero">
-                <img id="hero-avatar" class="hero-avatar" src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/user.svg">
-                <div class="hero-info">
-                    <h1 id="welcome-text">Hello, Guest!</h1>
-                    <div class="friends-row" id="friends-list">
-                        <!-- Friends render here -->
-                    </div>
-                </div>
-            </section>
-
-            <div class="section-title">Popular right now</div>
+        <section id="home-view" class="view-section active">
+            <div class="hero"><div class="hero-avatar-container"><img id="hero-avatar" src=""></div><div class="hero-info"><h1 id="welcome-text">Hello!</h1></div></div>
             <div id="game-grid"></div>
-        </div>
+        </section>
 
-        <!-- SETTINGS VIEW -->
-        <div id="settings-view">
+        <section id="profile-view" class="view-section">
+            <h1 id="profile-name-header">User</h1>
+            <div class="profile-layout"><div class="profile-char-card"><div><h2 style="font-size:40px;" id="profile-name-big">User</h2><div class="stat-box"><span class="val">0</span><span>Friends</span></div></div><img id="profile-render" style="width:200px;" src=""></div></div>
+        </section>
+
+        <section id="settings-view" class="view-section">
             <h1>Settings</h1>
             <div class="settings-grid">
                 <div class="settings-sidebar">
-                    <div class="settings-card settings-profile-header">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <img id="sett-pfp" src="">
-                            <span id="sett-name" style="font-weight:700;">Username</span>
-                        </div>
-                        <button class="edit-btn" style="background:#ff4d4d20; color:#ff4d4d; border:none;" onclick="logout()">Logout</button>
-                    </div>
-                    <div class="settings-card settings-nav">
-                        <div class="s-nav-btn active">Account</div>
-                        <div class="s-nav-btn">Security & Privacy</div>
-                        <div class="s-nav-btn">Sessions</div>
+                    <div class="settings-nav">
+                        <div class="s-nav-btn active" id="btn-acc" onclick="switchSettings('account')">Account</div>
+                        <div class="s-nav-btn" id="btn-sec" onclick="switchSettings('security')">Security</div>
+                        <div class="s-nav-btn" id="btn-cust" onclick="switchSettings('customization')">Customization</div>
                     </div>
                 </div>
-
-                <div class="settings-card">
-                    <h2 style="margin-top:0">Account Info</h2>
-                    <table class="info-table">
-                        <tr class="info-row">
-                            <td>
-                                <div class="info-label">Username</div>
-                                <div class="info-val" id="val-username">Guest</div>
-                            </td>
-                            <td style="text-align:right;"><button class="edit-btn">Edit</button></td>
-                        </tr>
-                        <tr class="info-row">
-                            <td>
-                                <div class="info-label">Email</div>
-                                <div class="info-val">user********@gmail.com</div>
-                            </td>
-                            <td style="text-align:right;"><button class="edit-btn">Edit</button></td>
-                        </tr>
-                    </table>
-                    <div class="danger-text" onclick="alert('Delete requested')">Danger Zone</div>
-                </div>
+                <div class="settings-card pane" id="pane-account"><h2>Account Info</h2><p id="val-username" style="font-weight:600;">User</p></div>
+                <div class="settings-card pane" id="pane-security" style="display:none;"><h2>Security</h2><div class="status-badge status-good">Good Standing</div></div>
+                <div class="settings-card pane" id="pane-customization" style="display:none;"><h2>Customization</h2><div style="display:flex;justify-content:space-between;"><span>Light Mode</span><label class="switch"><input type="checkbox" id="themeToggle" onchange="toggleTheme()"><span class="slider"></span></label></div></div>
             </div>
-        </div>
+        </section>
     </main>
 
-    <div class="modal-overlay" id="loginModal">
-        <div class="auth-modal">
-            <h2 style="margin-top:0">Login</h2>
-            <input type="text" id="loginUser" placeholder="Username">
-            <input type="password" id="loginPass" placeholder="Password">
-            <button class="auth-btn" onclick="login()">Sign In</button>
-            <button class="auth-btn" style="background:none; margin-top:5px;" onclick="closeModal()">Cancel</button>
-        </div>
-    </div>
-
     <script>
-        const PFP_BASE = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
         const API_BASE = 'https://powerhouse-api.c823.workers.dev';
+        const PFP_BASE = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
+        const DEFAULT_PFP = 'https://github.com/ElliottC823/Powerhouse/blob/main/profileicons/default.jpg?raw=true';
         
-        let games = [];
-        let user = {
-            token: localStorage.getItem('ph_token'),
-            username: localStorage.getItem('ph_username'),
-            pfp: localStorage.getItem('ph_pfp')
+        let user = { token: localStorage.getItem('ph_token'), username: localStorage.getItem('ph_username'), pfp: localStorage.getItem('ph_pfp') };
+
+        window.onload = () => {
+            if (user.token) unlockDashboard();
+            else document.getElementById('landing-page').style.display = 'flex';
+            if (localStorage.getItem('vortex_theme') === 'light') { document.body.setAttribute('data-theme', 'light'); document.getElementById('themeToggle').checked = true; }
+            fetchGames(); updateUI();
         };
 
-        window.onload = async () => {
-            await fetchGames();
-            if (user.token) await fetchUserData();
-            updateUI();
-        };
+        function toggleDropdown(e) { e.stopPropagation(); document.getElementById('user-dropdown').classList.toggle('show'); }
+        window.onclick = () => { document.getElementById('user-dropdown').classList.remove('show'); };
 
-        async function fetchGames() {
-            try {
-                const r = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
-                games = await r.json();
-                renderGames();
-            } catch(e) {}
-        }
-
-        async function fetchUserData() {
-            try {
-                const r = await fetch(`${API_BASE}/auth/load`, {
-                    headers: { 'Authorization': `Bearer ${user.token}` }
-                });
-                if (r.ok) {
-                    const { data } = await r.json();
-                    if (data.settings?.pfp) {
-                        user.pfp = data.settings.pfp;
-                        localStorage.setItem('ph_pfp', user.pfp);
-                    }
-                }
-            } catch(e) {}
-        }
-
-        function updateUI() {
-            const isGuest = !user.username;
-            const displayName = isGuest ? 'Guest' : user.username;
-            const pfpUrl = user.pfp ? PFP_BASE + user.pfp : 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/user.svg';
-
-            document.getElementById('welcome-text').textContent = `Hello, ${displayName}!`;
-            document.getElementById('nav-username').textContent = displayName;
-            document.getElementById('nav-pfp').src = pfpUrl;
-            document.getElementById('hero-avatar').src = pfpUrl;
-            
-            // Settings UI
-            document.getElementById('sett-name').textContent = displayName;
-            document.getElementById('sett-pfp').src = pfpUrl;
-            document.getElementById('val-username').textContent = displayName;
-        }
-
-        function renderGames() {
-            const grid = document.getElementById('game-grid');
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = games.filter(g => g.title.toLowerCase().includes(search));
-
-            grid.innerHTML = filtered.map(g => `
-                <a href="${g.link}" class="game-card" target="_blank">
-                    <img src="${g.thumb}" class="game-thumb">
-                    <span class="game-name">${g.title}</span>
-                    <div class="game-stats">
-                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
-                        ${Math.floor(Math.random() * 20)} playing
-                    </div>
-                </a>
-            `).join('');
-        }
-
-        function showPage(page) {
-            document.getElementById('home-view').style.display = page === 'home' ? 'block' : 'none';
-            document.getElementById('settings-view').style.display = page === 'settings' ? 'block' : 'none';
-            
-            // Update active state
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.toggle('active', el.textContent.toLowerCase().includes(page));
-            });
-        }
-
-        function handleUserClick() {
-            if (!user.token) document.getElementById('loginModal').classList.add('show');
-            else showPage('settings');
-        }
-
-        function closeModal() { document.getElementById('loginModal').classList.remove('show'); }
+        function unlockDashboard() { document.getElementById('landing-page').style.display = 'none'; document.getElementById('sidebar').style.display = 'flex'; document.getElementById('main-wrapper').style.display = 'block'; }
 
         async function login() {
             const u = document.getElementById('loginUser').value;
             const p = document.getElementById('loginPass').value;
             try {
-                const r = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: u, password: p })
-                });
+                const r = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
                 const data = await r.json();
-                if (r.ok) {
-                    localStorage.setItem('ph_token', data.token);
-                    localStorage.setItem('ph_username', data.username);
-                    location.reload();
-                } else alert(data.error);
+                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); if(data.pfp) localStorage.setItem('ph_pfp', data.pfp); location.reload(); }
+                else alert(data.error);
             } catch(e) { alert("Login failed"); }
         }
 
-        function logout() {
-            localStorage.clear();
-            location.reload();
+        function updateUI() {
+            if (!user.username) return;
+            const pfpUrl = user.pfp ? PFP_BASE + user.pfp : DEFAULT_PFP;
+            document.querySelectorAll('img[id*="pfp"], img[id*="avatar"], img[id*="render"]').forEach(img => { 
+                img.src = pfpUrl; 
+                img.onerror = () => { img.src = DEFAULT_PFP; };
+            });
+            document.getElementById('welcome-text').textContent = `Hello, ${user.username}!`;
+            document.getElementById('nav-username').textContent = user.username;
+            document.getElementById('profile-name-big').textContent = user.username;
+            document.getElementById('val-username').textContent = user.username;
         }
+
+        async function fetchGames() {
+            try {
+                const r = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
+                const games = await r.json();
+                document.getElementById('game-grid').innerHTML = games.map(g => `<a href="${g.link}" class="game-card" target="_blank"><img src="${g.thumb}" class="game-thumb"><p style="font-weight:700;margin:0;">${g.title}</p></a>`).join('');
+            } catch(e) {}
+        }
+
+        function showPage(p) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById(`${p}-view`).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(`side-${p}`).classList.add('active');
+            document.getElementById('user-dropdown').classList.remove('show');
+        }
+
+        function switchSettings(p) {
+            document.querySelectorAll('.pane').forEach(v => v.style.display = 'none');
+            document.getElementById(`pane-${p}`).style.display = 'block';
+            document.querySelectorAll('.s-nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${p.substring(0,3)}`).classList.add('active');
+        }
+
+        function toggleTheme() { const isL = document.getElementById('themeToggle').checked; document.body.setAttribute('data-theme', isL ? 'light' : 'dark'); localStorage.setItem('vortex_theme', isL ? 'light' : 'dark'); }
+        function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
