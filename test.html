@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
+    <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
+    <script>
+      (function () {
+        const base = document.querySelector('base');
+        if (base) base.setAttribute('href', window.location.origin + '/');
+      })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -217,7 +224,7 @@
                         <img id="nav-pfp" src="">
                     </div>
                     <div id="user-dropdown">
-                        <a href="/profile" class="dropdown-item">Profile</a>
+                        <a href="/profile" id="dropdown-profile-link" class="dropdown-item">Profile</a>
                         <a href="/settings" class="dropdown-item">Settings</a>
                         <div class="dropdown-item sign-out" onclick="logout()">Sign out</div>
                     </div>
@@ -411,7 +418,7 @@
             document.getElementById('nav-username').textContent = user.username;
             const ownLink = document.getElementById('side-profile');
             if (ownLink) ownLink.href = profileURL(user.username);
-            const dropdownProfile = document.querySelector('#user-dropdown a[href="/profile"]');
+            const dropdownProfile = document.getElementById('dropdown-profile-link');
             if (dropdownProfile) dropdownProfile.href = profileURL(user.username);
             document.getElementById('val-username').textContent = user.username;
             // Profile view is updated separately by renderProfile().
@@ -712,6 +719,20 @@
             routeFromURL();
         }
         function showPage(page) { navigateTo(page); }
+        // Keep same-origin links inside this app regardless of any upstream <base> tag.
+        document.querySelectorAll('#sidebar a[href^="/"], #user-dropdown a[href^="/"]').forEach(link => {
+            link.addEventListener('click', event => {
+                if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                const target = new URL(link.getAttribute('href'), location.origin);
+                if (target.origin !== location.origin) return;
+                event.preventDefault();
+                if (target.pathname === '/profile') navigateProfile(user.username);
+                else {
+                    history.pushState({}, '', target.pathname);
+                    routeFromURL();
+                }
+            });
+        });
         window.addEventListener('popstate', routeFromURL);
 
         function switchSettings(p) {
