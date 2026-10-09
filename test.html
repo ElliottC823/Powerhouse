@@ -74,7 +74,7 @@
         .user-pill img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
         #user-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: 220px; background: var(--bg-side); border: 1px solid var(--border); border-radius: 16px; padding: 8px; display: none; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.4); z-index: 2000; }
         #user-dropdown.show { display: flex; }
-        .dropdown-item { padding: 12px 16px; border-radius: 10px; color: var(--text); font-weight: 600; cursor: pointer; font-size: 14px; }
+        .dropdown-item { display:block; text-decoration:none; padding: 12px 16px; border-radius: 10px; color: var(--text); font-weight: 600; cursor: pointer; font-size: 14px; }
         .dropdown-item.sign-out { background: var(--danger); margin-top: 8px; color: white; }
 
         /* --- VIEWS --- */
@@ -184,18 +184,18 @@
     <aside id="sidebar">
         <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;"></div>
         <nav class="nav-group">
-            <div class="nav-item active" id="side-home" onclick="showPage('home')">
+            <a href="/home" onclick="event.preventDefault(); showPage('home')" class="nav-item active" id="side-home">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Home <span class="badge">12</span>
-            </div>
-            <div class="nav-item" id="side-profile" onclick="showPage('profile')">
+            </a>
+            <a href="/profile" onclick="event.preventDefault(); showPage('profile')" class="nav-item" id="side-profile">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg> Profile
-            </div>
-            <div class="nav-item" id="side-friends" onclick="showPage('friends')">
+            </a>
+            <a href="/friends" onclick="event.preventDefault(); showPage('friends')" class="nav-item" id="side-friends">
                 <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Friends
-            </div>
-            <div class="nav-item" id="side-settings" onclick="showPage('settings')">
+            </a>
+            <a href="/settings" onclick="event.preventDefault(); showPage('settings')" class="nav-item" id="side-settings">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82"/></svg> Settings
-            </div>
+            </a>
             <div style="height:20px; border-bottom: 1px solid var(--border); margin: 10px 0 20px;"></div>
             <!-- Replacement for Studio -->
             <a href="https://home.c823.workers.dev" class="nav-item" style="text-decoration: none;">
@@ -214,8 +214,8 @@
                         <img id="nav-pfp" src="">
                     </div>
                     <div id="user-dropdown">
-                        <div class="dropdown-item" onclick="showPage('profile')">Profile</div>
-                        <div class="dropdown-item" onclick="showPage('settings')">Settings</div>
+                        <a href="/profile" class="dropdown-item">Profile</a>
+                        <a href="/settings" class="dropdown-item">Settings</a>
                         <div class="dropdown-item sign-out" onclick="logout()">Sign out</div>
                     </div>
                 </div>
@@ -323,7 +323,8 @@
         </section>
     </main>
 
-    <script>
+
+<script>
         const API_BASE = 'https://powerhouse-api.c823.workers.dev';
         const PFP_BASE = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
         const DEFAULT_PFP = 'https://github.com/ElliottC823/Powerhouse/blob/main/profileicons/default.jpg?raw=true';
@@ -485,9 +486,9 @@
             return PFP_BASE + encodeURIComponent(pfp);
         }
         async function switchSocialTab(tab, updateRoute = true) {
-            if (updateRoute && user.token && location.pathname !== '/' + tab) {
-                history.pushState({page:tab}, '', '/' + tab);
-                document.title = tab[0].toUpperCase() + tab.slice(1) + ' | Powerhouse';
+            if (updateRoute && user.token) {
+                navigateTo(tab);
+                return;
             }
             if (!socialPaths[tab]) return;
             activeSocialTab = tab;
@@ -632,7 +633,7 @@
                 page = 'home';
             }
             const canonical = '/' + page;
-            if (replace || location.pathname !== canonical) {
+            if (location.pathname !== canonical) {
                 history.replaceState({page}, '', canonical);
             }
             if (page === 'sign-in') {
