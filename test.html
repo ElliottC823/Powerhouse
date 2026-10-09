@@ -416,7 +416,7 @@
             try {
                 const r = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
                 const data = await r.json();
-                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; unlockDashboard(); updateUI(); navigateTo((sessionStorage.getItem('ph_return_to') || '/home').slice(1), true); sessionStorage.removeItem('ph_return_to'); fetchUserData(); fetchHomeFriends(); }
+                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; unlockDashboard(); updateUI(); let nextPage = 'home'; try { nextPage = (sessionStorage.getItem('ph_return_to') || '/home').slice(1); sessionStorage.removeItem('ph_return_to'); } catch(e) {} navigateTo(ROUTE_PAGES.has(nextPage) ? nextPage : 'home', true); fetchUserData(); fetchHomeFriends(); }
                 else alert(data.error);
             } catch(e) { alert("Login failed"); }
         }
@@ -498,7 +498,7 @@
             });
             const panel = document.getElementById('friends-pane');
             panel.innerHTML = '<div class="social-empty">Loading ' + tab + '…</div>';
-            if (socialCache[tab]) { renderSocialCards(tab, socialCache[tab]); return; }
+            if (Array.isArray(socialCache[tab])) { renderSocialCards(tab, socialCache[tab]); return; }
             try {
                 const response = await fetch(`${API_BASE}${socialPaths[tab]}`, {headers:{Authorization:`Bearer ${user.token}`}});
                 if (!response.ok) throw Error(response.status === 404 ? 'This section is not available on the API yet.' : 'Unable to load this section.');
@@ -593,22 +593,48 @@
         }
         function fetchSocialData() { return switchSocialTab('friends'); }
 
-        // Route the entire application using browser History API.
-        // Every route uses the same HTML shell; the hosting Worker must serve it for these paths.
+        // Router: always update both the URL and the visible view together.
+        // Cloudflare must return this HTML for every supported route.
         const ROUTE_PAGES = new Set(['home', 'profile', 'friends', 'followers', 'following', 'requests', 'settings']);
         const SOCIAL_ROUTES = new Set(['friends', 'followers', 'following', 'requests']);
+        function routeName() {
+            let route = window.location.pathname.replace(/\/+$/, '').slice(1);
+            try { route = decodeURIComponent(route).toLowerCase(); } catch(e) { route = ''; }
+            return ROUTE_PAGES.has(route) || route === 'sign-in' ? route : (user.token ? 'home' : 'sign-in');
+        }
+        function renderRoute(page) {
+            const socialPage = SOCIAL_ROUTES.has(page);
+            const view = socialPage ? 'friends' : page;
+            document.querySelectorAll('.view-section').forEach(section => {
+                const selected = section.id === view + '-view';
+                section.classList.toggle('active', selected);
+                section.hidden = !selected;
+                if (selected) section.style.display = 'block';
+                else section.style.display = 'none';
+            });
+            document.querySelectorAll('#sidebar .nav-item').forEach(item => item.classList.remove('active'));
+            const sideBtn = document.getElementById('side-' + view);
+            if (sideBtn) sideBtn.classList.add('active');
+            document.getElementById('user-dropdown')?.classList.remove('show');
+            document.title = (socialPage ? 'Social' : page.charAt(0).toUpperCase() + page.slice(1)) + ' | Powerhouse';
+            if (socialPage) {
+                // This fetch is independent of the navigation itself.
+                switchSocialTab(page, false).catch(error => console.error('Social tab failed:', error));
+            }
+            if (page === 'settings') switchSettings('account');
+        }
         function routeFromURL(replace = false) {
-            const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
-            let page;
-            try { page = decodeURIComponent(pathname.slice(1)).toLowerCase(); }
-            catch (error) { page = user.token ? 'home' : 'sign-in'; }
-            if (!ROUTE_PAGES.has(page) && page !== 'sign-in') page = user.token ? 'home' : 'sign-in';
+            let page = routeName();
             if (!user.token && page !== 'sign-in') {
-                sessionStorage.setItem('ph_return_to', '/' + page);
+                try { sessionStorage.setItem('ph_return_to', '/' + page); } catch(e) {}
                 page = 'sign-in';
-            } else if (user.token && page === 'sign-in') page = 'home';
+            } else if (user.token && page === 'sign-in') {
+                page = 'home';
+            }
             const canonical = '/' + page;
-            if (replace || window.location.pathname !== canonical) history.replaceState({page}, '', canonical);
+            if (replace || location.pathname !== canonical) {
+                history.replaceState({page}, '', canonical);
+            }
             if (page === 'sign-in') {
                 document.getElementById('landing-page').style.display = 'flex';
                 document.getElementById('sidebar').style.display = 'none';
@@ -622,26 +648,24 @@
         function navigateTo(page, replace = false) {
             if (!ROUTE_PAGES.has(page) && page !== 'sign-in') return;
             if (!user.token && page !== 'sign-in') {
-                sessionStorage.setItem('ph_return_to', '/' + page);
+                try { sessionStorage.setItem('ph_return_to', '/' + page); } catch(e) {}
                 page = 'sign-in';
             }
-            const path = '/' + page;
-            if (location.pathname !== path) {
-                if (replace) history.replaceState({page}, '', path);
-                else history.pushState({page}, '', path);
+            if (user.token && page === 'sign-in') page = 'home';
+            const target = '/' + page;
+            if (location.pathname !== target) {
+                if (replace) history.replaceState({page}, '', target);
+                else history.pushState({page}, '', target);
             }
-            routeFromURL(false);
-        }
-        function renderRoute(page) {
-            const socialPage = SOCIAL_ROUTES.has(page);
-            const view = socialPage ? 'friends' : page;
-            document.querySelectorAll('.view-section').forEach(v => v.classList.toggle('active', v.id === view + '-view'));
-            document.querySelectorAll('#sidebar .nav-item').forEach(i => i.classList.remove('active'));
-            const sideBtn = document.getElementById('side-' + view);
-            if (sideBtn) sideBtn.classList.add('active');
-            if (socialPage) switchSocialTab(page, false);
-            document.getElementById('user-dropdown').classList.remove('show');
-            document.title = (page === 'friends' ? 'Social' : page[0].toUpperCase() + page.slice(1)) + ' | Powerhouse';
+            if (page === 'sign-in') {
+                document.getElementById('landing-page').style.display = 'flex';
+                document.getElementById('sidebar').style.display = 'none';
+                document.getElementById('main-wrapper').style.display = 'none';
+                document.title = 'Sign in | Powerhouse';
+            } else {
+                unlockDashboard();
+                renderRoute(page);
+            }
         }
         function showPage(page) { navigateTo(page); }
         window.addEventListener('popstate', () => routeFromURL(false));
