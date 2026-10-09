@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
+    <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
+    <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <script>
       (function () {
@@ -17,9 +20,9 @@
             --accent: #4d7fff;
             --accent2: #2f5fe0;
             --accent-light: rgba(77, 127, 255, 0.1);
-            --bg-main: #0a0b10;
-            --bg-side: #131419;
-            --surface: #191b22;
+            --bg-main: #121212;
+            --bg-side: #1e1e1e;
+            --surface: #1e1e1e;
             --border: rgba(255, 255, 255, 0.08);
             --text: #f4f5f9;
             --text-muted: rgba(244, 245, 249, 0.5);
@@ -175,6 +178,26 @@
         #user-dropdown.show { animation:viewEnter .2s ease both; }
         @media (max-width:600px) { .social-title { font-size:25px; } .social-tabs { gap:0; } .social-tab { padding-inline:11px; } .social-grid { grid-template-columns:1fr; } }
         @media (prefers-reduced-motion:reduce) { .view-section.active,.social-card,#user-dropdown.show,.social-tab.active::after { animation:none; } *,*::before,*::after { transition-duration:.01ms !important; } }
+
+        /* Announcements and staff workspaces */
+        #site-banner { display:none; position:relative; padding:11px 44px; margin:0 0 18px; border-radius:12px; text-align:center; font-weight:600; font-size:14px; animation:bannerEnter .25s ease; }
+        #site-banner-close { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:inherit; background:transparent; border:0; cursor:pointer; padding:5px 9px; font-size:20px; }
+        @keyframes bannerEnter { from {opacity:0;transform:translateY(-8px)} to {opacity:1;transform:translateY(0)} }
+        .staff-page {max-width:920px; margin:auto;}
+        .staff-panel {border:1px solid var(--border); background:var(--bg-side); padding:24px; border-radius:18px; margin:18px 0;}
+        .staff-row {display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:12px 0;}
+        .staff-input {width:100%; min-width:0; padding:11px 13px; color:var(--text); background:var(--surface); border:1px solid var(--border); border-radius:10px; font:inherit;}
+        .staff-row .staff-input {flex:1 1 220px;}
+        .staff-btn {background:var(--accent); color:white; border:0; border-radius:10px; padding:11px 16px; cursor:pointer; font:inherit; font-weight:700;}
+        .staff-btn:disabled {opacity:.5;cursor:wait}
+        .staff-status {color:var(--text-muted);min-height:22px;font-size:14px;}
+        .staff-card {padding:14px; border:1px solid var(--border); border-radius:12px; margin-top:10px; display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;}
+        .staff-card button {padding:7px 12px;}
+        .staff-page label {color:var(--text-muted);font-size:13px;}
+        .staff-section-title {margin:0 0 8px;}
+        .staff-page p {color:var(--text-muted);}
+        #side-admin[hidden], #side-moderation[hidden] {display:none!important}
+        @media(max-width:680px) {.staff-panel{padding:16px}}
     </style>
 </head>
 <body>
@@ -182,7 +205,7 @@
     <!-- AUTH PAGE -->
     <div id="landing-page">
         <div class="auth-container">
-            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo">
+            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" data-powerhouse-logo>
             <h2>Sign in</h2>
             <div class="form-group"><label>Username</label><input type="text" id="loginUser"></div>
             <div class="form-group"><label>Password</label><input type="password" id="loginPass"></div>
@@ -192,7 +215,7 @@
 
     <!-- SIDEBAR -->
     <aside id="sidebar">
-        <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;"></div>
+        <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;" data-powerhouse-logo></div>
         <nav class="nav-group">
             <a href="/home" class="nav-item active" id="side-home">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Home <span class="badge">12</span>
@@ -206,10 +229,17 @@
             <a href="/settings" class="nav-item" id="side-settings">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82"/></svg> Settings
             </a>
+
+            <a href="/admin" class="nav-item" id="side-admin" hidden>
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Admin
+            </a>
+            <a href="/moderation" class="nav-item" id="side-moderation" hidden>
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Moderation
+            </a>
             <div style="height:20px; border-bottom: 1px solid var(--border); margin: 10px 0 20px;"></div>
             <!-- Replacement for Studio -->
             <a href="https://home.c823.workers.dev" class="nav-item" style="text-decoration: none;">
-                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Home
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Hub
             </a>
         </nav>
     </aside>
@@ -231,6 +261,12 @@
                 </div>
             </div>
         </header>
+
+
+        <div id="site-banner" role="status" aria-live="polite">
+            <span id="site-banner-msg"></span>
+            <button id="site-banner-close" type="button" aria-label="Dismiss announcement" onclick="dismissSiteBanner()">×</button>
+        </div>
 
         <!-- HOME VIEW -->
         <section id="home-view" class="view-section active">
@@ -331,6 +367,37 @@
             </div>
             <div class="social-grid" id="friends-pane" role="tabpanel" aria-live="polite"><div class="social-empty">Loading friends…</div></div>
         </section>
+
+        <section id="admin-view" class="view-section staff-page" hidden>
+            <h1>Admin Panel</h1>
+            <p>Manage site-wide announcements. Only authorized admins and Founders can use this page.</p>
+            <div class="staff-panel">
+                <h2 class="staff-section-title">Site Banner</h2>
+                <p>Announcements appear above the content on Powerhouse pages. Uses the existing banner API.</p>
+                <div id="staff-banner-current" class="staff-status">Loading current banner…</div>
+                <div class="staff-row"><input id="staff-banner-message" class="staff-input" maxlength="350" placeholder="Announcement message" aria-label="Announcement message"></div>
+                <div class="staff-row"><label for="staff-banner-color">Color</label><input id="staff-banner-color" type="color" value="#4d7fff"><label><input id="staff-banner-enabled" type="checkbox" checked> Enabled</label></div>
+                <button class="staff-btn" type="button" onclick="saveSiteBanner()">Save Banner</button>
+                <div id="staff-banner-feedback" class="staff-status" aria-live="polite"></div>
+            </div>
+        </section>
+        <section id="moderation-view" class="view-section staff-page" hidden>
+            <h1>Moderation</h1>
+            <p>Search for users and issue a warning or ban. Only Founders and Moderators have access.</p>
+            <div class="staff-panel">
+                <h2 class="staff-section-title">Find a user</h2>
+                <div class="staff-row"><input id="staff-mod-search" class="staff-input" placeholder="Search username" aria-label="Search username"><button type="button" class="staff-btn" onclick="searchModerationUsers()">Search</button></div>
+                <div id="staff-mod-results" class="staff-status" aria-live="polite">Enter a username to search.</div>
+            </div>
+            <div class="staff-panel" id="staff-mod-action" hidden>
+                <h2 class="staff-section-title">Moderate <span id="staff-mod-target"></span></h2>
+                <label for="staff-mod-reason">Reason</label>
+                <textarea id="staff-mod-reason" class="staff-input" rows="3" placeholder="Required reason"></textarea>
+                <div class="staff-row"><label for="staff-mod-duration">Ban duration</label><select class="staff-input" id="staff-mod-duration"><option value="1day">1 day</option><option value="2days">2 days</option><option value="4days">4 days</option><option value="8days">8 days</option><option value="16days">16 days</option><option value="1month">1 month</option><option value="permanent">Permanent</option></select></div>
+                <div class="staff-row"><button type="button" class="staff-btn" onclick="performModeration('warn')">Issue Warning</button><button type="button" class="staff-btn" style="background:#c42b1c" onclick="performModeration('ban')">Ban User</button></div>
+                <div id="staff-mod-feedback" class="staff-status" aria-live="polite"></div>
+            </div>
+        </section>
     </main>
 
 
@@ -375,12 +442,15 @@
                 document.body.setAttribute('data-theme', isLight ? 'light' : 'dark');
                 const themeToggle = document.getElementById('themeToggle');
                 if (themeToggle) themeToggle.checked = isLight;
+                updatePowerhouseLogos();
                 updateUI();
             } catch (error) { console.error('Profile/theme initialization failed:', error); }
 
             // Independent requests: none are awaited during startup.
+            Promise.resolve().then(loadSiteBanner).catch(error => console.warn('Banner failed:', error));
             Promise.resolve().then(fetchGames).catch(error => console.error('Games failed:', error));
             if (user.token) {
+                Promise.resolve().then(loadStaffPermissions).catch(error => console.warn('Role check failed:', error));
                 Promise.resolve().then(fetchUserData).catch(error => console.error('Profile failed:', error));
                 Promise.resolve().then(fetchHomeFriends).catch(error => console.error('Friends failed:', error));
             }
@@ -622,8 +692,150 @@
         }
         function fetchSocialData() { return switchSocialTab('friends'); }
 
+
+        // Banner API compatibility: ENABLED|message|#RRGGBB
+        const staffAccess = {checked:false,admin:false,mod:false,rank:''};
+        let staffPermissionLoading = null;
+        let selectedModerationUser = '';
+        const permittedBannerColor = /^#[0-9a-fA-F]{6}$/;
+        function safeBannerColor(color) { return permittedBannerColor.test(color) ? color : '#4d7fff'; }
+        function readableTextColor(hex) {
+            const h = hex.slice(1), r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+            return (.299*r+.587*g+.114*b)/255 > .5 ? '#16171a' : '#fff';
+        }
+        function parseBanner(raw) {
+            const chunks = String(raw||'').trim().split('|');
+            if (chunks.length < 2) return null;
+            return {enabled:chunks[0].trim().toUpperCase()==='ENABLED',message:chunks[1].trim(),color:safeBannerColor((chunks[2]||'').trim())};
+        }
+        async function fetchBannerData() {
+            const response = await fetch(`${API_BASE}/banner`,{cache:'no-store'});
+            if (!response.ok) throw Error('Banner unavailable');
+            return parseBanner(await response.text());
+        }
+        async function loadSiteBanner() {
+            const bar = document.getElementById('site-banner');
+            if (!bar) return;
+            const data = await fetchBannerData();
+            bar.style.display = 'none';
+            if (!data?.enabled || !data.message) return;
+            try { if (sessionStorage.getItem('ph_banner_closed') === data.message) return; } catch(e) {}
+            bar.style.backgroundColor = data.color;
+            bar.style.color = readableTextColor(data.color);
+            document.getElementById('site-banner-msg').textContent = data.message;
+            bar.style.display = 'block';
+        }
+        function dismissSiteBanner() {
+            const message = document.getElementById('site-banner-msg').textContent;
+            const color = document.getElementById('site-banner').style.backgroundColor;
+            // Suppress only for this tab's current session.
+            document.getElementById('site-banner').style.display='none';
+            try {sessionStorage.setItem('ph_banner_closed', message);}catch(e){}
+        }
+        async function loadStaffPermissions() {
+            if (!user.token) { staffAccess.checked=true; return; }
+            if (staffPermissionLoading) return staffPermissionLoading;
+            staffPermissionLoading=(async()=>{
+                let rank='', blogAdmin=false;
+                try {
+                    const [rankResponse, adminResponse] = await Promise.all([
+                        fetch(`${API_BASE}/ranks/me`, {headers:{Authorization:`Bearer ${user.token}`}}),
+                        fetch(`${API_BASE}/blog/admin/check`, {headers:{Authorization:`Bearer ${user.token}`}})
+                    ]);
+                    if (rankResponse.ok) rank = String((await rankResponse.json()).rank||'');
+                    if (adminResponse.ok) blogAdmin = (await adminResponse.json()).isAdmin===true;
+                } catch(error) {console.warn('Permissions unavailable:',error);}
+                staffAccess.rank=rank;
+                staffAccess.admin=blogAdmin || rank.toLowerCase()==='founder';
+                staffAccess.mod=['founder','moderator'].includes(rank.toLowerCase());
+                staffAccess.checked=true;
+                document.getElementById('side-admin').hidden=!staffAccess.admin;
+                document.getElementById('side-moderation').hidden=!staffAccess.mod;
+                if (['admin','moderation'].includes(parseRoute().page)) routeFromURL();
+            })().finally(()=>{staffPermissionLoading=null});
+            return staffPermissionLoading;
+        }
+        async function readBannerForEditor() {
+            if (!staffAccess.admin) return;
+            const note = document.getElementById('staff-banner-current');
+            try {
+                const data = await fetchBannerData();
+                note.textContent = data ? (data.enabled?'Enabled: ':'Disabled: ')+(data.message||'(empty)') : 'No banner configured.';
+                if(data) {
+                    document.getElementById('staff-banner-message').value=data.message;
+                    document.getElementById('staff-banner-color').value=data.color;
+                    document.getElementById('staff-banner-enabled').checked=data.enabled;
+                }
+            } catch(e) { note.textContent='Unable to read banner.'; }
+        }
+        async function saveSiteBanner() {
+            if (!staffAccess.admin) return;
+            const note=document.getElementById('staff-banner-feedback');
+            const message=document.getElementById('staff-banner-message').value.trim();
+            const enabled=document.getElementById('staff-banner-enabled').checked;
+            const color=safeBannerColor(document.getElementById('staff-banner-color').value);
+            if(enabled&&!message) {note.textContent='Enter a message first.';return;}
+            const content=`${enabled?'ENABLED':'DISABLED'}|${message.replaceAll('|',' ')}|${color}`;
+            note.textContent='Saving…';
+            try {
+                const response=await fetch(`${API_BASE}/admin/banner`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${user.token}`},body:JSON.stringify({content})});
+                const result=await response.json().catch(()=>({}));
+                if(!response.ok) throw Error(result.error||'Unable to update banner.');
+                note.textContent='Banner updated.';
+                try{localStorage.removeItem('ph_banner_dismissed')}catch(e){}
+                await Promise.all([loadSiteBanner(),readBannerForEditor()]);
+            } catch(error){note.textContent=error.message;}
+        }
+        function selectModerationUser(name) {
+            selectedModerationUser=name;
+            document.getElementById('staff-mod-target').textContent=name;
+            document.getElementById('staff-mod-action').hidden=false;
+            document.getElementById('staff-mod-feedback').textContent='';
+        }
+        async function searchModerationUsers(){
+            if(!staffAccess.mod)return;
+            const query=document.getElementById('staff-mod-search').value.trim();
+            const result=document.getElementById('staff-mod-results');
+            result.replaceChildren();
+            if(!query){result.textContent='Enter a username.';return;}
+            result.textContent='Searching…';
+            try {
+                const response=await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(query)}`);
+                if(!response.ok)throw Error('Search failed');
+                const data=await response.json();
+                const entries=Array.isArray(data.results)?data.results:[];
+                result.replaceChildren();
+                if(!entries.length){result.textContent='No users found.';return;}
+                for(const entry of entries){
+                    const name=typeof entry.username==='string'?entry.username:'';
+                    if(!name)continue;
+                    const row=document.createElement('div');row.className='staff-card';
+                    const text=document.createElement('strong');text.textContent=name;
+                    const button=document.createElement('button');button.className='staff-btn';button.textContent='Select';
+                    button.addEventListener('click',()=>selectModerationUser(name));
+                    row.append(text,button);result.append(row);
+                }
+            }catch(error){result.textContent=error.message;}
+        }
+        async function performModeration(action){
+            if(!staffAccess.mod||!selectedModerationUser)return;
+            const reason=document.getElementById('staff-mod-reason').value.trim();
+            const feedback=document.getElementById('staff-mod-feedback');
+            if(!reason){feedback.textContent='A reason is required.';return;}
+            if(!confirm(`${action==='warn'?'Warn':'Ban'} ${selectedModerationUser}?`))return;
+            const payload={username:selectedModerationUser,reason};
+            if(action==='ban')payload.duration=document.getElementById('staff-mod-duration').value;
+            feedback.textContent='Submitting…';
+            try{
+                const response=await fetch(`${API_BASE}/mod/${action}`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${user.token}`},body:JSON.stringify(payload)});
+                const result=await response.json().catch(()=>({}));
+                if(!response.ok)throw Error(result.error||'Action failed');
+                feedback.textContent=action==='warn'?'Warning issued.':'Ban submitted.';
+            }catch(error){feedback.textContent=error.message;}
+        }
+
         // Profile URLs use a username and do not need authentication to display.
-        const ROUTE_PAGES = new Set(['home','profile','friends','followers','following','requests','settings']);
+        const ROUTE_PAGES = new Set(['home','profile','friends','followers','following','requests','settings','admin','moderation']);
         const SOCIAL_ROUTES = new Set(['friends','followers','following','requests']);
         const knownProfiles = new Map();
         function profileURL(username) { return '/user/' + encodeURIComponent(String(username)) + '/profile'; }
@@ -660,6 +872,17 @@
         }
         function renderRoute(route) {
             const page = route.page;
+            if ((page === 'admin' || page === 'moderation') && !staffAccess.checked) {
+                // Do not show privileged controls while permissions are unresolved.
+                document.querySelectorAll('.view-section').forEach(el => { el.hidden = true; el.style.display = 'none'; el.classList.remove('active'); });
+                if (!staffPermissionLoading) loadStaffPermissions().then(() => routeFromURL());
+                return;
+            }
+            if ((page === 'admin' && !staffAccess.admin) || (page === 'moderation' && !staffAccess.mod)) {
+                history.replaceState({}, '', '/home');
+                renderRoute({page:'home'});
+                return;
+            }
             const social = SOCIAL_ROUTES.has(page);
             const view = social ? 'friends' : page;
             document.querySelectorAll('.view-section').forEach(section => {
@@ -675,6 +898,8 @@
             if (page === 'profile') renderProfile(route.username);
             if (social && user.token) switchSocialTab(page, false).catch(console.error);
             if (page === 'settings') switchSettings('account');
+            if (page === 'admin') readBannerForEditor();
+            if (page === 'moderation') document.getElementById('staff-mod-search')?.focus();
         }
         function routeFromURL() {
             let route = parseRoute();
@@ -745,7 +970,26 @@
 
         function toggleDropdown(e) { e.stopPropagation(); document.getElementById('user-dropdown').classList.toggle('show'); }
         window.onclick = () => { if(document.getElementById('user-dropdown')) document.getElementById('user-dropdown').classList.remove('show'); };
-        function toggleTheme() { const isL = document.getElementById('themeToggle').checked; document.body.setAttribute('data-theme', isL ? 'light' : 'dark'); localStorage.setItem('vortex_theme', isL ? 'light' : 'dark'); }
+
+        // Match the theme-specific logos from the original Powerhouse index.html.
+        const PH_LOGOS = {
+            dark: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg',
+            light: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.svg'
+        };
+        function updatePowerhouseLogos() {
+            const light = document.body.getAttribute('data-theme') === 'light';
+            const src = light ? PH_LOGOS.light : PH_LOGOS.dark;
+            document.querySelectorAll('[data-powerhouse-logo]').forEach(img => {
+                if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePowerhouseLogos();
+            new MutationObserver(updatePowerhouseLogos).observe(document.body, {attributes:true, attributeFilter:['data-theme']});
+        });
+
+        function toggleTheme() { const isL = document.getElementById('themeToggle').checked; document.body.setAttribute('data-theme', isL ? 'light' : 'dark'); localStorage.setItem('vortex_theme', isL ? 'light' : 'dark'); updatePowerhouseLogos(); }
         function logout() { localStorage.removeItem('ph_token'); localStorage.removeItem('ph_username'); localStorage.removeItem('ph_pfp'); user = {token:null,username:null,pfp:null}; navigateTo('sign-in', true); }
     </script>
 </body>
