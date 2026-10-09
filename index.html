@@ -1625,29 +1625,24 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             const feedback = document.getElementById('account-about-feedback');
             if (!user.token || !user.username) { feedback.textContent = 'Please sign in first.'; return; }
             const tokenAtStart = user.token;
-            const value = input.value.trim().slice(0,500);
+            const value = input.value.trim();
+            if (value.length > 500) { feedback.textContent = 'About cannot exceed 500 characters.'; return; }
             button.disabled = true;
             feedback.textContent = 'Saving…';
             try {
-                // Preserve the existing account document and all other saved settings.
-                const data = accountSavedData || {};
-                const payload = {
-                    settings: {...(data.settings || {}), about:value},
-                    history: data.history || [],
-                    favorites: data.favorites || [],
-                    limitedEditionPfps: data.limitedEditionPfps || []
-                };
-                const response = await fetch(`${API_BASE}/auth/save`, {
+                const response = await fetch(`${API_BASE}/auth/about`, {
                     method:'POST',
                     headers:{'Content-Type':'application/json',Authorization:`Bearer ${tokenAtStart}`},
-                    body:JSON.stringify(payload)
+                    body:JSON.stringify({about:value})
                 });
-                if (!response.ok) throw new Error('The account API did not save the description (HTTP '+response.status+').');
+                const result = await response.json();
+                if (!response.ok || !result.ok) throw new Error(result.error || 'Unable to save About.');
                 if (user.token !== tokenAtStart) return;
-                accountSavedData = {...data,...payload};
-                localStorage.setItem(aboutStorageKey(), value);
-                setAccountAbout(value);
-                feedback.textContent = 'About saved. The public profile API may need updating to show it to other users.';
+                if (!accountSavedData) accountSavedData = {};
+                accountSavedData.settings = {...(accountSavedData.settings || {}), about:result.about};
+                setAccountAbout(result.about);
+                knownProfiles.delete(user.username.toLowerCase());
+                feedback.textContent = 'About saved to your Powerhouse account.';
             } catch(error) { feedback.textContent = error.message || 'Could not save About.'; }
             finally { button.disabled = false; }
         }
@@ -1659,7 +1654,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     const { data } = await r.json();
                     if (!data || !user.token) return;
                     accountSavedData = data;
-                    setAccountAbout(typeof data.settings?.about === 'string' ? data.settings.about : (localStorage.getItem(aboutStorageKey()) || ''));
+                    setAccountAbout(typeof data.settings?.about === 'string' ? data.settings.about : '');
                     if (data.settings?.pfp) {
                         user.pfp = data.settings.pfp;
                         localStorage.setItem('ph_pfp', user.pfp);
@@ -1684,7 +1679,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             const dropdownProfile = document.getElementById('dropdown-profile-link');
             if (dropdownProfile) dropdownProfile.href = profileURL(user.username);
             document.getElementById('val-username').textContent = user.username;
-            if (!accountSavedData) setAccountAbout(localStorage.getItem(aboutStorageKey()) || '');
+            if (!accountSavedData) setAccountAbout('');
             // Profile view is updated separately by renderProfile().
             if (typeof parseRoute === 'function') {
                 const current = parseRoute();
@@ -2079,6 +2074,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             if (path === '/') return {page:user.token?'home':'sign-in'};
             return {page:'not-found'};
         }
+        let profileRequestSequence = 0;
         function renderProfile(username) {
             const own = Boolean(user.username && username && user.username.toLowerCase() === username.toLowerCase());
             const shownName = username || user.username || 'Unknown user';
@@ -2094,10 +2090,34 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             document.getElementById('profile-about-edit').style.display = own ? '' : 'none';
             document.getElementById('profile-about').textContent = own
                 ? (currentAbout || 'No description yet.')
-                : (cached?.about || 'This user has not shared a public About description.');
-            const cachedFriends = typeof socialCache !== 'undefined' ? socialCache.friends : null;
-            document.getElementById('profile-friends-number').textContent = own && Array.isArray(cachedFriends) ? cachedFriends.length : '—';
+                : (cached?.about || 'Loading profile…');
+            document.getElementById('profile-friends-number').textContent = '—';
+            const requestId = ++profileRequestSequence;
+            fetch(`${API_BASE}/users/${encodeURIComponent(shownName)}/profile`)
+                .then(async response => {
+                    if (!response.ok) throw new Error(response.status === 404 ? 'User not found.' : 'Profile unavailable.');
+                    return response.json();
+                })
+                .then(({profile}) => {
+                    if (requestId !== profileRequestSequence || parseRoute().username?.toLowerCase() !== shownName.toLowerCase()) return;
+                    if (!profile) return;
+                    knownProfiles.set(shownName.toLowerCase(), {...(cached || {}), ...profile});
+                    document.getElementById('profile-friends-number').textContent = Number.isFinite(profile.friendsCount) ? profile.friendsCount : '—';
+                    // The About box uses API data even when viewing somebody else's profile.
+                    document.getElementById('profile-about').textContent = profile.about || 'No description yet.';
+                    if (profile.pfp) {
+                        portrait.src = socialAvatar(profile.pfp);
+                        portrait.onerror = () => { portrait.onerror = null; portrait.src = DEFAULT_PFP; };
+                    }
+                })
+                .catch(error => {
+                    if (requestId !== profileRequestSequence) return;
+                    document.getElementById('profile-about').textContent = own
+                        ? (currentAbout || 'No description yet.')
+                        : error.message;
+                });
         }
+
         function renderRoute(route) {
             const page = route.page;
             if ((page === 'admin' || page === 'moderation') && !staffAccess.checked) {
