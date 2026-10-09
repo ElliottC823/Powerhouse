@@ -328,15 +328,57 @@
         const PFP_BASE = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
         const DEFAULT_PFP = 'https://github.com/ElliottC823/Powerhouse/blob/main/profileicons/default.jpg?raw=true';
         
-        let user = { token: localStorage.getItem('ph_token'), username: localStorage.getItem('ph_username'), pfp: localStorage.getItem('ph_pfp') };
+        function safeStorageGet(key) {
+            try { return localStorage.getItem(key); } catch (error) { return null; }
+        }
+        let user = { token: safeStorageGet('ph_token'), username: safeStorageGet('ph_username'), pfp: safeStorageGet('ph_pfp') };
 
-        window.onload = async () => {
-            routeFromURL(true);
-            if (localStorage.getItem('vortex_theme') === 'light') { document.body.setAttribute('data-theme', 'light'); document.getElementById('themeToggle').checked = true; }
-            await fetchGames();
-            if (user.token) { await fetchUserData(); fetchHomeFriends(); }
-            updateUI();
-        };
+        // Initialize the visible page before requesting any remote data.
+        // Network failures must never prevent the sign-in form or dashboard from appearing.
+        function showStartupFallback(error) {
+            console.error('Powerhouse initialization failed:', error);
+            const landing = document.getElementById('landing-page');
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main-wrapper');
+            if (user.token) {
+                if (landing) landing.style.display = 'none';
+                if (sidebar) sidebar.style.display = 'flex';
+                if (main) main.style.display = 'block';
+                const home = document.getElementById('home-view');
+                if (home && !document.querySelector('.view-section.active')) home.classList.add('active');
+            } else {
+                if (landing) landing.style.display = 'flex';
+                if (sidebar) sidebar.style.display = 'none';
+                if (main) main.style.display = 'none';
+            }
+        }
+
+        function initializePowerhouse() {
+            try {
+                routeFromURL(true);
+            } catch (error) {
+                showStartupFallback(error);
+            }
+            try {
+                const isLight = safeStorageGet('vortex_theme') === 'light';
+                document.body.setAttribute('data-theme', isLight ? 'light' : 'dark');
+                const themeToggle = document.getElementById('themeToggle');
+                if (themeToggle) themeToggle.checked = isLight;
+                updateUI();
+            } catch (error) { console.error('Profile/theme initialization failed:', error); }
+
+            // Independent requests: none are awaited during startup.
+            Promise.resolve().then(fetchGames).catch(error => console.error('Games failed:', error));
+            if (user.token) {
+                Promise.resolve().then(fetchUserData).catch(error => console.error('Profile failed:', error));
+                Promise.resolve().then(fetchHomeFriends).catch(error => console.error('Friends failed:', error));
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePowerhouse, { once: true });
+        } else {
+            initializePowerhouse();
+        }
 
         function unlockDashboard() { document.getElementById('landing-page').style.display = 'none'; document.getElementById('sidebar').style.display = 'flex'; document.getElementById('main-wrapper').style.display = 'block'; }
 
@@ -359,7 +401,7 @@
             const pfpSource = (user.pfp && user.pfp.length > 1) ? PFP_BASE + user.pfp : DEFAULT_PFP;
             document.querySelectorAll('img[id*="pfp"], img[id*="avatar"], img[id*="render"]').forEach(img => { 
                 img.src = pfpSource; 
-                img.onerror = function() { this.src = DEFAULT_PFP; this.onerror = null; };
+                img.onerror = function() { this.onerror = null; if (this.src !== DEFAULT_PFP) this.src = DEFAULT_PFP; };
             });
             document.getElementById('welcome-text').textContent = `Hello, ${user.username}!`;
             document.getElementById('nav-username').textContent = user.username;
@@ -557,7 +599,9 @@
         const SOCIAL_ROUTES = new Set(['friends', 'followers', 'following', 'requests']);
         function routeFromURL(replace = false) {
             const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
-            let page = decodeURIComponent(pathname.slice(1)).toLowerCase();
+            let page;
+            try { page = decodeURIComponent(pathname.slice(1)).toLowerCase(); }
+            catch (error) { page = user.token ? 'home' : 'sign-in'; }
             if (!ROUTE_PAGES.has(page) && page !== 'sign-in') page = user.token ? 'home' : 'sign-in';
             if (!user.token && page !== 'sign-in') {
                 sessionStorage.setItem('ph_return_to', '/' + page);
