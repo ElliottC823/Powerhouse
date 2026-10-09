@@ -114,6 +114,9 @@
         .settings-input { width: 100%; padding: 12px; background: var(--bg-main); border: 1px solid var(--border); color: white; border-radius: 10px; margin-top: 10px; font-family: inherit; }
         .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-top: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
+        .home-friend-card { text-decoration:none; color:inherit; cursor:pointer; }
+        .social-profile-link { display:flex; align-items:center; min-width:0; flex:1; color:inherit; text-decoration:none; }
+        .social-profile-link:hover .social-card-name, .home-friend-card:hover .home-friend-name { color:var(--accent); }
         /* --- GRID --- */
         #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
         .game-card { text-decoration: none; color: inherit; }
@@ -251,7 +254,7 @@
         <section id="profile-view" class="view-section">
             <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px;">
                 <h1 id="profile-name-header" style="font-size:36px; margin:0; font-weight:900;">User</h1>
-                <button style="background:var(--surface); border:1px solid var(--border); color:white; padding:12px 24px; border-radius:12px; cursor:pointer; font-weight:700;" onclick="showPage('settings')">Edit Profile</button>
+                <button style="background:var(--surface); border:1px solid var(--border); color:white; padding:12px 24px; border-radius:12px; cursor:pointer; font-weight:700;" id="profile-edit-button" onclick="showPage('settings')">Edit Profile</button>
             </div>
             <div class="profile-layout">
                 <div class="profile-char-card">
@@ -265,7 +268,7 @@
                     <img id="profile-render" class="profile-render" src="">
                 </div>
                 <div style="background:var(--bg-side); border:1px solid var(--border); border-radius:28px; padding:32px;">
-                    <h3>About</h3><p style="color:var(--text-muted);">Welcome to my profile!</p>
+                    <h3>About</h3><p id="profile-about" style="color:var(--text-muted);">Welcome to my profile!</p>
                 </div>
             </div>
         </section>
@@ -406,9 +409,14 @@
             });
             document.getElementById('welcome-text').textContent = `Hello, ${user.username}!`;
             document.getElementById('nav-username').textContent = user.username;
+            const ownLink = document.getElementById('side-profile');
+            if (ownLink) ownLink.href = profileURL(user.username);
             document.getElementById('val-username').textContent = user.username;
-            document.getElementById('profile-name-header').textContent = user.username;
-            document.getElementById('profile-name-big').textContent = user.username;
+            // Profile view is updated separately by renderProfile().
+            if (typeof parseRoute === 'function') {
+                const current = parseRoute();
+                if (current.page === 'profile' && current.username && current.username.toLowerCase() === user.username.toLowerCase()) renderProfile(current.username);
+            }
         }
 
         async function login() {
@@ -417,7 +425,7 @@
             try {
                 const r = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
                 const data = await r.json();
-                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; unlockDashboard(); updateUI(); let nextPage = 'home'; try { nextPage = (sessionStorage.getItem('ph_return_to') || '/home').slice(1); sessionStorage.removeItem('ph_return_to'); } catch(e) {} navigateTo(ROUTE_PAGES.has(nextPage) ? nextPage : 'home', true); fetchUserData(); fetchHomeFriends(); }
+                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; unlockDashboard(); updateUI(); let nextPage = 'home'; try { nextPage = (sessionStorage.getItem('ph_return_to') || '/home').slice(1); sessionStorage.removeItem('ph_return_to'); } catch(e) {} if (nextPage.startsWith('user/')) { history.replaceState({},'', '/' + nextPage); routeFromURL(); } else navigateTo(ROUTE_PAGES.has(nextPage) ? nextPage : 'home', true); fetchUserData(); fetchHomeFriends(); }
                 else alert(data.error);
             } catch(e) { alert("Login failed"); }
         }
@@ -524,8 +532,14 @@
                 const name = typeof item === 'string' ? item : (item.username || item.user?.username || item.name || 'Unknown');
                 const pfp = typeof item === 'object' ? (item.pfp || item.user?.pfp) : null;
                 const action = tab === 'friends' ? `<button type="button" class="social-action" data-remove-friend="${i}">Remove Friend</button>` : '';
-                return `<div class="social-card" style="animation-delay:${Math.min(i,12)*35}ms"><img alt="" src="${escapeText(socialAvatar(pfp))}" onerror="this.onerror=null;this.src='${DEFAULT_PFP}'"><span class="social-card-name">${escapeText(name)}</span>${action}</div>`;
+                const href = profileURL(name);
+                rememberProfile(name, pfp);
+                return `<div class="social-card" style="animation-delay:${Math.min(i,12)*35}ms"><a class="social-profile-link" href="${escapeText(href)}" data-profile-link="${escapeText(name)}"><img alt="${escapeText(name)} avatar" src="${escapeText(socialAvatar(pfp))}" onerror="this.onerror=null;this.src='${DEFAULT_PFP}'"><span class="social-card-name">${escapeText(name)}</span></a>${action}</div>`;
             }).join('');
+            panel.querySelectorAll('[data-profile-link]').forEach(link => link.addEventListener('click', event => {
+                if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                event.preventDefault(); navigateProfile(link.dataset.profileLink);
+            }));
             panel.querySelectorAll('[data-remove-friend]').forEach(btn => btn.addEventListener('click', () => {
                 const entry = entries[Number(btn.dataset.removeFriend)];
                 const name = typeof entry === 'string' ? entry : (entry.username || entry.user?.username);
@@ -563,7 +577,10 @@
                 const profile = obj.user || obj;
                 const name = typeof item === 'string' ? item : (profile.username || obj.username || obj.name || 'Unknown');
                 const avatar = profile.pfp || obj.pfp;
-                const card = document.createElement('div');
+                rememberProfile(name, avatar);
+                const card = document.createElement('a');
+                card.href = profileURL(name);
+                card.addEventListener('click', event => { if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); navigateProfile(name); });
                 card.className = 'home-friend-card';
                 card.style.animationDelay = Math.min(i,12)*35 + 'ms';
                 const img = document.createElement('img');
@@ -577,6 +594,8 @@
                 card.append(img,label);
                 grid.append(card);
             });
+            const currentRoute = parseRoute();
+            if (currentRoute.page === 'profile' && currentRoute.username) renderProfile(currentRoute.username);
         }
         async function fetchHomeFriends() {
             const grid = document.getElementById('home-friends-grid');
@@ -594,82 +613,104 @@
         }
         function fetchSocialData() { return switchSocialTab('friends'); }
 
-        // Router: always update both the URL and the visible view together.
-        // Cloudflare must return this HTML for every supported route.
-        const ROUTE_PAGES = new Set(['home', 'profile', 'friends', 'followers', 'following', 'requests', 'settings']);
-        const SOCIAL_ROUTES = new Set(['friends', 'followers', 'following', 'requests']);
-        function routeName() {
-            let route = window.location.pathname.replace(/\/+$/, '').slice(1);
-            try { route = decodeURIComponent(route).toLowerCase(); } catch(e) { route = ''; }
-            return ROUTE_PAGES.has(route) || route === 'sign-in' ? route : (user.token ? 'home' : 'sign-in');
+        // Profile URLs use a username and do not need authentication to display.
+        const ROUTE_PAGES = new Set(['home','profile','friends','followers','following','requests','settings']);
+        const SOCIAL_ROUTES = new Set(['friends','followers','following','requests']);
+        const knownProfiles = new Map();
+        function profileURL(username) { return '/user/' + encodeURIComponent(String(username)) + '/profile'; }
+        function rememberProfile(username, pfp) {
+            if (username && typeof username === 'string' && pfp) knownProfiles.set(username.toLowerCase(), {username,pfp});
         }
-        function renderRoute(page) {
-            const socialPage = SOCIAL_ROUTES.has(page);
-            const view = socialPage ? 'friends' : page;
+        function parseRoute() {
+            const path = location.pathname.replace(/\/+$/, '') || '/';
+            const match = path.match(/^\/user\/([^/]+)\/profile$/i);
+            if (match) {
+                try { return {page:'profile', username:decodeURIComponent(match[1])}; }
+                catch(e) { return {page:'not-found'}; }
+            }
+            const simple = path.slice(1).toLowerCase();
+            if (simple === 'profile') return {page:'profile',username:user.username || null}; // Legacy URL
+            if (ROUTE_PAGES.has(simple) || simple === 'sign-in') return {page:simple};
+            if (path === '/') return {page:user.token?'home':'sign-in'};
+            return {page:'not-found'};
+        }
+        function renderProfile(username) {
+            const own = Boolean(user.username && username && user.username.toLowerCase() === username.toLowerCase());
+            const shownName = username || user.username || 'Unknown user';
+            const cached = knownProfiles.get(shownName.toLowerCase());
+            const image = own ? socialAvatar(user.pfp) : socialAvatar(cached?.pfp);
+            document.getElementById('profile-name-header').textContent = shownName;
+            document.getElementById('profile-name-big').textContent = shownName;
+            const portrait = document.getElementById('profile-render');
+            portrait.src = image;
+            portrait.onerror = () => { portrait.onerror = null; portrait.src = DEFAULT_PFP; };
+            document.getElementById('profile-edit-button').style.display = own ? '' : 'none';
+            document.getElementById('profile-about').textContent = own ? 'Welcome to my profile!' : 'Public profile details are not available yet.';
+            // Never show the placeholder friend/playtime stats as facts about another user.
+            document.querySelectorAll('#profile-view .stat-box').forEach(box => { box.style.display = own ? '' : 'none'; });
+        }
+        function renderRoute(route) {
+            const page = route.page;
+            const social = SOCIAL_ROUTES.has(page);
+            const view = social ? 'friends' : page;
             document.querySelectorAll('.view-section').forEach(section => {
                 const selected = section.id === view + '-view';
                 section.classList.toggle('active', selected);
                 section.hidden = !selected;
-                if (selected) section.style.display = 'block';
-                else section.style.display = 'none';
+                section.style.display = selected ? 'block' : 'none';
             });
             document.querySelectorAll('#sidebar .nav-item').forEach(item => item.classList.remove('active'));
-            const sideBtn = document.getElementById('side-' + view);
-            if (sideBtn) sideBtn.classList.add('active');
+            document.getElementById('side-' + view)?.classList.add('active');
             document.getElementById('user-dropdown')?.classList.remove('show');
-            document.title = (socialPage ? 'Social' : page.charAt(0).toUpperCase() + page.slice(1)) + ' | Powerhouse';
-            if (socialPage) {
-                // This fetch is independent of the navigation itself.
-                switchSocialTab(page, false).catch(error => console.error('Social tab failed:', error));
-            }
+            document.title = (page === 'profile' ? (route.username || 'Profile') : social ? 'Social' : page.charAt(0).toUpperCase()+page.slice(1)) + ' | Powerhouse';
+            if (page === 'profile') renderProfile(route.username);
+            if (social && user.token) switchSocialTab(page, false).catch(console.error);
             if (page === 'settings') switchSettings('account');
         }
-        function routeFromURL(replace = false) {
-            let page = routeName();
-            if (!user.token && page !== 'sign-in') {
-                try { sessionStorage.setItem('ph_return_to', '/' + page); } catch(e) {}
-                page = 'sign-in';
-            } else if (user.token && page === 'sign-in') {
-                page = 'home';
+        function routeFromURL() {
+            let route = parseRoute();
+            if (route.page === 'profile' && !route.username) {
+                if (!user.token) route = {page:'sign-in'};
+                else route.username = user.username;
+                if (route.page === 'profile' && route.username) history.replaceState({}, '', profileURL(route.username));
             }
-            const canonical = '/' + page;
-            if (location.pathname !== canonical) {
-                history.replaceState({page}, '', canonical);
+            if (!user.token && !['sign-in','profile','not-found'].includes(route.page)) {
+                try { sessionStorage.setItem('ph_return_to',location.pathname); } catch(e) {}
+                history.replaceState({},'', '/sign-in'); route = {page:'sign-in'};
             }
-            if (page === 'sign-in') {
-                document.getElementById('landing-page').style.display = 'flex';
-                document.getElementById('sidebar').style.display = 'none';
-                document.getElementById('main-wrapper').style.display = 'none';
-                document.title = 'Sign in | Powerhouse';
-                return;
+            if (route.page === 'sign-in' && user.token) {
+                history.replaceState({},'', '/home'); route = {page:'home'};
             }
-            unlockDashboard();
-            renderRoute(page);
-        }
-        function navigateTo(page, replace = false) {
-            if (!ROUTE_PAGES.has(page) && page !== 'sign-in') return;
-            if (!user.token && page !== 'sign-in') {
-                try { sessionStorage.setItem('ph_return_to', '/' + page); } catch(e) {}
-                page = 'sign-in';
-            }
-            if (user.token && page === 'sign-in') page = 'home';
-            const target = '/' + page;
-            if (location.pathname !== target) {
-                if (replace) history.replaceState({page}, '', target);
-                else history.pushState({page}, '', target);
-            }
-            if (page === 'sign-in') {
+            if (route.page === 'not-found') { history.replaceState({},'',user.token?'/home':'/sign-in'); route = {page:user.token?'home':'sign-in'}; }
+            if (route.page === 'sign-in') {
                 document.getElementById('landing-page').style.display = 'flex';
                 document.getElementById('sidebar').style.display = 'none';
                 document.getElementById('main-wrapper').style.display = 'none';
                 document.title = 'Sign in | Powerhouse';
             } else {
-                unlockDashboard();
-                renderRoute(page);
+                unlockDashboard(); renderRoute(route);
             }
         }
+        function navigateTo(page, replace = false) {
+            if (page === 'profile') return navigateProfile(user.username);
+            if (!ROUTE_PAGES.has(page) && page !== 'sign-in') return;
+            if (!user.token && page !== 'sign-in') {
+                try { sessionStorage.setItem('ph_return_to','/'+page); } catch(e) {}
+                page = 'sign-in';
+            }
+            if (page === 'sign-in' && user.token) page = 'home';
+            const target = '/' + page;
+            if (location.pathname !== target) history[replace ? 'replaceState' : 'pushState']({},'',target);
+            routeFromURL();
+        }
+        function navigateProfile(username) {
+            if (!username) return navigateTo('sign-in');
+            const target = profileURL(username);
+            if (location.pathname !== target) history.pushState({},'',target);
+            routeFromURL();
+        }
         function showPage(page) { navigateTo(page); }
-        window.addEventListener('popstate', () => routeFromURL(false));
+        window.addEventListener('popstate', routeFromURL);
 
         function switchSettings(p) {
             document.querySelectorAll('.pane').forEach(v => v.style.display = 'none');
