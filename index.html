@@ -8,12 +8,6 @@
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
-    <script>
-      (function () {
-        const base = document.querySelector('base');
-        if (base) base.setAttribute('href', window.location.origin + '/');
-      })();
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -58,7 +52,7 @@
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-muted); text-decoration: none; font-weight: 600; cursor: pointer; margin-bottom: 4px; position: relative; transition: 0.2s; }
         .nav-item:hover { background: var(--accent-light); color: var(--text); }
         .nav-item.active { background: var(--accent); color: white; }
-        .nav-item svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .nav-item svg { width: 20px; height: 20px; flex: 0 0 20px; display: block; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; fill: none; }
         .badge { position: absolute; right: 12px; background: var(--accent2); padding: 2px 8px; border-radius: 20px; font-size: 10px; color: white; font-weight: 800; }
 
         #main-wrapper { margin-left: var(--sidebar-width); flex: 1; padding: 24px 48px; display: none; }
@@ -198,9 +192,1006 @@
         .staff-page p {color:var(--text-muted);}
         #side-admin[hidden], #side-moderation[hidden] {display:none!important}
         @media(max-width:680px) {.staff-panel{padding:16px}}
-    </style>
+        /* ══ ADMIN PANEL ═════════════════════════════════════════════════════════ */
+        .admin-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 2500;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+        }
+        .admin-backdrop.show { display: flex; align-items: flex-start; justify-content: center; padding: 20px clamp(8px,3%,20px); overflow-y: auto; }
+        @media (min-width: 681px) { .admin-backdrop.show { padding-left: calc(var(--sidebar-offset-left) + 20px); } }
+        .admin-panel {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.5);
+            width: 100%; max-width: 580px;
+            display: flex; flex-direction: column; margin: auto;
+            animation: fadeUp .2s ease;
+        }
+        .admin-panel-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 18px 0; flex-shrink: 0;
+            border-bottom: 1px solid var(--border); padding-bottom: 14px;
+        }
+        .admin-panel-title {
+            font-size: .9rem; font-weight: 700; flex: 1;
+            display: flex; align-items: center; gap: 7px;
+        }
+        .admin-title-badge {
+            font-size: .58rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .07em; background: var(--accent); color: #fff;
+            padding: 2px 7px; border-radius: 4px;
+        }
+        .admin-panel-close {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            padding: 4px; display: flex; align-items: center; transition: color .1s;
+        }
+        .admin-panel-close:hover { color: var(--text); }
+        .admin-panel-close svg { width: 16px; height: 16px; }
+        .admin-tabs {
+            display: flex; border-bottom: 1px solid var(--border);
+            padding: 0 18px; flex-shrink: 0;
+        }
+        .admin-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .75rem; font-weight: 400;
+            padding: 8px 14px 9px; cursor: pointer;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s;
+        }
+        .admin-tab:hover { color: var(--text); }
+        .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .admin-body { padding: 16px 18px 24px; overflow-y: auto; max-height: 72vh; }
+        .admin-body::-webkit-scrollbar { width: 2px; }
+        .admin-body::-webkit-scrollbar-thumb { background: var(--border); }
+        .admin-section-title {
+            font-size: .58rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .1em; color: var(--muted);
+            margin: 18px 0 8px; padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+        .admin-section-title:first-child { margin-top: 0; }
+        .admin-stat-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            margin-bottom: 4px;
+        }
+        .admin-stat {
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 12px; text-align: center;
+        }
+        .admin-stat-val { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+        .admin-stat-lbl { font-size: .62rem; color: var(--muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+        .admin-user-row {
+            display: flex; align-items: center; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+        }
+        .admin-user-row:last-child { border-bottom: none; }
+        .admin-user-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--accent); color: #fff; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .7rem; font-weight: 700; overflow: hidden;
+        }
+        .admin-user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .admin-user-name { flex: 1; font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .admin-user-meta { font-size: .65rem; color: var(--muted); }
+        .admin-user-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .admin-btn {
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .68rem; font-weight: 600;
+            padding: 3px 9px; cursor: pointer; transition: all .1s; white-space: nowrap;
+        }
+        .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .admin-btn.danger { border-color: rgba(196,43,28,.3); color: #c42b1c; }
+        .admin-btn.danger:hover { background: rgba(196,43,28,.1); border-color: #c42b1c; }
+        .admin-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .admin-btn.primary:hover { opacity: .85; }
+        .admin-empty { text-align: center; padding: 24px 0; color: var(--muted); font-size: .8rem; opacity: .6; }
+        .admin-search-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .admin-search-input {
+            flex: 1; background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .82rem;
+            padding: 7px 10px; outline: none; transition: border-color .1s;
+        }
+        .admin-search-input:focus { border-color: var(--accent); }
+        .admin-announce-box { display: flex; flex-direction: column; gap: 8px; }
+        .admin-announce-input {
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .82rem;
+            padding: 8px 10px; outline: none; resize: vertical; min-height: 70px;
+            transition: border-color .1s;
+        }
+        .admin-announce-input:focus { border-color: var(--accent); }
+        .admin-color-row { display: flex; align-items: center; gap: 8px; }
+        .admin-msg { font-size: .72rem; margin-top: 4px; color: var(--accent); min-height: 16px; }
+
+        /* ── ADMIN DELETE CONFIRM ── */
+        .admin-confirm-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 4000;
+            background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .admin-confirm-backdrop.show { display: flex; }
+        .admin-confirm-modal {
+            background: var(--surface); border: 1px solid rgba(196,43,28,.35);
+            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.6);
+            width: min(380px, 92vw); padding: 22px 24px;
+            display: flex; flex-direction: column; gap: 16px;
+            animation: fadeUp .2s ease;
+        }
+        .admin-confirm-title {
+            font-size: .9rem; font-weight: 700;
+            display: flex; align-items: center; gap: 8px; color: #c42b1c;
+        }
+        .admin-confirm-body { font-size: .8rem; line-height: 1.6; display: flex; flex-direction: column; gap: 8px; }
+        .admin-confirm-body strong { font-weight: 700; }
+        .admin-confirm-error { font-size: .72rem; color: #c42b1c; min-height: 16px; }
+        .admin-confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        #adminConfirmInput { margin-top: 4px; width: 100%; }
+
+        /* ══ MODERATION PANEL ════════════════════════════════════════════════════ */
+        .mod-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 2500;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+        }
+        .mod-backdrop.show { display: flex; align-items: flex-start; justify-content: center; padding: 20px clamp(8px,3%,20px); overflow-y: auto; }
+        @media (min-width: 681px) { .mod-backdrop.show { padding-left: calc(var(--sidebar-offset-left) + 20px); } }
+        .mod-panel {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,.5);
+            width: 100%; max-width: 560px;
+            display: flex; flex-direction: column; margin: auto;
+            animation: fadeUp .2s ease;
+        }
+        .mod-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 18px 0; flex-shrink: 0;
+            border-bottom: 1px solid var(--border); padding-bottom: 14px;
+        }
+        .mod-title {
+            font-size: .9rem; font-weight: 700; flex: 1;
+            display: flex; align-items: center; gap: 7px;
+        }
+        .mod-close {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            padding: 4px; display: flex; align-items: center;
+        }
+        .mod-close:hover { color: var(--text); }
+        .mod-close svg { width: 16px; height: 16px; }
+        .mod-tabs {
+            display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+        }
+        .mod-tab {
+            background: none; border: none; color: var(--muted);
+            font-family: inherit; font-size: .75rem; font-weight: 400;
+            padding: 8px 14px 9px; cursor: pointer;
+            border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+            transition: color .1s, border-color .1s;
+        }
+        .mod-tab:hover { color: var(--text); }
+        .mod-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+        .mod-body { padding: 16px 18px 24px; overflow-y: auto; max-height: 68vh; }
+        .mod-body::-webkit-scrollbar { width: 2px; }
+        .mod-body::-webkit-scrollbar-thumb { background: var(--border); }
+        .mod-section-title {
+            font-size: .58rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .1em; color: var(--muted);
+            margin: 18px 0 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
+        }
+        .mod-section-title:first-child { margin-top: 0; }
+        .mod-user-row {
+            display: flex; align-items: center; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+        }
+        .mod-user-row:last-child { border-bottom: none; }
+        .mod-user-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--accent); color: #fff; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .7rem; font-weight: 700; overflow: hidden;
+        }
+        .mod-user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .mod-user-info { flex: 1; min-width: 0; }
+        .mod-user-name { font-size: .82rem; font-weight: 600; }
+        .mod-user-meta { font-size: .65rem; color: var(--muted); margin-top: 1px; }
+        .mod-actions { display: flex; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
+        .mod-btn {
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .68rem; font-weight: 600;
+            padding: 4px 10px; cursor: pointer; transition: all .1s; white-space: nowrap;
+        }
+        .mod-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .mod-btn.danger { border-color: rgba(196,43,28,.3); color: #c42b1c; }
+        .mod-btn.danger:hover { background: rgba(196,43,28,.1); border-color: #c42b1c; }
+        .mod-btn.green { border-color: rgba(46,125,50,.3); color: #2e7d32; }
+        .mod-btn.green:hover { background: rgba(46,125,50,.1); border-color: #2e7d32; }
+        .mod-search-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .mod-search-input {
+            flex: 1; background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .82rem;
+            padding: 7px 10px; outline: none;
+        }
+        .mod-search-input:focus { border-color: var(--accent); }
+        .mod-empty { text-align: center; padding: 24px 0; color: var(--muted); font-size: .8rem; opacity: .6; }
+        .warn-reason-input {
+            width: 100%; background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-family: inherit; font-size: .78rem;
+            padding: 7px 10px; outline: none; margin-top: 8px; resize: none;
+        }
+        .warn-reason-input:focus { border-color: var(--accent); }
+
+
+.legacy-staff {--muted:var(--text-muted);--radius-sm:12px;--radius-xs:8px;max-width:100%;overflow:hidden;}
+.legacy-staff .admin-tabs,.legacy-staff .mod-tabs {display:flex;overflow-x:auto;gap:4px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.legacy-staff .admin-tab,.legacy-staff .mod-tab {white-space:nowrap; flex-shrink:0;}
+.legacy-staff .admin-body,.legacy-staff .mod-body {max-height:none;overflow:visible;padding:12px 0 20px;}
+.legacy-staff .admin-search-row,.legacy-staff .mod-search-row {display:flex;gap:8px;}
+.legacy-staff .admin-search-input,.legacy-staff .mod-search-input {min-width:0;}
+.legacy-staff .admin-user-row,.legacy-staff .mod-user-row {flex-wrap:wrap;}
+.legacy-staff .admin-user-actions,.legacy-staff .mod-actions {flex-wrap:wrap;}
+.admin-confirm-backdrop {z-index:6500;}
+.admin-confirm-modal {max-width:420px;}
+
+
+        .rank-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:5px;font-size:10px;letter-spacing:.02em;font-weight:800;margin-left:6px;vertical-align:middle;white-space:nowrap;background:#555;color:white}
+        .rank-badge-sm{font-size:9px;padding:1px 5px}
+        .rank-founder{background:linear-gradient(135deg,#c8a600,#e8c200);color:#2a1f00}
+        .rank-moderator{background:#2e7d32;color:#fff}
+        .rank-admin{background:#4d7fff;color:#fff}
+        .rank-contributor{background:#555;color:white}
+    
+/* Staff role symbols: icon only, adjacent to username */
+.role-icon { display:inline-block;vertical-align:-3px; flex-shrink:0; margin-left:5px;object-fit:contain; }
+#nav-username .role-icon {vertical-align:-2px}
+.home-friend-name, .social-card-name, .admin-user-name {display:inline-flex;align-items:center;gap:2px;max-width:100%;}
+/* Animate staff pages and tab content */
+@keyframes staffReveal {from {opacity:0;transform:translateY(10px)} to {opacity:1;transform:translateY(0)}}
+@keyframes staffPop {from {opacity:0;transform:scale(.96)} to {opacity:1;transform:scale(1)}}
+.staff-page.active .staff-panel { animation: staffReveal .35s cubic-bezier(.18,.8,.2,1) both; }
+.legacy-staff .admin-body, .legacy-staff .mod-body {animation: staffReveal .25s ease both}
+.legacy-staff .admin-stat {animation:staffPop .32s both;transition:transform .2s,border-color .2s,box-shadow .2s}
+.legacy-staff .admin-stat:nth-child(2) {animation-delay:.05s}
+.legacy-staff .admin-stat:nth-child(3) {animation-delay:.1s}
+.legacy-staff .admin-stat:hover {transform:translateY(-3px);border-color:var(--accent);box-shadow:0 8px 18px rgba(0,0,0,.14)}
+.legacy-staff .admin-user-row,.legacy-staff .mod-user-row {animation:staffReveal .3s ease both;transition:background .2s, transform .2s}
+.legacy-staff .admin-user-row:hover,.legacy-staff .mod-user-row:hover {background:var(--surface);transform:translateX(3px)}
+.legacy-staff .admin-tab,.legacy-staff .mod-tab {transition:color .2s,border-color .2s,background .2s}
+.legacy-staff .admin-tab:hover,.legacy-staff .mod-tab:hover {background:var(--accent-light)}
+.legacy-staff button {transition:transform .15s,filter .15s,background .15s}
+.legacy-staff button:active {transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.staff-page *, .staff-page *::before,.staff-page *::after{animation:none!important;transition:none!important}}
+
+</style>
 </head>
 <body>
+<div class="admin-confirm-backdrop" id="adminConfirmBackdrop">
+    <div class="admin-confirm-modal">
+        <div class="admin-confirm-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:#c42b1c;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Delete Account
+        </div>
+        <div class="admin-confirm-body">
+            <p>You are about to permanently delete <strong id="adminConfirmUsername"></strong>. This will remove their account, settings, history, and friends. <strong>This cannot be undone.</strong></p>
+            <p style="margin-top:10px;font-size:.78rem;color:var(--muted)">Type the username to confirm:</p>
+            <input class="admin-search-input" id="adminConfirmInput" type="text" placeholder="Username…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="adminConfirmCheck()" onkeydown="if(event.key==='Enter')adminConfirmDelete()">
+            <div class="admin-confirm-error" id="adminConfirmError"></div>
+        </div>
+        <div class="admin-confirm-actions">
+            <button class="admin-btn" onclick="adminConfirmCancel()">Cancel</button>
+            <button class="admin-btn danger" id="adminConfirmBtn" onclick="adminConfirmDelete()" disabled style="opacity:.4;cursor:not-allowed">Delete Account</button>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+      (function () {
+        const base = document.querySelector('base');
+        if (base) base.setAttribute('href', window.location.origin + '/');
+      })();
+
+// Restored from the legacy Admin and Moderation pages.
+let _adminDeleteTarget = '';
+let _cacheRanks = null, _cacheRanksAt = 0;
+function staffEsc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const POWERHOUSE_ROLE_ICON_URLS = {
+ admin: 'https://raw.githubusercontent.com/ElliottC823/Powerhouse/0deaddd87fcbfdc3016e0c5aab0304d03273f245/icons/admin_icon.svg'
+};
+function getRankBadgeHtml(rank,sm=false){
+ const role=String(rank||'').trim().toLowerCase();
+ if(!['founder','moderator','admin'].includes(role))return '';
+ const size=sm?'14':'17';
+ const label=role.charAt(0).toUpperCase()+role.slice(1);
+ if(role==='admin')return `<img class="role-icon" src="${POWERHOUSE_ROLE_ICON_URLS.admin}" width="${size}" height="${size}" alt="Admin" title="Admin" loading="lazy">`;
+ if(role==='founder')return `<svg class="role-icon" width="${size}" height="${size}" viewBox="0 0 24 24" role="img" aria-label="Founder" xmlns="http://www.w3.org/2000/svg"><title>Founder</title><path fill="#f4be39" d="M2 7l5.1 4.1L12 3l4.9 8.1L22 7l-2 12H4L2 7Z"/><path fill="none" stroke="#ffe7a0" stroke-width="1.5" d="M4 19h16M7 14l5-8 5 8"/></svg>`;
+ return `<svg class="role-icon" width="${size}" height="${size}" viewBox="0 0 24 24" role="img" aria-label="Moderator" xmlns="http://www.w3.org/2000/svg"><title>Moderator</title><path fill="#31966a" d="m12 2 9 4v6c0 5.2-3.5 8.7-9 10-5.5-1.3-9-4.8-9-10V6l9-4Z"/><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 12 2.5 2.5L16.5 9"/></svg>`;
+}
+function staffBadge(username,isAdmin,size,isContributor){
+ const role=_cacheRanks?.[String(username).toLowerCase()]||'';
+ return getRankBadgeHtml(role,size==='sm') || (isAdmin?getRankBadgeHtml('admin',size==='sm'):'') + (isContributor?'<span class="rank-badge rank-contributor">Contributor</span>':'');
+}
+function lookupUserBadge(name,small=false){
+ const role=String(name||'').toLowerCase()===String(user.username||'').toLowerCase() ? staffAccess.rank|| (staffAccess.admin?'Admin':'') : (_cacheRanks?.[String(name||'').toLowerCase()]||'');
+ return getRankBadgeHtml(role,small);
+}
+function updateRoleLabels(){
+ const nav=document.getElementById('nav-username');
+ if(nav&&user.username){nav.textContent=user.username;nav.insertAdjacentHTML('beforeend',lookupUserBadge(user.username,true));}
+ const account=document.getElementById('val-username');
+ if(account&&user.username){account.textContent=user.username;account.insertAdjacentHTML('beforeend',lookupUserBadge(user.username));}
+ if(typeof parseRoute==='function'){const route=parseRoute();if(route.page==='profile'&&route.username)renderProfile(route.username);}
+ document.querySelectorAll('[data-staff-badge-for]').forEach(el=>{el.innerHTML=lookupUserBadge(el.dataset.staffBadgeFor,true);});
+}
+async function getCachedRanks(){
+ if(_cacheRanks&&Date.now()-_cacheRanksAt<3600000)return _cacheRanks;
+ try{const r=await fetch(`${API_BASE}/ranks`,{headers:{Authorization:`Bearer ${user.token}`}});_cacheRanks=r.ok?(await r.json()).ranks||{}:{};}catch(e){_cacheRanks={};}
+ _cacheRanksAt=Date.now();return _cacheRanks;
+}
+
+function syncLegacyBannerFields(){
+ const map=[['adminBannerMsg','staff-banner-message'],['adminBannerColor','staff-banner-color'],['adminBannerEnabled','staff-banner-enabled']];
+ for(const [oldId,newId] of map){const source=document.getElementById(oldId),target=document.getElementById(newId);if(source&&target){target.value=source.value; if(source.type==='checkbox')target.checked=source.checked;}}
+}
+async function staffLegacySaveBanner(){syncLegacyBannerFields();await saveSiteBanner();const s=document.getElementById('staff-banner-feedback');document.getElementById('adminBannerMsg2').textContent=s?.textContent||'';}
+async function staffLegacyReadBanner(){await readBannerForEditor();const data=await fetchBannerData().catch(()=>null);if(data){document.getElementById('adminBannerMsg').value=data.message;document.getElementById('adminBannerColor').value=data.color;document.getElementById('adminBannerEnabled').checked=data.enabled;}document.getElementById('adminBannerPreview').textContent=data?(data.enabled?'Enabled: ':'Disabled: ')+data.message:'No banner configured.';}
+
+function adminSetBanner(){return staffLegacySaveBanner();}
+
+    function adminTabSwitch(tab) {
+        ['overview','users','allusers','ranks','banner'].forEach(t => {
+            document.getElementById('adminPane' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
+            document.getElementById('adminTab'  + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+        });
+        if (tab === 'banner')   staffLegacyReadBanner();
+        if (tab === 'allusers') adminLoadAllUsers();
+        if (tab === 'overview') adminLoadOverview();
+    }
+
+
+    async function adminLoadOverview() {
+        if (!staffAccess.admin) return;
+        try {
+            const [adminsRes, postsRes] = await Promise.all([
+                fetch(`${API_BASE}/blog/admins`),
+                fetch(`${API_BASE}/blog/posts`)
+            ]);
+            const adminsData = adminsRes.ok ? await adminsRes.json() : {};
+            const postsData  = postsRes.ok  ? await postsRes.json()  : {};
+            const admins = adminsData.admins || [];
+            const posts  = (postsData.posts  || []).filter(p => p.status === 'published');
+
+            document.getElementById('adminStatPosts').textContent  = posts.length;
+            document.getElementById('adminStatAdmins').textContent = admins.length;
+
+            // Fetch user count via search (broad query)
+            const usersRes = await fetch(`${API_BASE}/admin/stats`, { headers: { Authorization: `Bearer ${user.token}` } });
+            if (usersRes.ok) {
+                const d = await usersRes.json();
+                document.getElementById('adminStatUsers').textContent = d.userCount ?? '—';
+            }
+
+            // Admin list — enrich with pfp via search
+            const listEl = document.getElementById('adminAdminList');
+            if (listEl) {
+                if (admins.length === 0) { listEl.innerHTML = '<div class="admin-empty">No admins found.</div>'; }
+                else {
+                    // Fetch pfp for each admin in parallel
+                    const adminProfiles = await Promise.all(admins.map(async u => {
+                        try {
+                            const r = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(u)}`);
+                            if (r.ok) {
+                                const d = await r.json();
+                                const match = (d.results || []).find(x => x.username.toLowerCase() === u.toLowerCase());
+                                return { username: u, pfp: match?.pfp || '' };
+                            }
+                        } catch(e) {}
+                        return { username: u, pfp: '' };
+                    }));
+                    listEl.innerHTML = adminProfiles.map(({ username: u, pfp }) => `
+                        <div class="admin-user-row">
+                            <div class="admin-user-avatar">
+                                ${pfp ? `<img src="${PFP_BASE + pfp}" alt="">` : staffEsc(u).slice(0,2).toUpperCase()}
+                            </div>
+                            <div style="flex:1">
+                                <div class="admin-user-name">${staffEsc(u)}
+                                    ${staffBadge(u,true,'sm',false)}
+                                </div>
+                            </div>
+                        </div>`).join('');
+                }
+            }
+        } catch(e) { console.error('Admin overview error', e); }
+    }
+
+
+    async function adminSearchUsers() {
+        const q = (document.getElementById('adminUserSearch')?.value || '').trim();
+        const el = document.getElementById('adminUserList');
+        if (!el) return;
+        if (q.length < 1) { el.innerHTML = '<div class="admin-empty">Search for a user above.</div>'; return; }
+        el.innerHTML = '<div class="admin-empty">Searching…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`);
+            const data = r.ok ? await r.json() : {};
+            const users = data.results || [];
+            const adminsRes   = await fetch(`${API_BASE}/blog/admins`);
+            const adminsData   = adminsRes.ok ? await adminsRes.json() : {};
+            const admins       = (adminsData.admins || []).map(a => a.toLowerCase());
+            const contribsRes  = await fetch(`${API_BASE}/blog/contributors`);
+            const contribsData = contribsRes.ok ? await contribsRes.json() : {};
+            const contributors = (contribsData.contributors || []).map(c => c.toLowerCase());
+            if (users.length === 0) { el.innerHTML = '<div class="admin-empty">No users found.</div>'; return; }
+            el.innerHTML = users.map(u => {
+                const isAdm = admins.includes(u.username.toLowerCase());
+                return `<div class="admin-user-row">
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE + u.pfp}" alt="">` : staffEsc(u.username).slice(0,2).toUpperCase()}</div>
+                    <div style="flex:1;min-width:0">
+                        <div class="admin-user-name">${staffEsc(u.username)}${staffBadge(u.username, isAdm, 'sm', contributors.includes(u.username.toLowerCase()))}</div>
+                        <div class="admin-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="admin-user-actions">
+                        ${u.username.toLowerCase() !== (user.username||'').toLowerCase() ? `
+                        <button class="admin-btn" onclick="triggerCalmDownForUser('${staffEsc(u.username)}')" title="Make user watch calming video on next login">Calm Down</button>
+                        ${['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? '' : `<button class="admin-btn danger" onclick="adminDeleteUser('${staffEsc(u.username)}')">Delete</button>`}
+                        ${isAdm
+                            ? (['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? '<span style="font-size:.65rem;color:var(--muted)">Protected</span>' : `<button class="admin-btn" onclick="adminToggleAdmin('${staffEsc(u.username)}', false)">Revoke Admin</button>`)
+                            : `<button class="admin-btn primary" onclick="adminToggleAdmin('${staffEsc(u.username)}', true)">Make Admin</button>`
+                        }
+                        ${!isAdm ? (contributors.includes(u.username.toLowerCase())
+                            ? `<button class="admin-btn" onclick="adminToggleContributor('${staffEsc(u.username)}', false)">Revoke Contrib</button>`
+                            : `<button class="admin-btn" onclick="adminToggleContributor('${staffEsc(u.username)}', true)">Make Contrib</button>`)
+                        : ''}` : '<span style="font-size:.65rem;color:var(--muted)">You</span>'}
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e) { el.innerHTML = '<div class="admin-empty">Search failed.</div>'; }
+    }
+
+
+    async function adminLoadAllUsers() {
+        const el    = document.getElementById('adminAllUsersList');
+        const ctEl  = document.getElementById('adminAllUsersCount');
+        if (!el) return;
+        el.innerHTML = '<div class="admin-empty">Loading…</div>';
+        if (ctEl) ctEl.textContent = '';
+        try {
+            const statsRes = await fetch(`${API_BASE}/admin/users`, { headers: { Authorization: `Bearer ${user.token}` } });
+            if (!statsRes.ok) { el.innerHTML = '<div class="admin-empty">Failed to load.</div>'; return; }
+            const data = await statsRes.json();
+            const users = data.users || [];
+            const adminsRes   = await fetch(`${API_BASE}/blog/admins`);
+            const adminsData   = adminsRes.ok ? await adminsRes.json() : {};
+            const admins       = (adminsData.admins || []).map(a => a.toLowerCase());
+            const contribsRes  = await fetch(`${API_BASE}/blog/contributors`);
+            const contribsData = contribsRes.ok ? await contribsRes.json() : {};
+            const contributors = (contribsData.contributors || []).map(c => c.toLowerCase());
+            if (ctEl) ctEl.textContent = `${users.length} account${users.length !== 1 ? 's' : ''}`;
+            if (users.length === 0) { el.innerHTML = '<div class="admin-empty">No accounts found.</div>'; return; }
+            el.innerHTML = users.map(u => {
+                const isAdm = admins.includes(u.username.toLowerCase());
+                const isProtected = ['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase());
+                return `<div class="admin-user-row">
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE + u.pfp}" alt="">` : staffEsc(u.username).slice(0,2).toUpperCase()}</div>
+                    <div style="flex:1;min-width:0">
+                        <div class="admin-user-name">${staffEsc(u.username)}${staffBadge(u.username, isAdm, 'sm', contributors.includes(u.username.toLowerCase()))}</div>
+                        <div class="admin-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="admin-user-actions">
+                        ${u.username.toLowerCase() !== (user.username||'').toLowerCase() && !isProtected ? `
+                        <button class="admin-btn danger" onclick="adminDeleteUser('${staffEsc(u.username)}')">Delete</button>
+                        ${isAdm
+                            ? `<button class="admin-btn" onclick="adminToggleAdmin('${staffEsc(u.username)}', false)">Revoke Admin</button>`
+                            : `<button class="admin-btn primary" onclick="adminToggleAdmin('${staffEsc(u.username)}', true)">Make Admin</button>`
+                        }
+                        ${!isAdm ? (contributors.includes(u.username.toLowerCase())
+                            ? `<button class="admin-btn" onclick="adminToggleContributor('${staffEsc(u.username)}', false)">Revoke Contrib</button>`
+                            : `<button class="admin-btn" onclick="adminToggleContributor('${staffEsc(u.username)}', true)">Make Contrib</button>`)
+                        : ''}` : `<span style="font-size:.65rem;color:var(--muted)">${isProtected ? 'Protected' : 'You'}</span>`}
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e) { el.innerHTML = '<div class="admin-empty">Failed to load.</div>'; }
+    }
+
+
+
+    function adminDeleteUser(username) {
+        _adminDeleteTarget = username;
+        document.getElementById('adminConfirmUsername').textContent = username;
+        document.getElementById('adminConfirmInput').value = '';
+        document.getElementById('adminConfirmError').textContent = '';
+        const btn = document.getElementById('adminConfirmBtn');
+        btn.disabled = true; btn.style.opacity = '.4'; btn.style.cursor = 'not-allowed';
+        document.getElementById('adminConfirmBackdrop').classList.add('show');
+        setTimeout(() => document.getElementById('adminConfirmInput').focus(), 50);
+    }
+
+
+    function adminConfirmCheck() {
+        const val = document.getElementById('adminConfirmInput').value.trim();
+        const btn = document.getElementById('adminConfirmBtn');
+        const match = val.toLowerCase() === _adminDeleteTarget.toLowerCase();
+        btn.disabled = !match;
+        btn.style.opacity = match ? '1' : '.4';
+        btn.style.cursor  = match ? 'pointer' : 'not-allowed';
+        document.getElementById('adminConfirmError').textContent = '';
+    }
+
+
+    function adminConfirmCancel() {
+        document.getElementById('adminConfirmBackdrop').classList.remove('show');
+        _adminDeleteTarget = '';
+    }
+
+
+    async function adminConfirmDelete() {
+        const val = document.getElementById('adminConfirmInput').value.trim();
+        const errEl = document.getElementById('adminConfirmError');
+        if (val.toLowerCase() !== _adminDeleteTarget.toLowerCase()) {
+            errEl.textContent = 'Username does not match.'; return;
+        }
+        const btn = document.getElementById('adminConfirmBtn');
+        btn.disabled = true; btn.textContent = 'Deleting…';
+        try {
+            const r = await fetch(`${API_BASE}/admin/user/${encodeURIComponent(_adminDeleteTarget)}`, {
+                method: 'DELETE', headers: { Authorization: `Bearer ${user.token}` }
+            });
+            const d = await r.json();
+            if (r.ok) {
+                document.getElementById('adminConfirmBackdrop').classList.remove('show');
+                adminSearchUsers();
+                adminLoadOverview();
+            } else {
+                errEl.textContent = d.error || 'Failed to delete user.';
+                btn.disabled = false; btn.textContent = 'Delete Account';
+            }
+        } catch(e) {
+            errEl.textContent = 'Network error. Try again.';
+            btn.disabled = false; btn.textContent = 'Delete Account';
+        }
+    }
+
+
+    async function adminToggleContributor(username, makeContrib) {
+        if (!confirm(`${makeContrib ? 'Grant' : 'Revoke'} contributor status for "${username}"?`)) return;
+        try {
+            const r = await fetch(`${API_BASE}/admin/contributor`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ username, makeContributor: makeContrib })
+            });
+            const d = await r.json();
+            if (r.ok) { adminSearchUsers(); adminLoadAllUsers(); }
+            else alert(d.error || 'Failed.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+
+    async function adminToggleAdmin(username, makeAdmin) {
+        if (!confirm(`${makeAdmin ? 'Grant' : 'Revoke'} admin for "${username}"?`)) return;
+        try {
+            const r = await fetch(`${API_BASE}/admin/admin`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ username, makeAdmin })
+            });
+            const d = await r.json();
+            if (r.ok) { adminSearchUsers(); adminLoadOverview(); }
+            else alert(d.error || 'Failed.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+
+    async function adminSubmitGameSuggestion() {
+        const name = document.getElementById('suggestName')?.value?.trim();
+        const thumbnail = document.getElementById('suggestThumbnail')?.value?.trim();
+        const url = document.getElementById('suggestUrl')?.value?.trim();
+        const description = document.getElementById('suggestDescription')?.value?.trim();
+        const verified = document.getElementById('suggestVerified')?.checked;
+        const canUseBlank = document.getElementById('suggestBlank')?.checked;
+        const msgEl = document.getElementById('suggestMsg');
+
+        if (!name || !thumbnail || !url || !description) {
+            if (msgEl) msgEl.textContent = 'All fields are required.';
+            return;
+        }
+
+        try {
+            const r = await fetch(`${API_BASE}/admin/suggest-game`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ name, thumbnail, url, description, verified, canUseBlank })
+            });
+            const d = await r.json();
+            if (r.ok) {
+                if (msgEl) msgEl.textContent = 'Game suggestion submitted!';
+                document.getElementById('suggestName').value = '';
+                document.getElementById('suggestThumbnail').value = '';
+                document.getElementById('suggestUrl').value = '';
+                document.getElementById('suggestDescription').value = '';
+                document.getElementById('suggestVerified').checked = false;
+                document.getElementById('suggestBlank').checked = false;
+                adminLoadSuggestions();
+            } else {
+                if (msgEl) msgEl.textContent = d.error || 'Failed.';
+            }
+        } catch(e) { if (msgEl) msgEl.textContent = 'Network error.'; }
+    }
+
+
+    async function adminLoadSuggestions() {
+        const el = document.getElementById('suggestList');
+        if (!el) return;
+        el.innerHTML = '<div class="admin-empty">Loading…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/admin/suggestions`, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            const d = r.ok ? (await r.json()) : { suggestions: [] };
+            const suggestions = d.suggestions || [];
+            if (suggestions.length === 0) {
+                el.innerHTML = '<div class="admin-empty">No suggestions yet.</div>';
+                return;
+            }
+            el.innerHTML = suggestions.map(s => `
+                <div style="background:color-mix(in srgb,var(--text) 3%,transparent);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px">
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                        <img src="${s.thumbnail}" alt="${s.name}" style="width:60px;height:60px;border-radius:4px;object-fit:cover;flex-shrink:0">
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:.85rem;font-weight:600">${staffEsc(s.name)}</div>
+                            <div style="font-size:.7rem;color:var(--muted);margin:3px 0">${staffEsc(s.description).slice(0,100)}</div>
+                            <div style="font-size:.65rem;color:var(--muted)">
+                                By ${staffEsc(s.suggestedBy)} · ${new Date(s.suggestedAt).toLocaleDateString()}
+                                ${s.verified ? ' · Verified' : ''} ${s.canUseBlank ? ' · about:blank' : ''}
+                            </div>
+                        </div>
+                        <button class="admin-btn danger" onclick="adminRemoveSuggestion('${s.id}')" style="padding:6px 12px;font-size:.7rem">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch(e) { el.innerHTML = '<div class="admin-empty">Failed to load.</div>'; }
+    }
+
+
+    async function adminRemoveSuggestion(suggestionId) {
+        try {
+            const r = await fetch(`${API_BASE}/admin/suggestion/${encodeURIComponent(suggestionId)}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            if (r.ok) adminLoadSuggestions();
+        } catch(e) { console.error('Failed to remove suggestion', e); }
+    }
+
+    // ── UNCLE'S AI SETTING ───────────────────────────────────────────────────
+
+    async function triggerCalmDownForUser(username) {
+        if (!user.token) return;
+        try {
+            const r = await fetch(`${API_BASE}/admin/calm-user`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ targetUsername: username })
+            });
+            if (r.ok) {
+                alert(`Calm-down popup queued for ${username}! They will see it on next login.`);
+            } else {
+                const data = await r.json();
+                alert('Error: ' + (data.error || 'Failed to queue calm-down popup'));
+            }
+        } catch(e) {
+            console.error('Error triggering calm-down:', e);
+            alert('Failed to queue calm-down popup');
+        }
+    }
+
+    // ── DYNAMIC TAB TITLES ───────────────────────────────────────────────────
+
+    async function adminSearchRanks() {
+        const q  = (document.getElementById('adminRankSearch')?.value || '').trim();
+        const el = document.getElementById('adminRankUserResult');
+        if (!el) return;
+        if (q.length < 1) { el.innerHTML = '<div class="admin-empty">Search for a user to manage their rank.</div>'; return; }
+        el.innerHTML = '<div class="admin-empty">Searching…</div>';
+        try {
+            const [searchRes, ranksData] = await Promise.all([
+                fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`),
+                getCachedRanks()
+            ]);
+            const users = searchRes.ok ? ((await searchRes.json()).results || []) : [];
+            if (users.length === 0) { el.innerHTML = '<div class="admin-empty">No users found.</div>'; return; }
+            el.innerHTML = users.map(u => {
+                const rank = ranksData[u.username.toLowerCase()] || '';
+                return `<div class="admin-user-row">
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${PFP_BASE+u.pfp}" alt="">` : staffEsc(u.username).slice(0,2).toUpperCase()}</div>
+                    <div style="flex:1;min-width:0">
+                        <div class="admin-user-name">${staffEsc(u.username)} ${getRankBadgeHtml(rank, true)}</div>
+                        <div class="admin-user-meta">Current rank: ${rank || 'None'}</div>
+                    </div>
+                    <div class="admin-user-actions" style="flex-wrap:wrap">
+                        ${['Founder','Moderator','VIP',''].map(r =>
+                            `<button class="admin-btn${r===rank?' primary':''}" onclick="adminSetRank('${staffEsc(u.username)}','${r}')">${r||'Remove Rank'}</button>`
+                        ).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e) { el.innerHTML = '<div class="admin-empty">Failed to load.</div>'; }
+    }
+
+
+    async function adminSetRank(username, rank) {
+        try {
+            const r = await fetch(`${API_BASE}/admin/rank`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ username, rank })
+            });
+            const d = await r.json();
+            if (r.ok) { _cacheRanks = null; adminSearchRanks(); }
+            else alert(d.error || 'Failed.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+    // ── Moderation Panel ─────────────────────────────────────────────────────
+
+    function modTabSwitch(tab) {
+        ['action','bans','warns'].forEach(t => {
+            document.getElementById('modPane' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
+            document.getElementById('modTab'  + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+        });
+        if (tab === 'bans')  modLoadBans();
+        if (tab === 'warns') modLoadWarns();
+    }
+
+
+    async function modSearchUser() {
+        const q  = (document.getElementById('modUserSearch')?.value || '').trim();
+        const el = document.getElementById('modUserResult');
+        if (!el) return;
+        if (q.length < 1) { el.innerHTML = '<div class="mod-empty">Search for a user to moderate.</div>'; return; }
+        el.innerHTML = '<div class="mod-empty">Searching…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`);
+            const users = r.ok ? ((await r.json()).results || []) : [];
+            if (users.length === 0) { el.innerHTML = '<div class="mod-empty">No users found.</div>'; return; }
+            el.innerHTML = users.map(u => `
+                <div class="mod-user-row">
+                    <div class="mod-user-avatar">${u.pfp ? `<img src="${PFP_BASE+u.pfp}" alt="">` : staffEsc(u.username).slice(0,2).toUpperCase()}</div>
+                    <div class="mod-user-info">
+                        <div class="mod-user-name">${staffEsc(u.username)}${u.rank ? ` <span style="font-size: 0.7rem; font-weight: 700; background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 3px; margin-left: 6px;">${staffEsc(u.rank)}</span>` : ''}</div>
+                        <div class="mod-user-meta">Joined ${new Date(u.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="mod-actions">
+                        ${['c823','powerhouse','toethesis','unclejoe826'].includes(u.username.toLowerCase()) ? `<button class="mod-btn" disabled title="Protected account" style="opacity: 0.5; cursor: not-allowed;">Warn</button>` : `<button class="mod-btn" onclick="modWarnPrompt('${staffEsc(u.username)}')">Warn</button>`}
+                        <button class="mod-btn danger" onclick="modBanPrompt('${staffEsc(u.username)}')" ${u.rank === 'Founder' ? 'disabled title="Founder-ranked users cannot be banned"' : ''} style="${u.rank === 'Founder' ? 'opacity: 0.5; cursor: not-allowed;' : ''}">Ban</button>
+                    </div>
+                </div>`).join('');
+        } catch(e) { el.innerHTML = '<div class="mod-empty">Failed.</div>'; }
+    }
+
+
+    function modWarnPrompt(username) {
+        const el = document.getElementById('modUserResult');
+        const existing = document.getElementById('warnForm_' + username);
+        if (existing) { existing.remove(); return; }
+        const form = document.createElement('div');
+        form.id = 'warnForm_' + username;
+        form.style.cssText = 'background:color-mix(in srgb,var(--surface2) 60%,transparent);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:8px';
+        form.innerHTML = `
+            <div style="font-size:.75rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:5px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px;color:#e8a000"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Issue Warning to <strong>${staffEsc(username)}</strong>
+            </div>
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">This warning will be logged and shown to the user. 3 warnings = automatic ban.</div>
+            <textarea class="warn-reason-input" id="warnReason_${staffEsc(username)}" rows="2" placeholder="Reason for warning…"></textarea>
+            <div style="display:flex;gap:6px;margin-top:8px">
+                <button class="mod-btn danger" onclick="modIssueWarn('${staffEsc(username)}')">Issue Warning</button>
+                <button class="mod-btn" onclick="document.getElementById('warnForm_${staffEsc(username)}').remove()">Cancel</button>
+            </div>`;
+        if (el) el.appendChild(form);
+        document.getElementById('warnReason_' + username)?.focus();
+    }
+
+
+    async function modIssueWarn(username) {
+        const reasonEl = document.getElementById('warnReason_' + username);
+        const reason = (reasonEl?.value || '').trim();
+        const form   = document.getElementById('warnForm_' + username);
+        if (!reason) { if (reasonEl) { reasonEl.style.borderColor='#c42b1c'; reasonEl.focus(); } return; }
+        const btn = form?.querySelector('.mod-btn.danger');
+        if (btn) { btn.disabled = true; btn.textContent = 'Issuing…'; }
+        try {
+            const r = await fetch(`${API_BASE}/mod/warn`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ username, reason })
+            });
+            const d = await r.json();
+            if (r.ok) {
+                form?.remove();
+                // Show inline confirmation
+                const el = document.getElementById('modUserResult');
+                const msg = document.createElement('div');
+                msg.style.cssText = 'font-size:.75rem;color:#2e7d32;padding:8px 0;font-weight:600';
+                msg.textContent = d.autoBanned
+                    ? `${username} has been automatically banned after 3 warnings.`
+                    : `Warning issued to ${username}. They now have ${d.warnCount} warning${d.warnCount !== 1 ? 's' : ''}.`;
+                if (el) el.appendChild(msg);
+                setTimeout(() => msg.remove(), 4000);
+                modSearchUser();
+            } else {
+                if (btn) { btn.disabled = false; btn.textContent = 'Issue Warning'; }
+                const errEl = document.createElement('div');
+                errEl.style.cssText = 'font-size:.72rem;color:#c42b1c;margin-top:4px';
+                errEl.textContent = d.error || 'Failed.';
+                form?.appendChild(errEl);
+            }
+        } catch(e) {
+            if (btn) { btn.disabled = false; btn.textContent = 'Issue Warning'; }
+        }
+    }
+
+
+    function modBanPrompt(username) {
+        const el = document.getElementById('modUserResult');
+        const existing = document.getElementById('banForm_' + username);
+        if (existing) { existing.remove(); return; }
+        const form = document.createElement('div');
+        form.id = 'banForm_' + username;
+        form.style.cssText = 'background:color-mix(in srgb,rgba(196,43,28,0.06) 80%,transparent);border:1px solid rgba(196,43,28,.3);border-radius:var(--radius-sm);padding:12px;margin-top:8px';
+        form.innerHTML = `
+            <div style="font-size:.75rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:5px;color:#c42b1c">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                Ban <strong>${staffEsc(username)}</strong>
+            </div>
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">This user will not be able to log in until unbanned. A reason is required.</div>
+            <textarea class="warn-reason-input" id="banReason_${staffEsc(username)}" rows="2" placeholder="Reason for ban…"></textarea>
+            <div style="margin-top:8px">
+                <label style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px">Ban Duration</label>
+                <select id="banDuration_${staffEsc(username)}" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surface2);color:var(--text);font-size:.85rem">
+                    <option value="1day">1 Day</option>
+                    <option value="2days">2 Days</option>
+                    <option value="4days">4 Days</option>
+                    <option value="8days">8 Days</option>
+                    <option value="16days">16 Days</option>
+                    <option value="1month">1 Month</option>
+                    <option value="permanent" selected>Permanent</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px">
+                <button class="mod-btn danger" onclick="modIssueBan('${staffEsc(username)}')">Confirm Ban</button>
+                <button class="mod-btn" onclick="document.getElementById('banForm_${staffEsc(username)}').remove()">Cancel</button>
+            </div>`;
+        if (el) el.appendChild(form);
+        document.getElementById('banReason_' + username)?.focus();
+    }
+
+
+    async function modIssueBan(username) {
+        const reasonEl = document.getElementById('banReason_' + username);
+        const durationEl = document.getElementById('banDuration_' + username);
+        const reason = (reasonEl?.value || '').trim();
+        const duration = durationEl?.value || 'permanent';
+        const form   = document.getElementById('banForm_' + username);
+        if (!reason) { if (reasonEl) { reasonEl.style.borderColor='#c42b1c'; reasonEl.focus(); } return; }
+        const btn = form?.querySelector('.mod-btn.danger');
+        if (btn) { btn.disabled = true; btn.textContent = 'Banning…'; }
+        try {
+            const r = await fetch(`${API_BASE}/mod/ban`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ username, reason, duration })
+            });
+            const d = await r.json();
+            if (r.ok) {
+                form?.remove();
+                const el = document.getElementById('modUserResult');
+                const msg = document.createElement('div');
+                msg.style.cssText = 'font-size:.75rem;color:#c42b1c;padding:8px 0;font-weight:600';
+                msg.textContent = `${username} has been banned.`;
+                if (el) el.appendChild(msg);
+                setTimeout(() => msg.remove(), 3000);
+            } else {
+                if (btn) { btn.disabled = false; btn.textContent = 'Confirm Ban'; }
+                const errEl = document.createElement('div');
+                errEl.style.cssText = 'font-size:.72rem;color:#c42b1c;margin-top:8px;padding:8px 12px;background:color-mix(in srgb,#c42b1c 12%,transparent);border:1px solid #c42b1c;border-radius:var(--radius-xs)';
+                errEl.textContent = d.error || 'Failed.';
+                form?.appendChild(errEl);
+            }
+        } catch(e) {
+            if (btn) { btn.disabled = false; btn.textContent = 'Confirm Ban'; }
+        }
+    }
+
+
+    async function modLoadBans() {
+        const el = document.getElementById('modBanList');
+        const ct = document.getElementById('modBanCount');
+        if (!el) return;
+        el.innerHTML = '<div class="mod-empty">Loading…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/mod/bans`, { headers: { Authorization: `Bearer ${user.token}` } });
+            const bans = r.ok ? ((await r.json()).bans || []) : [];
+            if (ct) ct.textContent = `${bans.length} ban${bans.length !== 1 ? 's' : ''}`;
+            if (bans.length === 0) { el.innerHTML = '<div class="mod-empty">No active bans.</div>'; return; }
+            el.innerHTML = bans.map(b => {
+                const durationStr = b.duration === 'permanent' ? 'Permanent' : (b.expiresAt ? `Expires ${new Date(b.expiresAt).toLocaleDateString()} at ${new Date(b.expiresAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}` : 'Permanent');
+                return `
+                <div class="mod-user-row">
+                    <div class="mod-user-info">
+                        <div class="mod-user-name" style="margin-bottom:3px">${staffEsc(b.username)}</div>
+                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${staffEsc(String(b.reason))}</div>
+                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Duration:</span> ${durationStr}</div>
+                        <div class="mod-user-meta">${new Date(b.bannedAt).toLocaleDateString()} · by ${staffEsc(b.by)}</div>
+                    </div>
+                    <div class="mod-actions">
+                        <button class="mod-btn green" onclick="modUnban('${staffEsc(b.username)}')">Unban</button>
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e) { el.innerHTML = '<div class="mod-empty">Failed.</div>'; }
+    }
+
+
+    async function modUnban(username) {
+        try {
+            const r = await fetch(`${API_BASE}/mod/unban`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ username })
+            });
+            if (r.ok) modLoadBans();
+            else alert((await r.json()).error || 'Failed.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+
+    async function modLoadWarns() {
+        const el = document.getElementById('modWarnList');
+        const ct = document.getElementById('modWarnCount');
+        if (!el) return;
+        el.innerHTML = '<div class="mod-empty">Loading…</div>';
+        try {
+            const r = await fetch(`${API_BASE}/mod/warnings`, { headers: { Authorization: `Bearer ${user.token}` } });
+            const warns = r.ok ? ((await r.json()).warnings || []) : [];
+            if (ct) ct.textContent = `${warns.length} warning${warns.length !== 1 ? 's' : ''}`;
+            if (warns.length === 0) { el.innerHTML = '<div class="mod-empty">No warnings issued.</div>'; return; }
+            el.innerHTML = warns.map(w => `
+                <div class="mod-user-row">
+                    <div class="mod-user-info">
+                        <div class="mod-user-name" style="margin-bottom:3px">${staffEsc(w.username)}</div>
+                        <div class="mod-user-meta"><span style="font-weight:600;color:var(--text)">Reason:</span> ${staffEsc(String(w.reason))}</div>
+                        <div class="mod-user-meta">${new Date(w.issuedAt).toLocaleDateString()} · by ${staffEsc(w.by)}</div>
+                    </div>
+                    <div class="mod-actions">
+                        <button class="mod-btn danger" onclick="modRemoveWarn('${staffEsc(w.username)}','${w.id}')">Remove</button>
+                    </div>
+                </div>`).join('');
+        } catch(e) { el.innerHTML = '<div class="mod-empty">Failed.</div>'; }
+    }
+
+
+    async function modRemoveWarn(username, warnId) {
+        try {
+            const r = await fetch(`${API_BASE}/mod/warning/${encodeURIComponent(warnId)}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            if (r.ok) modLoadWarns();
+            else alert((await r.json()).error || 'Failed.');
+        } catch(e) { alert('Network error.'); }
+    }
+
+    // ── DEBOUNCE ─────────────────────────────────────────────────────────────
+
+    </script>
+
+
 
     <!-- AUTH PAGE -->
     <div id="landing-page">
@@ -218,28 +1209,28 @@
         <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;" data-powerhouse-logo></div>
         <nav class="nav-group">
             <a href="/home" class="nav-item active" id="side-home">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Home <span class="badge">12</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M9 21v-8h6v8"/></svg> Home <span class="badge">12</span>
             </a>
             <a href="/profile" class="nav-item" id="side-profile">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg> Profile
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg> Profile
             </a>
             <a href="/friends" class="nav-item" id="side-friends">
-                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Friends
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Friends
             </a>
             <a href="/settings" class="nav-item" id="side-settings">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82"/></svg> Settings
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.12 2.12-.06-.06A1.7 1.7 0 0 0 15.74 18a1.7 1.7 0 0 0-1.04 1.57V21h-3v-1.43A1.7 1.7 0 0 0 10.66 18a1.7 1.7 0 0 0-1.88.34l-.06.06-2.12-2.12.06-.06A1.7 1.7 0 0 0 7 14.34 1.7 1.7 0 0 0 5.43 13.3H4v-3h1.43A1.7 1.7 0 0 0 7 9.26a1.7 1.7 0 0 0-.34-1.88L6.6 7.32 8.72 5.2l.06.06A1.7 1.7 0 0 0 10.66 5a1.7 1.7 0 0 0 1.04-1.57V2h3v1.43A1.7 1.7 0 0 0 15.74 5a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.12 2.12-.06.06A1.7 1.7 0 0 0 19.4 8.66 1.7 1.7 0 0 0 20.97 9.7H22v3h-1.03A1.7 1.7 0 0 0 19.4 15Z" transform="translate(-.3 .5) scale(.97)"/></svg> Settings
             </a>
 
             <a href="/admin" class="nav-item" id="side-admin" hidden>
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Admin
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg> Admin
             </a>
             <a href="/moderation" class="nav-item" id="side-moderation" hidden>
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Moderation
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg> Moderation
             </a>
             <div style="height:20px; border-bottom: 1px solid var(--border); margin: 10px 0 20px;"></div>
             <!-- Replacement for Studio -->
             <a href="https://home.c823.workers.dev" class="nav-item" style="text-decoration: none;">
-                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Hub
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Hub
             </a>
         </nav>
     </aside>
@@ -368,36 +1359,113 @@
             <div class="social-grid" id="friends-pane" role="tabpanel" aria-live="polite"><div class="social-empty">Loading friends…</div></div>
         </section>
 
-        <section id="admin-view" class="view-section staff-page" hidden>
-            <h1>Admin Panel</h1>
-            <p>Manage site-wide announcements. Only authorized admins and Founders can use this page.</p>
-            <div class="staff-panel">
-                <h2 class="staff-section-title">Site Banner</h2>
-                <p>Announcements appear above the content on Powerhouse pages. Uses the existing banner API.</p>
-                <div id="staff-banner-current" class="staff-status">Loading current banner…</div>
-                <div class="staff-row"><input id="staff-banner-message" class="staff-input" maxlength="350" placeholder="Announcement message" aria-label="Announcement message"></div>
-                <div class="staff-row"><label for="staff-banner-color">Color</label><input id="staff-banner-color" type="color" value="#4d7fff"><label><input id="staff-banner-enabled" type="checkbox" checked> Enabled</label></div>
-                <button class="staff-btn" type="button" onclick="saveSiteBanner()">Save Banner</button>
-                <div id="staff-banner-feedback" class="staff-status" aria-live="polite"></div>
+        <section id="admin-view" class="view-section staff-page" hidden><h1>Admin Panel</h1><p>Manage accounts, ranks, and announcements.</p><div class="staff-panel legacy-staff"><div hidden aria-hidden="true"><span id="staff-banner-current"></span><input id="staff-banner-message"><input id="staff-banner-color" type="color" value="#4d7fff"><input id="staff-banner-enabled" type="checkbox"><span id="staff-banner-feedback"></span></div>        <div class="admin-tabs">
+            <button class="admin-tab active" id="adminTabOverview"  onclick="adminTabSwitch('overview')">Overview</button>
+            <button class="admin-tab"        id="adminTabUsers"     onclick="adminTabSwitch('users')">Search</button>
+            <button class="admin-tab"        id="adminTabAllusers"  onclick="adminTabSwitch('allusers')">All Users</button>
+            <button class="admin-tab"        id="adminTabRanks"     onclick="adminTabSwitch('ranks')">Ranks</button>
+            <button class="admin-tab"        id="adminTabBanner"    onclick="adminTabSwitch('banner')">Banner</button>
+        </div>
+
+        <!-- Overview -->
+        <div class="admin-body" id="adminPaneOverview">
+            <div class="admin-section-title">Site Stats</div>
+            <div class="admin-stat-grid">
+                <div class="admin-stat"><div class="admin-stat-val" id="adminStatUsers">—</div><div class="admin-stat-lbl">Total Users</div></div>
+                <div class="admin-stat"><div class="admin-stat-val" id="adminStatPosts">—</div><div class="admin-stat-lbl">Blog Posts</div></div>
+                <div class="admin-stat"><div class="admin-stat-val" id="adminStatAdmins">—</div><div class="admin-stat-lbl">Admins</div></div>
             </div>
-        </section>
-        <section id="moderation-view" class="view-section staff-page" hidden>
-            <h1>Moderation</h1>
-            <p>Search for users and issue a warning or ban. Only Founders and Moderators have access.</p>
-            <div class="staff-panel">
-                <h2 class="staff-section-title">Find a user</h2>
-                <div class="staff-row"><input id="staff-mod-search" class="staff-input" placeholder="Search username" aria-label="Search username"><button type="button" class="staff-btn" onclick="searchModerationUsers()">Search</button></div>
-                <div id="staff-mod-results" class="staff-status" aria-live="polite">Enter a username to search.</div>
+            <div class="admin-section-title" style="margin-top:20px">Admin List</div>
+            <div id="adminAdminList"><div class="admin-empty">Loading…</div></div>
+        </div>
+
+        <!-- Users -->
+        <div class="admin-body" id="adminPaneUsers" style="display:none">
+            <div class="admin-search-row">
+                <input class="admin-search-input" id="adminUserSearch" placeholder="Search username…" oninput="adminSearchUsers()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
-            <div class="staff-panel" id="staff-mod-action" hidden>
-                <h2 class="staff-section-title">Moderate <span id="staff-mod-target"></span></h2>
-                <label for="staff-mod-reason">Reason</label>
-                <textarea id="staff-mod-reason" class="staff-input" rows="3" placeholder="Required reason"></textarea>
-                <div class="staff-row"><label for="staff-mod-duration">Ban duration</label><select class="staff-input" id="staff-mod-duration"><option value="1day">1 day</option><option value="2days">2 days</option><option value="4days">4 days</option><option value="8days">8 days</option><option value="16days">16 days</option><option value="1month">1 month</option><option value="permanent">Permanent</option></select></div>
-                <div class="staff-row"><button type="button" class="staff-btn" onclick="performModeration('warn')">Issue Warning</button><button type="button" class="staff-btn" style="background:#c42b1c" onclick="performModeration('ban')">Ban User</button></div>
-                <div id="staff-mod-feedback" class="staff-status" aria-live="polite"></div>
+            <div id="adminUserList"><div class="admin-empty">Search for a user above.</div></div>
+        </div>
+
+        <!-- All Users -->
+        <div class="admin-body" id="adminPaneAllusers" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:.75rem;color:var(--muted)" id="adminAllUsersCount"></span>
+                <button class="admin-btn primary" onclick="adminLoadAllUsers()">Refresh</button>
             </div>
-        </section>
+            <div id="adminAllUsersList"><div class="admin-empty">Click Refresh to load all accounts.</div></div>
+        </div>
+
+        <!-- Ranks -->
+        <div class="admin-body" id="adminPaneRanks" style="display:none">
+            <div class="admin-search-row">
+                <input class="admin-search-input" id="adminRankSearch" placeholder="Search username…" oninput="adminSearchRanks()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div id="adminRankUserResult"><div class="admin-empty">Search for a user to manage their rank.</div></div>
+            <div class="admin-section-title" style="margin-top:20px">Rank Descriptions</div>
+            <div style="font-size:.75rem;color:var(--muted);line-height:1.8">
+                <b style="color:var(--text)">Founder</b> — Full admin panel + Moderation panel<br>
+                <b style="color:var(--text)">Moderator</b> — Moderation panel only<br>
+                <b style="color:var(--text)">VIP</b> — Cosmetic rank badge only<br>
+                <b style="color:var(--text)">(none)</b> — Standard user
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class="admin-body" id="adminPaneBanner" style="display:none">
+            <div class="admin-section-title">Site Banner</div>
+            <p style="font-size:.75rem;color:var(--muted);margin-bottom:12px">Controls the announcement banner shown at the top of the site. Use the form below to set it instantly — no GitHub edits needed.</p>
+            <div class="admin-section-title">Current Banner Preview</div>
+            <div id="adminBannerPreview" style="font-size:.8rem;color:var(--muted);padding:8px 0">Loading…</div>
+            <div class="admin-section-title" style="margin-top:16px">Quick Set via Worker</div>
+            <div class="admin-announce-box">
+                <input class="admin-search-input" id="adminBannerMsg" placeholder="Banner message…" autocomplete="off">
+                <div class="admin-color-row">
+                    <span style="font-size:.75rem;color:var(--muted)">Color:</span>
+                    <input type="color" id="adminBannerColor" value="#0078D4" style="width:36px;height:28px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:none">
+                    <label style="font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer">
+                        <input type="checkbox" id="adminBannerEnabled" checked> Enabled
+                    </label>
+                </div>
+                <button class="admin-btn primary" onclick="adminSetBanner()" style="align-self:flex-start;padding:6px 16px">Update Banner</button>
+                <div class="admin-msg" id="adminBannerMsg2"></div>
+            </div>
+        </div>
+
+</div></section>
+<section id="moderation-view" class="view-section staff-page" hidden><h1>Moderation</h1><p>Manage warnings and bans.</p><div class="staff-panel legacy-staff">        <div class="mod-tabs">
+            <button class="mod-tab active" id="modTabAction"  onclick="modTabSwitch('action')">Actions</button>
+            <button class="mod-tab"        id="modTabBans"    onclick="modTabSwitch('bans')">Bans</button>
+            <button class="mod-tab"        id="modTabWarns"   onclick="modTabSwitch('warns')">Warnings</button>
+        </div>
+
+        <!-- Actions tab -->
+        <div class="mod-body" id="modPaneAction">
+            <div class="mod-section-title">Find User</div>
+            <div class="mod-search-row">
+                <input class="mod-search-input" id="modUserSearch" placeholder="Search username…" oninput="modSearchUser()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div id="modUserResult"><div class="mod-empty">Search for a user to moderate.</div></div>
+        </div>
+
+        <!-- Bans tab -->
+        <div class="mod-body" id="modPaneBans" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:.75rem;color:var(--muted)" id="modBanCount"></span>
+                <button class="mod-btn green" onclick="modLoadBans()">Refresh</button>
+            </div>
+            <div id="modBanList"><div class="mod-empty">Click Refresh to load bans.</div></div>
+        </div>
+
+        <!-- Warnings tab -->
+        <div class="mod-body" id="modPaneWarns" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:.75rem;color:var(--muted)" id="modWarnCount"></span>
+                <button class="mod-btn" onclick="modLoadWarns()">Refresh</button>
+            </div>
+            <div id="modWarnList"><div class="mod-empty">Click Refresh to load warnings.</div></div>
+        </div>
+</div></section>
     </main>
 
 
@@ -486,6 +1554,7 @@
             });
             document.getElementById('welcome-text').textContent = `Hello, ${user.username}!`;
             document.getElementById('nav-username').textContent = user.username;
+            updateRoleLabels();
             const ownLink = document.getElementById('side-profile');
             if (ownLink) ownLink.href = profileURL(user.username);
             const dropdownProfile = document.getElementById('dropdown-profile-link');
@@ -504,7 +1573,7 @@
             try {
                 const r = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
                 const data = await r.json();
-                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; unlockDashboard(); updateUI(); let nextPage = 'home'; try { nextPage = (sessionStorage.getItem('ph_return_to') || '/home').slice(1); sessionStorage.removeItem('ph_return_to'); } catch(e) {} if (nextPage.startsWith('user/')) { history.replaceState({},'', '/' + nextPage); routeFromURL(); } else navigateTo(ROUTE_PAGES.has(nextPage) ? nextPage : 'home', true); fetchUserData(); fetchHomeFriends(); }
+                if (r.ok) { localStorage.setItem('ph_token', data.token); localStorage.setItem('ph_username', data.username); user.token = data.token; user.username = data.username; resetStaffUI(); unlockDashboard(); updateUI(); let nextPage = 'home'; try { nextPage = (sessionStorage.getItem('ph_return_to') || '/home').slice(1); sessionStorage.removeItem('ph_return_to'); } catch(e) {} if (nextPage.startsWith('user/')) { history.replaceState({},'', '/' + nextPage); routeFromURL(); } else navigateTo(ROUTE_PAGES.has(nextPage) ? nextPage : 'home', true); fetchUserData(); fetchHomeFriends(); loadStaffPermissions().catch(console.warn); }
                 else alert(data.error);
             } catch(e) { alert("Login failed"); }
         }
@@ -613,7 +1682,7 @@
                 const action = tab === 'friends' ? `<button type="button" class="social-action" data-remove-friend="${i}">Remove Friend</button>` : '';
                 const href = profileURL(name);
                 rememberProfile(name, pfp);
-                return `<div class="social-card" style="animation-delay:${Math.min(i,12)*35}ms"><a class="social-profile-link" href="${escapeText(href)}" data-profile-link="${escapeText(name)}"><img alt="${escapeText(name)} avatar" src="${escapeText(socialAvatar(pfp))}" onerror="this.onerror=null;this.src='${DEFAULT_PFP}'"><span class="social-card-name">${escapeText(name)}</span></a>${action}</div>`;
+                return `<div class="social-card" style="animation-delay:${Math.min(i,12)*35}ms"><a class="social-profile-link" href="${escapeText(href)}" data-profile-link="${escapeText(name)}"><img alt="${escapeText(name)} avatar" src="${escapeText(socialAvatar(pfp))}" onerror="this.onerror=null;this.src='${DEFAULT_PFP}'"><span class="social-card-name">${escapeText(name)}${lookupUserBadge(name,true)}</span></a>${action}</div>`;
             }).join('');
             panel.querySelectorAll('[data-profile-link]').forEach(link => link.addEventListener('click', event => {
                 if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
@@ -671,6 +1740,10 @@
                 label.className = 'home-friend-name';
                 label.textContent = name;
                 card.append(img,label);
+                const rankHolder=document.createElement('span');
+                rankHolder.dataset.staffBadgeFor=name;
+                rankHolder.innerHTML=lookupUserBadge(name,true);
+                card.append(rankHolder);
                 grid.append(card);
             });
             const currentRoute = parseRoute();
@@ -696,6 +1769,22 @@
         // Banner API compatibility: ENABLED|message|#RRGGBB
         const staffAccess = {checked:false,admin:false,mod:false,rank:''};
         let staffPermissionLoading = null;
+        let staffSessionVersion = 0;
+        function resetStaffUI() {
+            staffSessionVersion++;
+            staffAccess.checked = false;
+            staffAccess.admin = false;
+            staffAccess.mod = false;
+            staffAccess.rank = '';
+            staffPermissionLoading = null;
+            _cacheRanks = null;
+            _cacheRanksAt = 0;
+            for (const id of ['side-admin', 'side-moderation']) {
+                const link = document.getElementById(id);
+                if (link) { link.hidden = true; link.classList.remove('active'); }
+            }
+            updateRoleLabels();
+        }
         let selectedModerationUser = '';
         const permittedBannerColor = /^#[0-9a-fA-F]{6}$/;
         function safeBannerColor(color) { return permittedBannerColor.test(color) ? color : '#4d7fff'; }
@@ -735,6 +1824,8 @@
         async function loadStaffPermissions() {
             if (!user.token) { staffAccess.checked=true; return; }
             if (staffPermissionLoading) return staffPermissionLoading;
+            const checkedToken = user.token;
+            const checkedSession = staffSessionVersion;
             staffPermissionLoading=(async()=>{
                 let rank='', blogAdmin=false;
                 try {
@@ -745,14 +1836,20 @@
                     if (rankResponse.ok) rank = String((await rankResponse.json()).rank||'');
                     if (adminResponse.ok) blogAdmin = (await adminResponse.json()).isAdmin===true;
                 } catch(error) {console.warn('Permissions unavailable:',error);}
+                // Ignore results from an account that has since logged out/switched.
+                if (checkedToken !== user.token || checkedSession !== staffSessionVersion) return;
                 staffAccess.rank=rank;
-                staffAccess.admin=blogAdmin || rank.toLowerCase()==='founder';
+                staffAccess.admin=blogAdmin || ['founder','admin'].includes(rank.toLowerCase());
                 staffAccess.mod=['founder','moderator'].includes(rank.toLowerCase());
                 staffAccess.checked=true;
+                getCachedRanks().then(updateRoleLabels).catch(()=>updateRoleLabels());
+                updateRoleLabels();
                 document.getElementById('side-admin').hidden=!staffAccess.admin;
                 document.getElementById('side-moderation').hidden=!staffAccess.mod;
                 if (['admin','moderation'].includes(parseRoute().page)) routeFromURL();
-            })().finally(()=>{staffPermissionLoading=null});
+            })().finally(()=>{
+                if (checkedSession === staffSessionVersion) staffPermissionLoading=null;
+            });
             return staffPermissionLoading;
         }
         async function readBannerForEditor() {
@@ -862,6 +1959,8 @@
             const image = own ? socialAvatar(user.pfp) : socialAvatar(cached?.pfp);
             document.getElementById('profile-name-header').textContent = shownName;
             document.getElementById('profile-name-big').textContent = shownName;
+            document.getElementById('profile-name-header').insertAdjacentHTML('beforeend',lookupUserBadge(shownName));
+            document.getElementById('profile-name-big').insertAdjacentHTML('beforeend',lookupUserBadge(shownName));
             const portrait = document.getElementById('profile-render');
             portrait.src = image;
             portrait.onerror = () => { portrait.onerror = null; portrait.src = DEFAULT_PFP; };
@@ -898,8 +1997,8 @@
             if (page === 'profile') renderProfile(route.username);
             if (social && user.token) switchSocialTab(page, false).catch(console.error);
             if (page === 'settings') switchSettings('account');
-            if (page === 'admin') readBannerForEditor();
-            if (page === 'moderation') document.getElementById('staff-mod-search')?.focus();
+            if (page === 'admin') {adminTabSwitch('overview'); adminLoadOverview();}
+            if (page === 'moderation') {modTabSwitch('action'); document.getElementById('modUserSearch')?.focus();}
         }
         function routeFromURL() {
             let route = parseRoute();
@@ -990,7 +2089,14 @@
         });
 
         function toggleTheme() { const isL = document.getElementById('themeToggle').checked; document.body.setAttribute('data-theme', isL ? 'light' : 'dark'); localStorage.setItem('vortex_theme', isL ? 'light' : 'dark'); updatePowerhouseLogos(); }
-        function logout() { localStorage.removeItem('ph_token'); localStorage.removeItem('ph_username'); localStorage.removeItem('ph_pfp'); user = {token:null,username:null,pfp:null}; navigateTo('sign-in', true); }
+        function logout() {
+            localStorage.removeItem('ph_token');
+            localStorage.removeItem('ph_username');
+            localStorage.removeItem('ph_pfp');
+            user = { token: null, username: null, pfp: null };
+            resetStaffUI(); // Hide staff links and clear role badges immediately.
+            navigateTo('sign-in', true);
+        }
     </script>
 </body>
 </html>
