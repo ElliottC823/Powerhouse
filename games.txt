@@ -135,15 +135,6 @@
     "useBlank": false
   },
   {
-    "title": "Fake Skyward",
-    "category": "Utility",
-    "desc": "A creative UI recreation for educational purposes.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiaJcq89sjkx3d51DNSQENETxF-XRkS1JMFQ&s",
-    "link": "https://tinyurl.com/skyward-hvs-v1",
-    "verified": true,
-    "useBlank": true
-  },
-  {
     "title": "Super Lemon Basket",
     "category": "Arcade",
     "desc": "A goofy physics-based basketball game featuring a very bouncy lemon.",
@@ -477,7 +468,7 @@
     "useBlank": false
   },
   {
-    "title": "Life\u2019s a Jungle: Africa\u2019s Most Wanted",
+    "title": "Lifes a Jungle: Africas Most Wanted",
     "category": "Media",
     "desc": "An animated adventure following a pampered dog who must learn to survive the challenges of the African safari.",
     "thumb": "https://m.media-amazon.com/images/M/MV5BNGNmZjJmNGEtOTliNS00ZGY5LThlYTItYzE0NjcyYWI5MWNhXkEyXkFqcGc@._V1_.jpg",
@@ -619,15 +610,6 @@
     "link": "https://www.youtube.com/user/FunVideoTV",
     "verified": false,
     "useBlank": false
-  },
-  {
-    "title": "Uncle Joe's Guardian",
-    "category": "Utility",
-    "desc": "yes.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_0pzThRWrMIXUKiVpEs3EHzxzgpQSsv5qHw&s",
-    "link": "https://uncle-joes-guardian-production.up.railway.app",
-    "verified": true,
-    "useBlank": true
   },
   {
     "title": "GeoDuels",
