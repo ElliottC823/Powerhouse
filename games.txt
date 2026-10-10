@@ -790,5 +790,14 @@
     "link": "https://shedletsky.com/SFOTH/",
     "verified": false,
     "useBlank": true
+  },
+  {
+    "title": "Fortnite OG",
+    "category": "Arcade",
+    "desc": "Drop into OG.",
+    "thumb": "https://fortniteog.lol/assets/logo.png",
+    "link": "https://fortniteog.lol/fortnite",
+    "verified": false,
+    "useBlank": true
   }
 ]
