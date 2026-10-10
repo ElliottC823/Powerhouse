@@ -111,7 +111,7 @@
     "title": "Teqiyokid",
     "category": "Media",
     "desc": "Entertaining and creative video content from Teqiyokid.",
-    "thumb": "https://i.ytimg.com/vi/m0QRlOSZFxY/hqdefault.jpg?sqp=-oaymwFBCNACELwBSFryq4qpAzMIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLC1kIoMuQCTGIUC9sMdDHR4H2vkIw",
+    "thumb": "https://i.ytimg.com/vi/TlMVYZao84A/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA9-GkyikXq7RmzTXKptRjSZvu90w",
     "link": "https://www.youtube.com/@Teqiyokid",
     "verified": false,
     "useBlank": false
