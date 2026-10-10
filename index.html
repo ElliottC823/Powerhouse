@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.7.6">
+    <meta name="powerhouse-site-version" content="2.7.7">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.7.6 — sampled from supplied reference:
+        /* Powerhouse palette v2.7.7 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.7.6 --- */
+        /* --- AUTH PAGE — website v2.7.7 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -176,6 +176,8 @@
         .profile-username .role-icon, .profile-username .staff-role-icon, .profile-username .rank-badge-icon { width:1em !important; height:1em !important; flex:0 0 1em; background:none!important;border:0!important;box-shadow:none!important; }
         .profile-friends-stat { display:flex; flex-direction:column; gap:3px; font-size:13px; color:var(--text-muted); }
         .profile-friends-stat span:first-child { color:var(--text);font-size:24px;font-weight:700;line-height:1; }
+        .profile-joined {margin-top:12px;color:var(--text-muted);font-size:13px;display:flex;align-items:center;gap:7px;}
+        .profile-joined strong {font-weight:600;color:var(--text);}
         .profile-head-actions { align-self:flex-start; margin-left:auto; }
         .profile-action { border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:9px; padding:11px 19px; font:700 13px 'Outfit',sans-serif; cursor:pointer; transition:transform .18s, border-color .18s; }
         .profile-action:hover { transform:translateY(-2px); border-color:var(--accent); }
@@ -1350,7 +1352,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.7.6 -->
+    <!-- AUTH PAGE | Powerhouse website v2.7.7 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1386,7 +1388,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.7.6</span>
+                <span class="auth-release">POWERHOUSE v2.7.7</span>
             </section>
         </div>
     </div>
@@ -1479,6 +1481,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     <div class="profile-head-details">
                         <h1 id="profile-name-header" class="profile-username">User</h1>
                         <div class="profile-friends-stat"><span id="profile-friends-number">—</span><span>Friends</span></div>
+                        <div class="profile-joined"><span>Joined</span><strong id="profile-joined-date">—</strong></div>
                     </div>
                     <div class="profile-head-actions">
                         <button type="button" class="profile-action" id="profile-edit-button" onclick="showPage('settings');switchSettings('account')">Edit Profile</button>
@@ -2420,6 +2423,12 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             return {page:'not-found'};
         }
         let profileRequestSequence = 0;
+        function formatProfileJoinDate(value) {
+            if (!value) return '—';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric', timeZone:'UTC'});
+        }
         function renderProfile(username) {
             const own = Boolean(user.username && username && user.username.toLowerCase() === username.toLowerCase());
             const shownName = username || user.username || 'Unknown user';
@@ -2437,6 +2446,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 ? (currentAbout || 'No description yet.')
                 : (cached?.about || 'Loading profile…');
             document.getElementById('profile-friends-number').textContent = '—';
+            document.getElementById('profile-joined-date').textContent = formatProfileJoinDate(cached?.createdAt);
             const requestId = ++profileRequestSequence;
             fetch(`${API_BASE}/users/${encodeURIComponent(shownName)}/profile`)
                 .then(async response => {
@@ -2448,6 +2458,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     if (!profile) return;
                     knownProfiles.set(shownName.toLowerCase(), {...(cached || {}), ...profile});
                     document.getElementById('profile-friends-number').textContent = Number.isFinite(profile.friendsCount) ? profile.friendsCount : '—';
+                    document.getElementById('profile-joined-date').textContent = formatProfileJoinDate(profile.createdAt);
                     // The About box uses API data even when viewing somebody else's profile.
                     document.getElementById('profile-about').textContent = profile.about || 'No description yet.';
                     if (profile.pfp) {
