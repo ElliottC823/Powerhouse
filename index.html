@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.7.3">
+    <meta name="powerhouse-site-version" content="2.7.5">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.7.3 — sampled from supplied reference:
+        /* Powerhouse palette v2.7.5 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,13 +43,13 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.7.3 --- */
-        #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:#000000; }
-        #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:linear-gradient(90deg,transparent 49.95%,rgba(255,255,255,.025) 50%,transparent 50.05%); }
+        /* --- AUTH PAGE — website v2.7.5 --- */
+        #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
+        #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
         .auth-shell { width:min(940px,100%); min-height:550px; display:grid; grid-template-columns:minmax(0,1fr) 420px; background:#1c1c1c; border:1px solid #383838; border-radius:10px; overflow:hidden; box-shadow:0 20px 55px rgba(0,0,0,.24); animation:authEnter .35s ease-out both; }
-        .auth-promo { position:relative; display:flex; flex-direction:column; justify-content:space-between; padding:42px; min-width:0; background:#000000; border-right:1px solid #353535; overflow:hidden; }
-        .auth-promo::after { content:'P'; position:absolute; right:-35px; bottom:-105px; font:900 420px/.85 'Outfit',sans-serif; letter-spacing:-.1em; color:rgba(255,255,255,.023); pointer-events:none; }
+        .auth-promo { position:relative; display:flex; flex-direction:column; justify-content:space-between; padding:42px; min-width:0; background:rgba(0,0,0,.78); border-right:1px solid #353535; overflow:hidden; }
+        .auth-promo::after { content:''; position:absolute; right:-65px; bottom:-100px; width:450px; height:450px; background:url('https://raw.githubusercontent.com/C823/Powerhouse/main/icons/POWERHOUSE-icon-dark.png') center / contain no-repeat; opacity:.075; pointer-events:none; }
         .auth-brand { display:flex; align-items:center; gap:13px; position:relative; z-index:1; }
         .auth-brand .auth-logo { height:31px; max-width:210px; width:auto; display:block; margin:0; filter:brightness(0) invert(1); }
         .auth-brand-tag { font-size:10px; font-weight:600; letter-spacing:.1em; color:#92959b; border-left:1px solid #44464a; padding-left:13px; }
@@ -85,6 +85,17 @@
         .auth-bottom { margin:26px 0 0; padding-top:20px; border-top:1px solid #393939; color:#8c8e95; text-align:center; font-size:12px; }
         .auth-bottom span { color:#ced0d6; font-weight:500; }
         .auth-release { position:absolute; bottom:17px; right:22px; font-size:10px; color:#686b72; letter-spacing:.03em; }
+
+        #landing-page [hidden] { display:none!important; }
+        .auth-switch-link { border:0; background:transparent; color:#f4f4f4; font:600 13px 'Outfit',sans-serif; padding:3px 4px; cursor:pointer; text-decoration:underline; text-decoration-color:#737373; text-underline-offset:4px; transition:color .2s,text-decoration-color .2s; }
+        .auth-switch-link:hover { color:#fff; text-decoration-color:white; }
+        .auth-hint {display:block; font-size:11px; color:#969696; margin-top:7px;}
+        .auth-agreement { display:flex; align-items:flex-start; gap:10px; color:#bcbcbc; font-size:12px; line-height:1.5; margin:0 0 18px; cursor:pointer; }
+        .auth-agreement input {width:16px; height:16px; flex:0 0 16px; accent-color:#777; margin:1px 0 0;}
+        #authRegisterPanel .auth-subtitle {margin-bottom:20px;}
+        #authRegisterPanel .form-group {margin-bottom:15px;}
+        #authRegisterPanel .auth-bottom {margin-top:18px;padding-top:15px;}
+        #authRegisterPanel .auth-release {position:static;}
         @keyframes authEnter { from {opacity:0;transform:translateY(8px)} to {opacity:1;transform:translateY(0)} }
         @keyframes authSpin { to {transform:rotate(360deg)} }
         @media(max-width:760px) { #landing-page {padding:18px;align-items:flex-start;} .auth-shell {max-width:440px;min-height:0;display:block;margin:auto;} .auth-promo {display:none;} .auth-container {padding:44px 30px 60px;} .auth-mobile-logo {display:block;} }
@@ -1334,18 +1345,19 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.7.3 -->
+    <!-- AUTH PAGE | Powerhouse website v2.7.5 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
                 <div class="auth-spark one" aria-hidden="true"></div><div class="auth-spark two" aria-hidden="true"></div><div class="auth-orbit" aria-hidden="true"></div>
-                <div class="auth-brand"><img src="https://raw.githubusercontent.com/C823/Powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" alt="Powerhouse" data-powerhouse-logo><span class="auth-brand-tag">ONLINE</span></div>
-                <div class="auth-promo-main"><div class="auth-eyebrow">A place to hang out</div><h1>Play something.<br><span>Stay awhile.</span></h1><p>Your games, friends, and everything else in one place.</p></div>
+                <div class="auth-brand"><img src="https://raw.githubusercontent.com/C823/Powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" alt="Powerhouse" data-powerhouse-logo></div>
+                <div class="auth-promo-main"><div class="auth-eyebrow">A place to hang out</div><h1>Level the<br><span>playing field.</span></h1><p>Your games, friends, and everything else in one place.</p></div>
                 <div class="auth-promo-footer">POWERHOUSE / EST. 2026</div>
             </section>
             <section class="auth-container" aria-label="Sign in">
                 <img src="https://raw.githubusercontent.com/C823/Powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-mobile-logo" alt="Powerhouse" data-powerhouse-logo>
                 <div class="auth-form-tag">Welcome back</div>
+                <div id="authLoginPanel">
                 <h2>Sign in to Powerhouse</h2>
                 <p class="auth-subtitle">Use your Powerhouse account to continue.</p>
                 <form id="authLoginForm" onsubmit="event.preventDefault(); login();" novalidate>
@@ -1354,8 +1366,22 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     <p id="authLoginError" class="auth-error" role="alert" hidden></p>
                     <button class="landing-btn" id="loginBtn" type="submit"><span id="authLoginButtonText">Sign in</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
                 </form>
-                <p class="auth-bottom">Made for the people who play.</p>
-                <span class="auth-release">POWERHOUSE v2.7.3</span>
+                <p class="auth-bottom"><button type="button" class="auth-switch-link" onclick="switchAuthMode('register')">Create an Account <span aria-hidden="true">→</span></button></p>
+                </div>
+                <div id="authRegisterPanel" hidden>
+                    <h2>Create an account</h2>
+                    <p class="auth-subtitle">Join Powerhouse. It only takes a minute.</p>
+                    <form id="authRegisterForm" onsubmit="event.preventDefault(); registerPowerhouseAccount();" novalidate>
+                        <div class="form-group"><label for="registerUser">Username</label><div class="auth-input-wrap"><input id="registerUser" type="text" autocomplete="username" placeholder="Choose a username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required></div><span class="auth-hint">3–24 characters. Letters, numbers, and underscores.</span></div>
+                        <div class="form-group"><label for="registerPass">Password</label><div class="auth-input-wrap"><input id="registerPass" type="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required><button type="button" class="auth-show-password" onclick="toggleAuthFieldPassword('registerPass',this)" aria-label="Show password">Show</button></div></div>
+                        <div class="form-group"><label for="registerConfirm">Confirm password</label><div class="auth-input-wrap"><input id="registerConfirm" type="password" autocomplete="new-password" placeholder="Repeat your password" required><button type="button" class="auth-show-password" onclick="toggleAuthFieldPassword('registerConfirm',this)" aria-label="Show password">Show</button></div></div>
+                        <label class="auth-agreement"><input id="registerAgree" type="checkbox" required> <span>I agree to follow the Powerhouse EULA and Code of Conduct.</span></label>
+                        <p id="authRegisterError" class="auth-error" role="alert" hidden></p>
+                        <button class="landing-btn" id="registerBtn" type="submit">Create account <span aria-hidden="true">→</span></button>
+                    </form>
+                    <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
+                </div>
+                <span class="auth-release">POWERHOUSE v2.7.5</span>
             </section>
         </div>
     </div>
@@ -1895,6 +1921,67 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             if (typeof parseRoute === 'function') {
                 const current = parseRoute();
                 if (current.page === 'profile' && current.username && current.username.toLowerCase() === user.username.toLowerCase()) renderProfile(current.username);
+            }
+        }
+
+
+        function switchAuthMode(mode) {
+            const registering = mode === 'register';
+            const loginPanel = document.getElementById('authLoginPanel');
+            const registerPanel = document.getElementById('authRegisterPanel');
+            if (!loginPanel || !registerPanel) return;
+            loginPanel.hidden = registering;
+            registerPanel.hidden = !registering;
+            document.querySelector('.auth-container')?.setAttribute('aria-label', registering ? 'Create an account' : 'Sign in');
+            authLoginFeedback('');
+            authRegisterFeedback('');
+            (registering ? document.getElementById('registerUser') : document.getElementById('loginUser'))?.focus();
+        }
+        function authRegisterFeedback(message) {
+            const el = document.getElementById('authRegisterError');
+            if (el) { el.textContent = message || ''; el.hidden = !message; }
+        }
+        function toggleAuthFieldPassword(id, button) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            input.type = input.type === 'password' ? 'text' : 'password';
+            button.textContent = input.type === 'text' ? 'Hide' : 'Show';
+            button.setAttribute('aria-label', input.type === 'text' ? 'Hide password' : 'Show password');
+        }
+        async function registerPowerhouseAccount() {
+            const username = document.getElementById('registerUser')?.value.trim() || '';
+            const password = document.getElementById('registerPass')?.value || '';
+            const confirm = document.getElementById('registerConfirm')?.value || '';
+            const agreed = document.getElementById('registerAgree')?.checked;
+            if (!/^[a-zA-Z0-9_]{3,24}$/.test(username)) return authRegisterFeedback('Username must be 3–24 characters and contain only letters, numbers, or underscores.');
+            if (password.length < 6) return authRegisterFeedback('Your password must be at least 6 characters.');
+            if (password !== confirm) return authRegisterFeedback('Passwords do not match.');
+            if (!agreed) return authRegisterFeedback('Please agree to the EULA and Code of Conduct.');
+            if (typeof isCensorableUsername === 'function' && isCensorableUsername(username)) return authRegisterFeedback('That username cannot be used.');
+            const btn = document.getElementById('registerBtn');
+            if (btn?.disabled) return;
+            authRegisterFeedback('');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="auth-spinner" aria-hidden="true"></span> Creating account…';
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST', headers: { 'Content-Type':'application/json' },
+                    body: JSON.stringify({username,password})
+                });
+                const data = await response.json();
+                if (!response.ok || !data.token) return authRegisterFeedback(data.error || 'Unable to create account. Please try again.');
+                localStorage.setItem('ph_token', data.token);
+                localStorage.setItem('ph_username', data.username);
+                user.token = data.token;
+                user.username = data.username;
+                resetStaffUI(); unlockDashboard(); updateUI();
+                navigateTo('home', true);
+                fetchUserData(); fetchHomeFriends(); loadStaffPermissions().catch(console.warn);
+            } catch (err) {
+                authRegisterFeedback('Unable to connect. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Create account <span aria-hidden="true">→</span>';
             }
         }
 
