@@ -747,15 +747,6 @@
     "useBlank": true
   },
   {
-    "title": "Uncle's Game Hub",
-    "category": "Hub",
-    "desc": "Uncle's finest copy.",
-    "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsyN6N87j0HibrpWb93ic_qy6Yow9J0L2M2Q&s",
-    "link": "http://unclesgamehub.base64.app/",
-    "verified": true,
-    "useBlank": true
-  },
-  {
     "title": "Fishbrain",
     "category": "Utility",
     "desc": "Find your best fishing spot.",
@@ -777,7 +768,7 @@
     "title": "LarpTube",
     "category": "Media",
     "desc": "Larp.",
-    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fthfvnext.bing.com%2Fth%2Fid%2FOIP.lY68gRpqdbm-T_NsYvKC-gAAAA%3Fcb%3Dthfvnextfalcon4%26pid%3DApi&f=1&ipt=0e7027d9714858b14f1e9c570fd59c5804eb1391acf98c479dc3aaf11b14589f&ipo=images",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flarptube.lovable.app%2F__l5e%2Fassets-v1%2F867607e1-c93c-429a-afed-8594154b77c9%2Flarptube-logo.png&f=1&nofb=1&ipt=18e3c76968c03b41c9937bbb4486d1e3605c742e3bd3230f73a557db007c04d5&ipo=images",
     "link": "https://larptube.com/",
     "verified": false,
     "useBlank": true
@@ -799,5 +790,14 @@
     "link": "https://fortniteog.lol/fortnite",
     "verified": false,
     "useBlank": true
+  },
+  {
+    "title": "SmartPass",
+    "category": "Utility",
+    "desc": "A Safer, Smarter Way to Optimize the School Day.",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fedovatecapital.com%2Fwp-content%2Fuploads%2F2024%2F04%2FSmartPass-6x4-1.jpg&f=1&nofb=1&ipt=94b026a19267603ecb1bdf4e36b401f75ed6bbca8df49e0d5b5964773e17d458&ipo=images",
+    "link": "https://mysmartpass.garnerj826.workers.dev",
+    "verified": true,
+    "useBlank": false
   }
 ]
