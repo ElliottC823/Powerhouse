@@ -696,7 +696,7 @@
     "title": "Jackbox.TV",
     "category": "Arcade",
     "desc": "game required.",
-    "thumb": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.i0s5_O9SauF_Gl6IBhubRAHaE8%3Fr%3D0%26pid%3DApi&sp=1780673009Tc4c456dcfbecacee2c97b3c3cc24789e8baa3166a8ce3b8ceceff9360c949b63",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.insidehook.com%2Fwp-content%2Fuploads%2F2020%2F05%2FJackbox-Games-Logo.jpg%3Ffit%3D1500%252C1000&f=1&nofb=1&ipt=3d6df4f2d5b8d6156654ef0e4e6242174407a9eaf52fde43d69e20c0c179579b&ipo=images",
     "link": "https://jackbox.tv",
     "verified": true,
     "useBlank": true
