@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
-    <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
-    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/ElliottC823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
+    <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
+    <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -1169,7 +1169,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
     <!-- AUTH PAGE -->
     <div id="landing-page">
         <div class="auth-container">
-            <img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" data-powerhouse-logo>
+            <img src="https://raw.githubusercontent.com/C823/powerhouse/main/icons/POWERHOUSE-dark.svg" class="auth-logo" data-powerhouse-logo>
             <h2>Sign in</h2>
             <div class="form-group"><label>Username</label><input type="text" id="loginUser"></div>
             <div class="form-group"><label>Password</label><input type="password" id="loginPass"></div>
@@ -1179,7 +1179,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
     <!-- SIDEBAR -->
     <aside id="sidebar">
-        <div class="logo-area"><img src="https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;" data-powerhouse-logo></div>
+        <div class="logo-area"><img src="https://raw.githubusercontent.com/C823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;" data-powerhouse-logo></div>
         <nav class="nav-group">
             <a href="/home" class="nav-item active" id="side-home">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M9 21v-8h6v8"/></svg> Home <span class="badge">12</span>
@@ -1487,8 +1487,8 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 <script>
         const API_BASE = 'https://powerhouse-api.c823.workers.dev';
-        const PFP_BASE = 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/profileicons/';
-        const DEFAULT_PFP = 'https://github.com/ElliottC823/Powerhouse/blob/main/profileicons/default.jpg?raw=true';
+        const PFP_BASE = 'https://raw.githubusercontent.com/C823/powerhouse/main/profileicons/';
+        const DEFAULT_PFP = 'https://github.com/C823/Powerhouse/blob/main/profileicons/default.jpg?raw=true';
         
         function safeStorageGet(key) {
             try { return localStorage.getItem(key); } catch (error) { return null; }
@@ -1596,7 +1596,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
         async function fetchGames() {
             try {
-                const r = await fetch('https://raw.githubusercontent.com/ElliottC823/powerhouse/main/games.txt');
+                const r = await fetch('https://raw.githubusercontent.com/C823/powerhouse/main/games.txt');
                 window.allGames = await r.json();
                 renderGames();
             } catch(e) {}
@@ -2066,8 +2066,8 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
         // Match the theme-specific logos from the original Powerhouse index.html.
         const PH_LOGOS = {
-            dark: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-dark.svg',
-            light: 'https://raw.githubusercontent.com/ElliottC823/powerhouse/main/icons/POWERHOUSE-light.svg'
+            dark: 'https://raw.githubusercontent.com/C823/powerhouse/main/icons/POWERHOUSE-dark.svg',
+            light: 'https://raw.githubusercontent.com/C823/powerhouse/main/icons/POWERHOUSE-light.svg'
         };
         function updatePowerhouseLogos() {
             const light = document.body.getAttribute('data-theme') === 'light';
