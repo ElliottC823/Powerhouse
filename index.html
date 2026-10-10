@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.8.3">
+    <meta name="powerhouse-site-version" content="2.8.4">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.8.3 — sampled from supplied reference:
+        /* Powerhouse palette v2.9.0 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.8.3 --- */
+        /* --- AUTH PAGE — website v2.9.0 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -283,6 +283,14 @@
         .social-card:hover { transform:translateY(-3px); border-color:rgba(120,145,255,.25); box-shadow:0 9px 24px rgba(0,0,0,.12); }
         .social-card img { width:54px; height:54px; object-fit:cover; flex-shrink:0; background:var(--surface); }
         .social-card-name { font-size:13px; font-weight:700; margin:0 8px 0 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+
+        /* v2.9.0: banned/deleted accounts retain removable friend entries, never a profile link. */
+        .social-deleted-profile {display:flex;align-items:center;flex:1;min-width:0;pointer-events:none;color:var(--text-muted);}
+        .social-deleted-profile img {filter:grayscale(1);opacity:.55;}
+        .social-deleted-text {display:flex;flex-direction:column;gap:2px;min-width:0;margin-left:12px;}
+        .social-deleted-text strong {font-size:13px;color:var(--text);font-weight:650;}
+        .social-deleted-text small {font-size:11px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .social-deleted-card:hover {transform:none;box-shadow:none;}
         .social-action { border:0; background:transparent; color:#ff4c67; padding:10px 12px 10px 4px; font:600 10px 'Outfit',sans-serif; cursor:pointer; white-space:nowrap; transition:color .2s ease, transform .2s ease; }
         .social-action:hover { color:#ff8c9b; transform:translateY(-1px); }
         .social-action:disabled { opacity:.5; cursor:wait; }
@@ -636,7 +644,7 @@
         }
 
 
-/* Powerhouse 2.8.3 — refreshed administrative workspace */
+/* Powerhouse 2.8.4 — refreshed administrative workspace */
 #admin-view {max-width:1120px;margin:0 auto;width:100%;}
 #admin-view .admin-page-heading {display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px;flex-wrap:wrap;}
 #admin-view .admin-eyebrow {font-size:10px;letter-spacing:.16em;font-weight:750;color:#9d9d9d;margin-bottom:9px;}
@@ -736,7 +744,7 @@ function updateRoleLabels(){
  if(nav&&user.username){nav.textContent=user.username;nav.insertAdjacentHTML('beforeend',lookupUserBadge(user.username,true));}
  const account=document.getElementById('val-username');
  if(account&&user.username){account.textContent=user.username;account.insertAdjacentHTML('beforeend',lookupUserBadge(user.username));}
- if(typeof parseRoute==='function'){const route=parseRoute();if(route.page==='profile'&&route.username)renderProfile(route.username);}
+ if(typeof parseRoute==='function'){const route=parseRoute();if(route.page==='profile')renderProfile(route.id ?? route.username);}
  document.querySelectorAll('[data-staff-badge-for]').forEach(el=>{el.innerHTML=lookupUserBadge(el.dataset.staffBadgeFor,true);});
 }
 async function getCachedRanks(){
@@ -1448,7 +1456,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.8.3 -->
+    <!-- AUTH PAGE | Powerhouse website v2.9.0 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1484,7 +1492,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.8.3</span>
+                <span class="auth-release">POWERHOUSE v2.9.0</span>
             </section>
         </div>
     </div>
@@ -1518,7 +1526,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Hub
             </a>
         </nav>
-        <div class="sidebar-release" aria-label="Powerhouse version">POWERHOUSE <span>v2.8.3</span></div>
+        <div class="sidebar-release" aria-label="Powerhouse version">POWERHOUSE <span>v2.9.0</span></div>
     </aside>
 
     <main id="main-wrapper">
@@ -1960,7 +1968,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             if (input && document.activeElement !== input) input.value = currentAbout;
             updateAboutCount();
             const route = typeof parseRoute === 'function' ? parseRoute() : {};
-            if (route.page === 'profile' && route.username) renderProfile(route.username);
+            if (route.page === 'profile') renderProfile(route.id ?? route.username);
         }
         async function saveAccountAbout() {
             const input = document.getElementById('account-about-input');
@@ -2020,15 +2028,15 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             document.getElementById('nav-username').textContent = user.username;
             updateRoleLabels();
             const ownLink = document.getElementById('side-profile');
-            if (ownLink) ownLink.href = profileURL(user.username);
+            if (ownLink) { ownLink.href=profileURL(user.username); bindProfileHref(ownLink,user.username); }
             const dropdownProfile = document.getElementById('dropdown-profile-link');
-            if (dropdownProfile) dropdownProfile.href = profileURL(user.username);
+            if (dropdownProfile) { dropdownProfile.href=profileURL(user.username); bindProfileHref(dropdownProfile,user.username); }
             document.getElementById('val-username').textContent = user.username;
             if (!accountSavedData) setAccountAbout('');
             // Profile view is updated separately by renderProfile().
             if (typeof parseRoute === 'function') {
                 const current = parseRoute();
-                if (current.page === 'profile' && current.username && current.username.toLowerCase() === user.username.toLowerCase()) renderProfile(current.username);
+                if (current.page === 'profile' && activeProfileName() === user.username.toLowerCase()) renderProfile(user.username);
             }
         }
 
@@ -2222,7 +2230,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             });
             const panel = document.getElementById('friends-pane');
             panel.innerHTML = '<div class="social-empty">Loading ' + tab + '…</div>';
-            if (Array.isArray(socialCache[tab])) { renderSocialCards(tab, socialCache[tab]); return; }
+            if (tab !== 'friends' && Array.isArray(socialCache[tab])) { renderSocialCards(tab, socialCache[tab]); return; }
             try {
                 const response = await fetch(`${API_BASE}${socialPaths[tab]}`, {headers:{Authorization:`Bearer ${user.token}`}});
                 if (!response.ok) throw Error(response.status === 404 ? 'This section is not available on the API yet.' : 'Unable to load this section.');
@@ -2245,16 +2253,21 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             }
             panel.innerHTML = entries.map((item, i) => {
                 const name = typeof item === 'string' ? item : (item.username || item.user?.username || item.name || 'Unknown');
-                const pfp = typeof item === 'object' ? (item.pfp || item.user?.pfp) : null;
+                const deleted = typeof item === 'object' && item !== null && item.deleted === true;
+                const pfp = !deleted && typeof item === 'object' ? (item.pfp || item.user?.pfp) : null;
                 const action = tab === 'friends' ? `<button type="button" class="social-action" data-remove-friend="${i}">Remove Friend</button>` : '';
+                if (deleted) {
+                    const former = escapeText(item.formerUsername || name);
+                    return `<div class="social-card social-deleted-card" style="animation-delay:${Math.min(i,12)*35}ms"><div class="social-profile-link social-deleted-profile"><img alt="Default avatar" src="${escapeText(DEFAULT_PFP)}"><span class="social-deleted-text"><strong>Account Deleted</strong><small>Formerly &quot;${former}&quot;</small></span></div>${action}</div>`;
+                }
                 const href = profileURL(name);
                 rememberProfile(name, pfp);
                 return `<div class="social-card" style="animation-delay:${Math.min(i,12)*35}ms"><a class="social-profile-link" href="${escapeText(href)}" data-profile-link="${escapeText(name)}"><img alt="${escapeText(name)} avatar" src="${escapeText(socialAvatar(pfp))}" onerror="this.onerror=null;this.src='${DEFAULT_PFP}'"><span class="social-card-name">${escapeText(name)}${lookupUserBadge(name,true)}</span></a>${action}</div>`;
             }).join('');
-            panel.querySelectorAll('[data-profile-link]').forEach(link => link.addEventListener('click', event => {
+            panel.querySelectorAll('[data-profile-link]').forEach(link => { bindProfileHref(link,link.dataset.profileLink); link.addEventListener('click', event => {
                 if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
                 event.preventDefault(); navigateProfile(link.dataset.profileLink);
-            }));
+            }); });
             panel.querySelectorAll('[data-remove-friend]').forEach(btn => btn.addEventListener('click', () => {
                 const entry = entries[Number(btn.dataset.removeFriend)];
                 const name = typeof entry === 'string' ? entry : (entry.username || entry.user?.username);
@@ -2278,6 +2291,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             } catch(e) { alert(e.message); button.disabled = false; }
         }
         function renderHomeFriends(entries) {
+            entries = entries.filter(item => !(item && typeof item === 'object' && item.deleted === true));
             const count = document.getElementById('home-friends-count');
             const grid = document.getElementById('home-friends-grid');
             count.textContent = String(entries.length);
@@ -2296,7 +2310,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 const avatar = profile.pfp || obj.pfp;
                 rememberProfile(name, avatar);
                 const card = document.createElement('a');
-                card.href = profileURL(name);
+                card.href = profileURL(name); bindProfileHref(card,name);
                 card.addEventListener('click', event => { if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); navigateProfile(name); });
                 card.className = 'home-friend-card';
                 card.style.animationDelay = Math.min(i,12)*35 + 'ms';
@@ -2318,7 +2332,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 grid.append(card);
             });
             const currentRoute = parseRoute();
-            if (currentRoute.page === 'profile' && currentRoute.username) renderProfile(currentRoute.username);
+            if (currentRoute.page === 'profile') renderProfile(currentRoute.id ?? currentRoute.username);
         }
         async function fetchHomeFriends() {
             const grid = document.getElementById('home-friends-grid');
@@ -2507,18 +2521,42 @@ function adminSetBanner(){return staffLegacySaveBanner();}
         const ROUTE_PAGES = new Set(['home','profile','friends','followers','following','requests','settings','admin','moderation']);
         const SOCIAL_ROUTES = new Set(['friends','followers','following','requests']);
         const knownProfiles = new Map();
-        function profileURL(username) { return '/user/' + encodeURIComponent(String(username)) + '/profile'; }
+        const profileIds = new Map();
+        const profileNames = new Map();
+        function profileURL(username) {
+            const id=profileIds.get(String(username||'').toLowerCase());
+            return id ? `/users/${id}/profile` : '/home';
+        }
+        async function resolveProfileId(username) {
+            const key=String(username||'').toLowerCase();
+            if (!key) throw new Error('Missing username');
+            if (profileIds.has(key)) return profileIds.get(key);
+            const response=await fetch(`${API_BASE}/users/resolve/${encodeURIComponent(key)}`);
+            if (!response.ok) throw new Error(response.status===404?'Profile not found':'Could not load profile ID');
+            const data=await response.json();
+            if (!Number.isSafeInteger(data.id)||data.id<1) throw new Error('Invalid profile ID');
+            profileIds.set(key,data.id);
+            profileNames.set(data.id,data.username||username);
+            return data.id;
+        }
+        async function bindProfileHref(anchor,username) {
+            try {
+                const id=await resolveProfileId(username);
+                if(anchor?.isConnected) anchor.href=`/users/${id}/profile`;
+            } catch(e) { if(anchor?.isConnected) anchor.href='/home'; }
+        }
+        function activeProfileName() {
+            const route=parseRoute();
+            return route.page==='profile' ? (profileNames.get(route.id)||'').toLowerCase() : '';
+        }
         function rememberProfile(username, pfp) {
             if (username && typeof username === 'string' && pfp) knownProfiles.set(username.toLowerCase(), {username,pfp});
         }
         function parseRoute() {
             const path = location.pathname.replace(/\/+$/, '') || '/';
-            const match = path.match(/^\/user\/([^/]+)\/profile$/i);
-            if (match) {
-                try { return {page:'profile', username:decodeURIComponent(match[1])}; }
-                catch(e) { return {page:'not-found'}; }
-            }
-            if (/^\/users(?:\/|$)/i.test(path)) return {page:'not-found'};
+            const match = path.match(/^\/users\/([1-9]\d*)\/profile$/);
+            if (match && Number.isSafeInteger(Number(match[1]))) return {page:'profile',id:Number(match[1])};
+            if (/^\/(?:user|users)(?:\/|$)/i.test(path)) return {page:'not-found'};
             const simple = path.slice(1).toLowerCase();
             if (simple === 'profile') return {page:'profile',username:user.username || null}; // Legacy URL
             if (ROUTE_PAGES.has(simple) || simple === 'sign-in') return {page:simple};
@@ -2556,9 +2594,9 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 const data = await response.json();
                 const entries = Array.isArray(data) ? data : (data.friends || []);
                 if (!Array.isArray(entries)) throw new Error('Invalid friend list.');
-                if (requestSequence !== profileFriendSequence || sessionToken !== user.token || parseRoute().username?.toLowerCase() !== username.toLowerCase()) return;
+                if (requestSequence !== profileFriendSequence || sessionToken !== user.token || activeProfileName() !== username.toLowerCase()) return;
                 socialCache.friends = entries;
-                const isFriend = entries.some(item => friendName(item).toLowerCase() === username.toLowerCase());
+                const isFriend = entries.some(item => !item?.deleted && friendName(item).toLowerCase() === username.toLowerCase());
                 const pending = sentProfileRequests.has(username.toLowerCase());
                 button.disabled = pending;
                 button.classList.toggle('is-friend', isFriend);
@@ -2585,7 +2623,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                             }
                             throw new Error(result.error || `Request failed (${actionResponse.status}).`);
                         }
-                        if (sessionToken !== user.token || parseRoute().username?.toLowerCase() !== username.toLowerCase()) return;
+                        if (sessionToken !== user.token || activeProfileName() !== username.toLowerCase()) return;
                         if (isFriend) {
                             delete socialCache.friends;
                             feedback.textContent = 'Friend removed.';
@@ -2612,6 +2650,28 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             }
         }
         function renderProfile(username) {
+            if (typeof username === 'number' || /^\d+$/.test(String(username||''))) {
+                const id=Number(username);
+                const fetchSeq=++profileRequestSequence;
+                fetch(`${API_BASE}/users/${id}/profile`).then(async response=>{
+                    if(response.status===404){const err=new Error('Profile not found');err.notFound=true;throw err;}
+                    if(!response.ok)throw new Error('Profile unavailable');
+                    return response.json();
+                }).then(({profile})=>{
+                    if(fetchSeq!==profileRequestSequence||parseRoute().id!==id)return;
+                    if(!profile?.username){navigateTo('home',true);return;}
+                    profileNames.set(id,profile.username);
+                    profileIds.set(profile.username.toLowerCase(),id);
+                    knownProfiles.set(profile.username.toLowerCase(),profile);
+                    document.title=profile.username+' | Powerhouse';
+                    renderProfile(profile.username);
+                }).catch(error=>{
+                    if(fetchSeq!==profileRequestSequence)return;
+                    if(error.notFound)navigateTo('home',true);
+                    else document.getElementById('profile-about').textContent=error.message;
+                });
+                return;
+            }
             const own = Boolean(user.username && username && user.username.toLowerCase() === username.toLowerCase());
             const shownName = username || user.username || 'Unknown user';
             const cached = knownProfiles.get(shownName.toLowerCase());
@@ -2644,7 +2704,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     return response.json();
                 })
                 .then(({profile}) => {
-                    if (requestId !== profileRequestSequence || parseRoute().username?.toLowerCase() !== shownName.toLowerCase()) return;
+                    if (requestId !== profileRequestSequence || activeProfileName() !== shownName.toLowerCase()) return;
                     if (!profile) { history.replaceState({}, '', '/home'); navigateTo('home', true); return; }
                     knownProfiles.set(shownName.toLowerCase(), {...(cached || {}), ...profile});
                     document.getElementById('profile-friends-number').textContent = Number.isFinite(profile.friendsCount) ? profile.friendsCount : '—';
@@ -2689,8 +2749,8 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             document.querySelectorAll('#sidebar .nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('side-' + view)?.classList.add('active');
             document.getElementById('user-dropdown')?.classList.remove('show');
-            document.title = (page === 'profile' ? (route.username || 'Profile') : social ? 'Social' : page.charAt(0).toUpperCase()+page.slice(1)) + ' | Powerhouse';
-            if (page === 'profile') renderProfile(route.username);
+            document.title = (page === 'profile' ? (profileNames.get(route.id) || 'Profile') : social ? 'Social' : page.charAt(0).toUpperCase()+page.slice(1)) + ' | Powerhouse';
+            if (page === 'profile') renderProfile(route.id ?? route.username);
             if (social && user.token) switchSocialTab(page, false).catch(console.error);
             if (page === 'settings') switchSettings('account');
             if (page === 'admin') {adminTabSwitch('overview'); adminLoadOverview();}
@@ -2698,10 +2758,10 @@ function adminSetBanner(){return staffLegacySaveBanner();}
         }
         function routeFromURL() {
             let route = parseRoute();
-            if (route.page === 'profile' && !route.username) {
+            if (route.page === 'profile' && !route.id && !route.username) {
                 if (!user.token) route = {page:'sign-in'};
                 else route.username = user.username;
-                if (route.page === 'profile' && route.username) history.replaceState({}, '', profileURL(route.username));
+                if (route.page === 'profile' && route.username) { navigateProfile(route.username); return; }
             }
             if (!user.token && !['sign-in','profile','not-found'].includes(route.page)) {
                 try { sessionStorage.setItem('ph_return_to',location.pathname); } catch(e) {}
@@ -2732,11 +2792,14 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             if (location.pathname !== target) history[replace ? 'replaceState' : 'pushState']({},'',target);
             routeFromURL();
         }
-        function navigateProfile(username) {
+        async function navigateProfile(username) {
             if (!username) return navigateTo('sign-in');
-            const target = profileURL(username);
-            if (location.pathname !== target) history.pushState({},'',target);
-            routeFromURL();
+            try {
+                const id=await resolveProfileId(username);
+                const target=`/users/${id}/profile`;
+                if(location.pathname!==target)history.pushState({},'',target);
+                routeFromURL();
+            }catch(error){console.warn('Profile navigation:',error);navigateTo('home');}
         }
         function showPage(page) { navigateTo(page); }
         // Keep same-origin links inside this app regardless of any upstream <base> tag.
@@ -2746,7 +2809,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 const target = new URL(link.getAttribute('href'), location.origin);
                 if (target.origin !== location.origin) return;
                 event.preventDefault();
-                if (target.pathname === '/profile') navigateProfile(user.username);
+                if (link.id === 'side-profile' || link.id === 'dropdown-profile-link' || target.pathname === '/profile') navigateProfile(user.username);
                 else {
                     history.pushState({}, '', target.pathname);
                     routeFromURL();
