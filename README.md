@@ -1,4 +1,4 @@
-![Powerhouse Banner](banner.png)
+![Powerhouse Banner](banner.jpg)
 # Powerhouse
 
 
