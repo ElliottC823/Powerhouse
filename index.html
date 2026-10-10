@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.7.2">
+    <meta name="powerhouse-site-version" content="2.7.3">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.7.2 — sampled from supplied reference:
+        /* Powerhouse palette v2.7.3 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.7.2 --- */
+        /* --- AUTH PAGE — website v2.7.3 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:#000000; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:linear-gradient(90deg,transparent 49.95%,rgba(255,255,255,.025) 50%,transparent 50.05%); }
         #landing-page::after { content:none; }
@@ -136,8 +136,8 @@
         .hero-info { min-width:0; flex:1; }
         .hero-info h1 { margin:0 0 18px; font-size:clamp(28px,3vw,40px); letter-spacing:-.8px; }
         .home-friends-heading { display:inline-flex; align-items:center; gap:9px; background:none; border:0; padding:0; margin:0 0 10px; color:var(--text); font:700 18px 'Outfit',sans-serif; cursor:pointer; transition:color .18s ease,transform .18s ease; }
-        .home-friends-heading:hover { color:var(--accent); transform:translateX(2px); }
-        .home-friends-count { display:inline-flex; min-width:23px; height:23px; justify-content:center; align-items:center; padding:0 8px; border-radius:100px; color:white; background:#4a4a4a; font-size:11px; }
+        .home-friends-heading:hover { color:#fff; transform:translateX(2px); }
+        .home-friends-count { display:inline-flex; position:static; min-width:23px; height:23px; box-sizing:border-box; justify-content:center; align-items:center; padding:0 8px; border:0; border-radius:100px; color:#fff; background:#363636; font-size:11px; font-weight:700; box-shadow:none; }
         .home-friends-grid { display:flex; flex-wrap:wrap; align-items:flex-start; gap:12px; }
         .home-friend-card { display:flex; flex-direction:column; align-items:flex-start; width:82px; max-width:100%; min-width:0; animation:socialIn .35s ease both; }
         .home-friend-card img { display:block; width:80px; height:80px; border-radius:12px; object-fit:cover; background:var(--surface); border:1px solid var(--border); transition:transform .2s ease,box-shadow .2s ease; }
@@ -1334,7 +1334,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.7.2 -->
+    <!-- AUTH PAGE | Powerhouse website v2.7.3 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1355,7 +1355,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     <button class="landing-btn" id="loginBtn" type="submit"><span id="authLoginButtonText">Sign in</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
                 </form>
                 <p class="auth-bottom">Made for the people who play.</p>
-                <span class="auth-release">POWERHOUSE v2.7.2</span>
+                <span class="auth-release">POWERHOUSE v2.7.3</span>
             </section>
         </div>
     </div>
@@ -1365,7 +1365,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
         <div class="logo-area"><img src="https://raw.githubusercontent.com/C823/powerhouse/main/icons/POWERHOUSE-dark.svg" style="height:28px;" data-powerhouse-logo></div>
         <nav class="nav-group">
             <a href="/home" class="nav-item active" id="side-home">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M9 21v-8h6v8"/></svg> Home <span class="badge">12</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M9 21v-8h6v8"/></svg> Home
             </a>
             <a href="/profile" class="nav-item" id="side-profile">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg> Profile
