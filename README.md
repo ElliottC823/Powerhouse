@@ -24,4 +24,4 @@ Any platform with a web browser that can run HTML 5 can run Powerhouse locally o
 
 ## Legal
 
-My lawyer told me to add this stuff in, we do not own most of the stuff like games, content, etc. The rights to that stuff goes to their respective parties.
+My lawyer(https://github.com/C823) told me to add this stuff in, we do not own most of the stuff like games, content, etc. The rights to that stuff goes to their respective parties.
