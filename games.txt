@@ -174,7 +174,7 @@
     "title": "What Beats Rock",
     "category": "Arcade",
     "desc": "An endless game of logic where you must name something that beats the last object.",
-    "thumb": "https://whatbeatsrock.io/data/image/options/what-beats-rock-banner.jpg",
+    "thumb": "https://www.whatbeatsrock.com/_next/image?url=%2Fprofile%2Frock-default.png&w=1920&q=75",
     "link": "https://www.whatbeatsrock.com/",
     "verified": false,
     "useBlank": false
@@ -183,7 +183,7 @@
     "title": "Bringus Studios",
     "category": "Media",
     "desc": "Tech exploration and fascinating experiments with optical media.",
-    "thumb": "https://www.whatbeatsrock.com/_next/image?url=%2Fprofile%2Frock-default.png&w=1920&q=75",
+    "thumb": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fyoutube%2Fimages%2F2%2F29%2FBringus_Studios.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F350%3Fcb%3D20240601040622&f=1&nofb=1&ipt=6002b51b6e36361122623f86213376691df849c60c19a6cbc3dbf48ef80c751c&ipo=images",
     "link": "https://www.youtube.com/@BringusStudios/featured",
     "verified": false,
     "useBlank": false
