@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.7.7">
+    <meta name="powerhouse-site-version" content="2.8.0">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.7.7 — sampled from supplied reference:
+        /* Powerhouse palette v2.8.0 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.7.7 --- */
+        /* --- AUTH PAGE — website v2.8.0 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -623,6 +623,46 @@
             outline:2px solid #bdbdbd;outline-offset:2px;
         }
 
+
+/* Powerhouse 2.8.0 — refreshed administrative workspace */
+#admin-view {max-width:1120px;margin:0 auto;width:100%;}
+#admin-view .admin-page-heading {display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px;flex-wrap:wrap;}
+#admin-view .admin-eyebrow {font-size:10px;letter-spacing:.16em;font-weight:750;color:#9d9d9d;margin-bottom:9px;}
+#admin-view .admin-page-heading h1 {font-size:clamp(1.65rem,3vw,2.35rem);letter-spacing:-.045em;line-height:1.15;margin:0 0 8px;}
+#admin-view .admin-page-heading p {margin:0;color:#a6a6a6;font-size:.86rem;}
+#admin-view .admin-version-tag {font-size:10px;font-weight:700;letter-spacing:.09em;border:1px solid #3c3c3c;color:#bdbdbd;border-radius:7px;padding:9px 11px;}
+#admin-view .staff-panel {background:#191919;border:1px solid #343434;border-radius:16px;padding:22px;box-shadow:0 10px 35px rgba(0,0,0,.17);}
+#admin-view .legacy-staff .admin-tabs {border-bottom:1px solid #373737;gap:6px;padding:0 0 14px;margin-bottom:8px;}
+#admin-view .legacy-staff .admin-tab {bottom:auto;border:1px solid transparent;border-radius:9px;padding:10px 16px;font-size:.81rem;font-weight:600;color:#a8a8a8;transition:background .16s,border-color .16s,color .16s;}
+#admin-view .legacy-staff .admin-tab:hover {background:#292929;border-color:#3d3d3d;color:white;}
+#admin-view .legacy-staff .admin-tab.active {background:#383838;border:1px solid #555;color:#fff;}
+#admin-view .legacy-staff .admin-body {padding:20px 0 8px;}
+#admin-view .admin-section-title {font-size:.73rem;text-transform:none;letter-spacing:.015em;font-weight:700;color:#eee;padding-bottom:10px;border-color:#353535;margin-bottom:15px;}
+#admin-view .admin-section-note {font-size:.7rem;font-weight:400;color:#8d8d8d;margin-left:8px;}
+#admin-view .admin-stat-grid {gap:12px;margin-bottom:20px;}
+#admin-view .admin-stat {text-align:left;background:#222;border:1px solid #373737;border-radius:12px;padding:20px 18px;min-height:100px;}
+#admin-view .admin-stat-val {font-size:2rem;font-weight:750;letter-spacing:-.045em;color:#fff;line-height:1.15;}
+#admin-view .admin-stat-lbl {font-size:.7rem;color:#999;letter-spacing:.01em;text-transform:none;margin-top:10px;font-weight:500;}
+#admin-view .admin-search-row {margin:0 0 18px;}
+#admin-view .admin-search-input {background:#242424;border:1px solid #424242;color:#f5f5f5;border-radius:10px;padding:12px 14px;font-size:.85rem;min-height:43px;}
+#admin-view .admin-search-input:focus {border-color:#a0a0a0;box-shadow:0 0 0 3px rgba(255,255,255,.07);}
+#admin-view .admin-user-row {background:#222;border:1px solid #353535;border-radius:11px;padding:13px 15px;margin-bottom:9px;gap:12px;}
+#admin-view .admin-user-row:last-child {border-bottom:1px solid #353535;}
+#admin-view .admin-user-avatar {width:39px;height:39px;background:#3a3a3a;font-size:.8rem;}
+#admin-view .admin-user-name {font-size:.88rem;font-weight:650;}
+#admin-view .admin-user-meta {font-size:.74rem;margin-top:4px;color:#aaa;}
+#admin-view .admin-user-actions {gap:6px;}
+#admin-view .admin-btn {font-size:.73rem;padding:8px 11px;min-height:32px;background:#2e2e2e;border:1px solid #494949;border-radius:8px;color:#e6e6e6;}
+#admin-view .admin-btn:hover {background:#404040;border-color:#747474;color:white;}
+#admin-view .admin-btn.primary {background:#e9e9e9;border-color:#e9e9e9;color:#151515;}
+#admin-view .admin-btn.primary:hover {background:white;border-color:white;color:black;}
+#admin-view .admin-btn.danger {color:#ff9797;border-color:#744040;background:#352323;}
+#admin-view .admin-empty {border:1px dashed #404040;border-radius:12px;background:#202020;padding:30px 18px;opacity:1;color:#a3a3a3;}
+#admin-view .admin-announce-box {padding:20px;border:1px solid #383838;background:#222;border-radius:12px;gap:13px;}
+#admin-view .admin-color-row {gap:14px;flex-wrap:wrap;}
+#admin-view .role-icon {width:.95em!important;height:.95em!important;max-width:.95em!important;max-height:.95em!important;}
+@media(max-width:760px){#admin-view .staff-panel{padding:14px;}#admin-view .admin-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}#admin-view .admin-stat{padding:12px;min-height:80px;}#admin-view .admin-stat-val{font-size:1.6rem;}#admin-view .legacy-staff .admin-tab{padding:9px 11px;}#admin-view .admin-user-row{align-items:flex-start;}#admin-view .admin-user-actions{width:100%;padding-left:0;}}
+
 </style>
 </head>
 <body>
@@ -660,7 +700,8 @@ function staffEsc(value) { return String(value ?? '').replace(/[&<>"']/g, c => (
 const POWERHOUSE_ROLE_ICON_URLS = {
  founder: 'https://raw.githubusercontent.com/C823/Powerhouse/main/icons/founder_icon.svg',
  admin: 'https://raw.githubusercontent.com/C823/Powerhouse/main/icons/admin_icon.svg',
- moderator: 'https://raw.githubusercontent.com/C823/Powerhouse/main/icons/moderator_icon.svg'
+ moderator: 'https://raw.githubusercontent.com/C823/Powerhouse/main/icons/moderator_icon.svg',
+ pwr: 'https://raw.githubusercontent.com/C823/Powerhouse/main/icons/POWERHOUSE-icon-dark.png'
 };
 function getRankBadgeHtml(rank,sm=false){
  const role=String(rank||'').trim().toLowerCase();
@@ -1073,7 +1114,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                         <div class="admin-user-meta">Current rank: ${rank || 'None'}</div>
                     </div>
                     <div class="admin-user-actions" style="flex-wrap:wrap">
-                        ${['Founder','Moderator','VIP',''].map(r =>
+                        ${['Founder','Moderator','VIP','PWR',''].map(r =>
                             `<button class="admin-btn${r===rank?' primary':''}" onclick="adminSetRank('${staffEsc(u.username)}','${r}')">${r||'Remove Rank'}</button>`
                         ).join('')}
                     </div>
@@ -1352,7 +1393,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.7.7 -->
+    <!-- AUTH PAGE | Powerhouse website v2.8.0 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1388,7 +1429,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.7.7</span>
+                <span class="auth-release">POWERHOUSE v2.8.0</span>
             </section>
         </div>
     </div>
@@ -1564,7 +1605,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             <div class="social-grid" id="friends-pane" role="tabpanel" aria-live="polite"><div class="social-empty">Loading friends…</div></div>
         </section>
 
-        <section id="admin-view" class="view-section staff-page" hidden><h1>Admin Panel</h1><p>Manage accounts, ranks, and announcements.</p><div class="staff-panel legacy-staff"><div hidden aria-hidden="true"><span id="staff-banner-current"></span><input id="staff-banner-message"><input id="staff-banner-color" type="color" value="#555555"><input id="staff-banner-enabled" type="checkbox"><span id="staff-banner-feedback"></span></div>        <div class="admin-tabs">
+        <section id="admin-view" class="view-section staff-page" hidden><div class="admin-page-heading"><div><div class="admin-eyebrow">POWERHOUSE / MANAGEMENT</div><h1>Admin Panel</h1><p>Manage accounts, permissions, and site announcements.</p></div><span class="admin-version-tag">CONTROL CENTER</span></div><div class="staff-panel legacy-staff"><div hidden aria-hidden="true"><span id="staff-banner-current"></span><input id="staff-banner-message"><input id="staff-banner-color" type="color" value="#555555"><input id="staff-banner-enabled" type="checkbox"><span id="staff-banner-feedback"></span></div>        <div class="admin-tabs">
             <button class="admin-tab active" id="adminTabOverview"  onclick="adminTabSwitch('overview')">Overview</button>
             <button class="admin-tab"        id="adminTabUsers"     onclick="adminTabSwitch('users')">Search</button>
             <button class="admin-tab"        id="adminTabAllusers"  onclick="adminTabSwitch('allusers')">All Users</button>
@@ -1574,7 +1615,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
         <!-- Overview -->
         <div class="admin-body" id="adminPaneOverview">
-            <div class="admin-section-title">Site Stats</div>
+            <div class="admin-section-title">Overview <span class="admin-section-note">Platform activity</span></div>
             <div class="admin-stat-grid">
                 <div class="admin-stat"><div class="admin-stat-val" id="adminStatUsers">—</div><div class="admin-stat-lbl">Total Users</div></div>
                 <div class="admin-stat"><div class="admin-stat-val" id="adminStatPosts">—</div><div class="admin-stat-lbl">Blog Posts</div></div>
@@ -1611,7 +1652,8 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             <div style="font-size:.75rem;color:var(--muted);line-height:1.8">
                 <b style="color:var(--text)">Founder</b> — Full admin panel + Moderation panel<br>
                 <b style="color:var(--text)">Moderator</b> — Moderation panel only<br>
-                <b style="color:var(--text)">VIP</b> — Cosmetic rank badge only<br>
+                <b style="color:var(--text)">VIP</b> — Cosmetic rank only<br>
+                <b style="color:var(--text)">PWR</b> — Powerhouse icon beside the username; no extra permissions<br>
                 <b style="color:var(--text)">(none)</b> — Standard user
             </div>
         </div>
