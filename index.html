@@ -1703,22 +1703,39 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             feedback.textContent = 'Saving profile picture…';
             renderPicturePicker();
             try {
+                const headers = {'Content-Type':'application/json',Authorization:`Bearer ${tokenAtStart}`};
+                let savedPfp = filename;
                 const res = await fetch(`${API_BASE}/auth/pfp`, {
-                    method:'POST',
-                    headers:{'Content-Type':'application/json',Authorization:`Bearer ${tokenAtStart}`},
-                    body:JSON.stringify({pfp:filename})
+                    method:'POST', headers, body:JSON.stringify({pfp:filename})
                 });
-                const result = await res.json();
-                if (!res.ok || !result.ok) throw new Error(result.error || 'Unable to save profile picture');
+                // Older API deployments do not yet have /auth/pfp. The original
+                // /auth/save endpoint can persist the picture to the same KV record.
+                if (res.status === 404 || res.status === 405) {
+                    const loadRes = await fetch(`${API_BASE}/auth/load`, {headers:{Authorization:`Bearer ${tokenAtStart}`},cache:'no-store'});
+                    if (!loadRes.ok) throw new Error('Could not load your account settings ('+loadRes.status+').');
+                    const loaded = await loadRes.json();
+                    const current = loaded.data && typeof loaded.data === 'object' ? loaded.data : {};
+                    const merged = {...current,
+                        settings:{...(current.settings || {}),pfp:filename},
+                        history:current.history || [], favorites:current.favorites || []};
+                    const saveRes = await fetch(`${API_BASE}/auth/save`, {method:'POST',headers,body:JSON.stringify(merged)});
+                    const saveResult = await saveRes.json().catch(()=>({}));
+                    if (!saveRes.ok || !saveResult.ok) throw new Error(saveResult.error || `Picture save failed (${saveRes.status}).`);
+                } else {
+                    const result = await res.json().catch(()=>({}));
+                    if (!res.ok || !result.ok) throw new Error(result.error || `Picture save failed (${res.status}).`);
+                    savedPfp = result.pfp;
+                }
                 if (user.token !== tokenAtStart || user.username !== userAtStart) return;
-                user.pfp = result.pfp;
-                localStorage.setItem('ph_pfp', result.pfp);
+                user.pfp = savedPfp;
+                localStorage.setItem('ph_pfp', savedPfp);
                 accountSavedData ||= {};
-                accountSavedData.settings = {...(accountSavedData.settings || {}),pfp:result.pfp};
+                accountSavedData.settings = {...(accountSavedData.settings || {}),pfp:savedPfp};
                 knownProfiles.delete(userAtStart.toLowerCase());
                 updateUI();
                 feedback.textContent = 'Profile picture saved.';
             } catch(e) {
+                console.error('Powerhouse profile picture save failed:',e);
                 feedback.textContent = e.message || 'Could not save profile picture.';
             } finally {
                 pictureSavePending = false;
@@ -1778,7 +1795,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     accountSavedData = data;
                     renderPicturePicker();
                     setAccountAbout(typeof data.settings?.about === 'string' ? data.settings.about : '');
-                    if (data.settings?.pfp) {
+                    if (!pictureSavePending && typeof data.settings?.pfp === 'string') {
                         user.pfp = data.settings.pfp;
                         localStorage.setItem('ph_pfp', user.pfp);
                         updateUI();
