@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.8.0">
+    <meta name="powerhouse-site-version" content="2.8.1">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.8.0 — sampled from supplied reference:
+        /* Powerhouse palette v2.8.1 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.8.0 --- */
+        /* --- AUTH PAGE — website v2.8.1 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -624,7 +624,7 @@
         }
 
 
-/* Powerhouse 2.8.0 — refreshed administrative workspace */
+/* Powerhouse 2.8.1 — refreshed administrative workspace */
 #admin-view {max-width:1120px;margin:0 auto;width:100%;}
 #admin-view .admin-page-heading {display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px;flex-wrap:wrap;}
 #admin-view .admin-eyebrow {font-size:10px;letter-spacing:.16em;font-weight:750;color:#9d9d9d;margin-bottom:9px;}
@@ -1092,49 +1092,92 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
     // ── DYNAMIC TAB TITLES ───────────────────────────────────────────────────
 
+    let _rankSearchRequest = 0;
+    let _rankSavePending = false;
     async function adminSearchRanks() {
-        const q  = (document.getElementById('adminRankSearch')?.value || '').trim();
+        const requestId = ++_rankSearchRequest;
+        const q = (document.getElementById('adminRankSearch')?.value || '').trim();
         const el = document.getElementById('adminRankUserResult');
         if (!el) return;
-        if (q.length < 1) { el.innerHTML = '<div class="admin-empty">Search for a user to manage their rank.</div>'; return; }
+        if (q.length < 2) {
+            el.innerHTML = '<div class="admin-empty">Enter at least 2 characters to find an account.</div>';
+            return;
+        }
         el.innerHTML = '<div class="admin-empty">Searching…</div>';
         try {
-            const [searchRes, ranksData] = await Promise.all([
-                fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`),
-                getCachedRanks()
+            // Request current ranks directly: the public /ranks endpoint is cacheable.
+            const [searchRes, ranksRes] = await Promise.all([
+                fetch(`${API_BASE}/auth/search?q=${encodeURIComponent(q)}`, { cache: 'no-store' }),
+                fetch(`${API_BASE}/admin/ranks`, { headers: { Authorization: `Bearer ${user.token}` }, cache: 'no-store' })
             ]);
-            const users = searchRes.ok ? ((await searchRes.json()).results || []) : [];
-            if (users.length === 0) { el.innerHTML = '<div class="admin-empty">No users found.</div>'; return; }
+            const searchData = await searchRes.json();
+            if (!searchRes.ok) throw new Error(searchData.error || 'User search failed');
+            let ranksData;
+            if (ranksRes.ok) {
+                ranksData = (await ranksRes.json()).ranks || {};
+            } else {
+                // Older API installations do not implement /admin/ranks.
+                ranksData = await getCachedRanks();
+            }
+            if (requestId !== _rankSearchRequest) return;
+            _cacheRanks = ranksData;
+            _cacheRanksAt = Date.now();
+            const users = searchData.results || [];
+            if (!users.length) {
+                el.innerHTML = '<div class="admin-empty">No users found.</div>';
+                return;
+            }
             el.innerHTML = users.map(u => {
-                const rank = ranksData[u.username.toLowerCase()] || '';
+                const name = String(u.username || '');
+                const rank = ranksData[name.toLowerCase()] || '';
+                const safeName = staffEsc(name);
                 return `<div class="admin-user-row">
-                    <div class="admin-user-avatar">${u.pfp ? `<img src="${pictureURL(u.pfp)}" alt="">` : staffEsc(u.username).slice(0,2).toUpperCase()}</div>
+                    <div class="admin-user-avatar">${u.pfp ? `<img src="${staffEsc(pictureURL(u.pfp))}" alt="">` : safeName.slice(0,2).toUpperCase()}</div>
                     <div style="flex:1;min-width:0">
-                        <div class="admin-user-name">${staffEsc(u.username)} ${getRankBadgeHtml(rank, true)}</div>
-                        <div class="admin-user-meta">Current rank: ${rank || 'None'}</div>
+                        <div class="admin-user-name">${safeName} ${getRankBadgeHtml(rank, true)}</div>
+                        <div class="admin-user-meta">Current rank: ${staffEsc(rank || 'None')}</div>
                     </div>
                     <div class="admin-user-actions" style="flex-wrap:wrap">
                         ${['Founder','Moderator','VIP','PWR',''].map(r =>
-                            `<button class="admin-btn${r===rank?' primary':''}" onclick="adminSetRank('${staffEsc(u.username)}','${r}')">${r||'Remove Rank'}</button>`
+                            `<button type="button" class="admin-btn${r===rank?' primary':''}" data-rank-target="${safeName}" data-rank-value="${r}" ${r===rank?'disabled':''}>${r||'Remove Rank'}</button>`
                         ).join('')}
                     </div>
                 </div>`;
             }).join('');
-        } catch(e) { el.innerHTML = '<div class="admin-empty">Failed to load.</div>'; }
+            el.querySelectorAll('[data-rank-target]').forEach(btn => {
+                btn.addEventListener('click', () => adminSetRank(btn.dataset.rankTarget, btn.dataset.rankValue));
+            });
+        } catch (e) {
+            if (requestId === _rankSearchRequest) el.innerHTML = `<div class="admin-empty">${staffEsc(e.message || 'Rank search failed.')}</div>`;
+        }
     }
 
-
     async function adminSetRank(username, rank) {
+        if (_rankSavePending) return;
+        if (!user.token) { alert('Please sign in again.'); return; }
+        _rankSavePending = true;
+        const el = document.getElementById('adminRankUserResult');
+        const controls = el ? [...el.querySelectorAll('[data-rank-target]')] : [];
+        controls.forEach(b => b.disabled = true);
         try {
-            const r = await fetch(`${API_BASE}/admin/rank`, {
+            const response = await fetch(`${API_BASE}/admin/rank`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
                 body: JSON.stringify({ username, rank })
             });
-            const d = await r.json();
-            if (r.ok) { _cacheRanks = null; adminSearchRanks(); }
-            else alert(d.error || 'Failed.');
-        } catch(e) { alert('Network error.'); }
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok || result.ok !== true) throw new Error(result.error || `Rank update failed (HTTP ${response.status})`);
+            _cacheRanks = null;
+            _cacheRanksAt = 0;
+            await adminSearchRanks();
+            await getCachedRanks();
+            updateRoleLabels();
+        } catch (e) {
+            alert(`Could not ${rank ? 'change' : 'remove'} rank for ${username}: ${e.message}`);
+        } finally {
+            _rankSavePending = false;
+            controls.forEach(b => b.disabled = false);
+        }
     }
 
     // ── Moderation Panel ─────────────────────────────────────────────────────
@@ -1393,7 +1436,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.8.0 -->
+    <!-- AUTH PAGE | Powerhouse website v2.8.1 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1429,7 +1472,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.8.0</span>
+                <span class="auth-release">POWERHOUSE v2.8.1</span>
             </section>
         </div>
     </div>
