@@ -11,7 +11,7 @@
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.10.0 — sampled from supplied reference:
+        /* Powerhouse palette v2.10.3 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.10.0 --- */
+        /* --- AUTH PAGE — website v2.10.3 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -105,7 +105,7 @@
         #sidebar { width: var(--sidebar-width); background: var(--bg-side); padding: 24px 16px; display: none; flex-direction: column; position: fixed; height: 100vh; border-right: 1px solid var(--border); z-index: 1000; }
         /* Keep the release version anchored to the bottom of the fixed sidebar. */
         #sidebar .sidebar-release {
-            margin-top: auto;
+            margin-top: 0;
             flex-shrink: 0;
             padding: 12px 0 2px;
             font-size: 11px;
@@ -115,6 +115,13 @@
             white-space: nowrap;
         }
         #sidebar .sidebar-release span { color: #bcbcbc; }
+        /* Lower-left external C823 link, separated from main navigation. */
+        #sidebar .sidebar-footer { margin-top: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+        #sidebar .c823-footer-link { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 12px; transition: background .18s ease, transform .18s ease; }
+        #sidebar .c823-footer-link:hover { background: #242424; transform: translateY(-2px); }
+        #sidebar .c823-footer-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+        #sidebar .c823-footer-icon { width: 32px; height: 32px; display: block; object-fit: contain; border: none; outline: none; background: transparent; }
+
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-muted); text-decoration: none; font-weight: 600; cursor: pointer; margin-bottom: 4px; position: relative; transition: 0.2s; }
         .nav-item:hover { background: var(--accent-light); color: var(--text); }
         .nav-item.active { background: var(--accent); color: white; }
@@ -153,6 +160,9 @@
         .hero { display: flex; align-items: center; gap: 30px; margin-bottom: 60px; }
         .hero-avatar-container { width: 160px; height: 160px; background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; }
         .hero-avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+        a.hero-avatar-container { display: block; cursor: pointer; text-decoration: none; transition: border-color .16s ease, transform .16s ease; }
+        a.hero-avatar-container:hover { border-color: #777; transform: translateY(-2px); }
+        a.hero-avatar-container:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
         /* Home friends preview */
         .hero { align-items:flex-start; }
@@ -284,7 +294,7 @@
         .social-card img { width:54px; height:54px; object-fit:cover; flex-shrink:0; background:var(--surface); }
         .social-card-name { font-size:13px; font-weight:700; margin:0 8px 0 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
 
-        /* v2.10.0: banned/deleted accounts retain removable friend entries, never a profile link. */
+        /* v2.10.3: banned/deleted accounts retain removable friend entries, never a profile link. */
         .social-deleted-profile {display:flex;align-items:center;flex:1;min-width:0;pointer-events:none;color:var(--text-muted);}
         .social-deleted-profile img {filter:grayscale(1);opacity:.55;}
         .social-deleted-text {display:flex;flex-direction:column;gap:2px;min-width:0;margin-left:12px;}
@@ -692,6 +702,13 @@
 .search-state{background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text-muted);padding:20px}.search-state.error{color:#f2a4a4}
 @media(max-width:550px){.search-user-row{gap:8px;padding:8px}.search-user-avatar{width:48px;height:48px}.search-user-link{gap:9px}.search-user-action{padding:9px;font-size:.77rem}.search-games-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 
+        .account-userid-field { margin: 20px 0 24px; max-width: 460px; }
+        .account-userid-row { display:flex; align-items:center; gap:10px; margin-top:8px; }
+        .account-userid-row .settings-input { margin:0; flex:1; min-width:0; font-variant-numeric:tabular-nums; color:inherit; cursor:default; }
+        .account-userid-row button { padding: 11px 17px; background:#383838; border:1px solid #505050; border-radius:9px; color:#fff; cursor:pointer; font:inherit; }
+        .account-userid-row button:hover:not(:disabled) { background:#4a4a4a; }
+        .account-userid-row button:disabled { opacity:.45; cursor:default; }
+        .account-userid-hint, #account-userid-feedback { color:#aaa; font-size:12px; margin:7px 0 0; }
 </style>
 </head>
 <body>
@@ -1465,7 +1482,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.10.0 -->
+    <!-- AUTH PAGE | Powerhouse website v2.10.3 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1501,7 +1518,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.10.0</span>
+                <span class="auth-release">POWERHOUSE v2.10.3</span>
             </section>
         </div>
     </div>
@@ -1529,13 +1546,13 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             <a href="/moderation" class="nav-item" id="side-moderation" hidden>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg> Moderation
             </a>
-            <div style="height:20px; border-bottom: 1px solid var(--border); margin: 10px 0 20px;"></div>
-            <!-- Replacement for Studio -->
-            <a href="https://home.c823.workers.dev" class="nav-item" style="text-decoration: none;">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Hub
-            </a>
         </nav>
-        <div class="sidebar-release" aria-label="Powerhouse version">POWERHOUSE <span>v2.10.0</span></div>
+        <div class="sidebar-footer">
+            <a class="c823-footer-link" href="https://home.c823.workers.dev" aria-label="Open C823 Hub" title="C823 Hub">
+                <img class="c823-footer-icon" src="https://raw.githubusercontent.com/C823/Powerhouse/main/icons/C823%20logo.png" alt="C823" loading="lazy">
+            </a>
+            <div class="sidebar-release" aria-label="Powerhouse version">POWERHOUSE <span>v2.10.3</span></div>
+        </div>
     </aside>
 
     <main id="main-wrapper">
@@ -1565,7 +1582,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
         <!-- HOME VIEW -->
         <section id="home-view" class="view-section active">
             <div class="hero">
-                <div class="hero-avatar-container"><img id="hero-avatar" src=""></div>
+                <a class="hero-avatar-container" id="home-own-profile-link" href="/home" aria-label="View your profile" onclick="event.preventDefault(); navigateProfile(user.username)"><img id="hero-avatar" src="" alt="Your profile picture"></a>
                 <div class="hero-info">
                     <h1 id="welcome-text">Hello!</h1>
                     <div class="home-friends-preview">
@@ -1634,6 +1651,15 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     <h2>Account Info</h2>
                     <label class="info-label">Username</label>
                     <p id="val-username" style="font-weight:700; font-size:18px;"></p>
+                    <div class="account-userid-field">
+                        <label class="info-label" for="account-userid-value">User ID</label>
+                        <div class="account-userid-row">
+                            <input id="account-userid-value" class="settings-input" type="text" value="Loading…" aria-label="Your permanent numeric User ID" readonly>
+                            <button id="account-userid-copy" type="button" onclick="copyAccountUserId()" disabled>Copy</button>
+                        </div>
+                        <p class="account-userid-hint">Your permanent account number. It cannot be changed.</p>
+                        <p id="account-userid-feedback" role="status" aria-live="polite"></p>
+                    </div>
 
                     <div class="account-picture-editor">
                         <h3>Profile Picture</h3>
@@ -2014,6 +2040,30 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             finally { button.disabled = false; }
         }
 
+        function setAccountUserId(value) {
+            const id=Number(value);
+            const valid=Number.isSafeInteger(id)&&id>0;
+            const field=document.getElementById('account-userid-value');
+            const button=document.getElementById('account-userid-copy');
+            if(field) field.value=valid ? String(id) : 'Unavailable';
+            if(button) button.disabled=!valid;
+            if(valid && user.username) {
+                profileIds.set(user.username.toLowerCase(),id);
+                profileNames.set(id,user.username);
+            }
+        }
+        async function copyAccountUserId() {
+            const field=document.getElementById('account-userid-value');
+            const feedback=document.getElementById('account-userid-feedback');
+            if(!field || !/^\d+$/.test(field.value)) return;
+            try {
+                await navigator.clipboard.writeText(field.value);
+                if(feedback) feedback.textContent='User ID copied.';
+            } catch {
+                field.select();
+                if(feedback) feedback.textContent='Select and copy the User ID above.';
+            }
+        }
         async function fetchUserData() {
             try {
                 const r = await fetch(`${API_BASE}/auth/load`, { headers: {'Authorization': `Bearer ${user.token}`} });
@@ -2021,6 +2071,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     const { data } = await r.json();
                     if (!data || !user.token) return;
                     accountSavedData = data;
+                    setAccountUserId(data.userId);
                     renderPicturePicker();
                     setAccountAbout(typeof data.settings?.about === 'string' ? data.settings.about : '');
                     if (!pictureSavePending && typeof data.settings?.pfp === 'string') {
@@ -2043,11 +2094,14 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             document.getElementById('welcome-text').textContent = `Hello, ${user.username}!`;
             document.getElementById('nav-username').textContent = user.username;
             updateRoleLabels();
+            const heroProfile = document.getElementById('home-own-profile-link');
+            if (heroProfile) { heroProfile.href=profileURL(user.username); bindProfileHref(heroProfile,user.username); }
             const ownLink = document.getElementById('side-profile');
             if (ownLink) { ownLink.href=profileURL(user.username); bindProfileHref(ownLink,user.username); }
             const dropdownProfile = document.getElementById('dropdown-profile-link');
             if (dropdownProfile) { dropdownProfile.href=profileURL(user.username); bindProfileHref(dropdownProfile,user.username); }
             document.getElementById('val-username').textContent = user.username;
+            setAccountUserId(accountSavedData?.userId || profileIds.get(user.username.toLowerCase()));
             if (!accountSavedData) setAccountAbout('');
             // Profile view is updated separately by renderProfile().
             if (typeof parseRoute === 'function') {
@@ -2146,6 +2200,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     localStorage.setItem('ph_token', data.token);
                     localStorage.setItem('ph_username', data.username);
                     user.token = data.token; user.username = data.username;
+                    setAccountUserId(data.userId);
                     resetStaffUI(); unlockDashboard(); updateUI();
                     let nextPage = 'home';
                     try { nextPage = (sessionStorage.getItem('ph_return_to') || '/home').slice(1); sessionStorage.removeItem('ph_return_to'); } catch(e) {}
@@ -2973,6 +3028,13 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             document.querySelectorAll('.s-nav-btn').forEach(b => b.classList.remove('active'));
             const map = { account: 'btn-acc', security: 'btn-sec', customization: 'btn-cust' };
             document.getElementById(map[p]).classList.add('active');
+            if(p==='account' && user.username) {
+                const savedId=accountSavedData?.userId || profileIds.get(user.username.toLowerCase());
+                if(savedId) setAccountUserId(savedId);
+                else resolveProfileId(user.username).then(id=>{
+                    if(user.username) setAccountUserId(id);
+                }).catch(()=>setAccountUserId(null));
+            }
         }
 
         function toggleDropdown(e) { e.stopPropagation(); document.getElementById('user-dropdown').classList.toggle('show'); }
