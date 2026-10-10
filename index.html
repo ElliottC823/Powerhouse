@@ -11,7 +11,7 @@
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.11.1 — sampled from supplied reference:
+        /* Powerhouse palette v2.11.2 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.11.1 --- */
+        /* --- AUTH PAGE — website v2.11.2 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -126,7 +126,7 @@
         .nav-item:hover { background: var(--accent-light); color: var(--text); }
         .nav-item.active { background: var(--accent); color: white; }
         .nav-item svg { width: 20px; height: 20px; flex: 0 0 20px; display: block; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; fill: none; }
-        /* v2.11.1: solid filled sidebar navigation icons */
+        /* v2.11.2: solid filled sidebar navigation icons */
         #sidebar .nav-item svg.sidebar-solid-icon { fill: currentColor; stroke: none; stroke-width: 0; }
         .badge { position: absolute; right: 12px; background: var(--accent2); padding: 2px 8px; border-radius: 20px; font-size: 10px; color: white; font-weight: 800; }
 
@@ -296,7 +296,7 @@
         .social-card img { width:54px; height:54px; object-fit:cover; flex-shrink:0; background:var(--surface); }
         .social-card-name { font-size:13px; font-weight:700; margin:0 8px 0 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
 
-        /* v2.11.1: banned/deleted accounts retain removable friend entries, never a profile link. */
+        /* v2.11.2: banned/deleted accounts retain removable friend entries, never a profile link. */
         .social-deleted-profile {display:flex;align-items:center;flex:1;min-width:0;pointer-events:none;color:var(--text-muted);}
         .social-deleted-profile img {filter:grayscale(1);opacity:.55;}
         .social-deleted-text {display:flex;flex-direction:column;gap:2px;min-width:0;margin-left:12px;}
@@ -712,7 +712,7 @@
         .account-userid-row button:disabled { opacity:.45; cursor:default; }
         .account-userid-hint, #account-userid-feedback { color:#aaa; font-size:12px; margin:7px 0 0; }
 
-/* v2.11.1 — Messaging */
+/* v2.11.2 — Messaging */
 #messages-view [hidden], #side-messages .message-nav-count[hidden], #profile-message-action[hidden] { display:none !important; }
 #side-messages { position:relative; }
 .message-nav-count { margin-left:auto; min-width:19px; padding:2px 6px; border-radius:30px; background:#393939; color:#fff; font-size:11px; font-weight:700; text-align:center; }
@@ -757,7 +757,7 @@
 .messages-back { border:0; background:#343434; color:white; border-radius:7px; padding:6px 10px; cursor:pointer; }
 
 
-/* v2.11.1 — Friends / Requests */
+/* v2.11.2 — Friends / Requests */
 .requests-count {display:inline-flex;min-width:19px;height:19px;padding:0 5px;align-items:center;justify-content:center;border-radius:9px;background:#383838;color:#fff;font-size:11px;margin-left:5px;}
 .requests-count[hidden] {display:none!important;}
 .social-request-card {height:auto;min-height:78px;padding-right:12px;gap:12px;}
@@ -775,6 +775,18 @@
 .social-request-error:empty {display:none;}
 #friends-view:has(.social-request-card) .social-grid {grid-template-columns:repeat(auto-fill,minmax(min(100%,470px),470px));}
 @media(max-width:540px){.social-request-card{flex-wrap:wrap;padding:8px;}.social-request-actions{width:100%;justify-content:flex-end}.social-request-card .social-profile-link{width:100%;}}
+
+/* v2.11.2 — Not found page */
+#not-found-view .error-layout { min-height:calc(100vh - 190px); display:flex; align-items:center; justify-content:center; text-align:center; padding:64px 16px; }
+#not-found-view .error-content {max-width:520px; width:100%; }
+#not-found-view .error-kicker {color:#9b9b9b; font-weight:700; letter-spacing:.18em; font-size:12px; text-transform:uppercase; margin-bottom:16px;}
+#not-found-view .error-code {font-size:clamp(100px,18vw,190px); line-height:.9; font-weight:850; letter-spacing:-.1em; color:#f5f5f5; margin:0 0 27px; padding-right:.11em;}
+#not-found-view h1 {font-size:clamp(24px,4vw,34px); font-weight:750; letter-spacing:-.04em; margin:0 0 10px; color:#fff;}
+#not-found-view p {color:#9a9a9a; font-size:15px; line-height:1.6; margin:0 0 28px;}
+#not-found-view .error-home-link {display:inline-flex; align-items:center; gap:9px; text-decoration:none; border:1px solid #585858; background:#eee; color:#171717; border-radius:9px; padding:12px 20px; font-size:14px; font-weight:750; transition:background .18s,transform .18s;}
+#not-found-view .error-home-link:hover {background:#fff;transform:translateY(-2px);}
+#not-found-view .error-home-link:focus-visible {outline:2px solid white;outline-offset:3px;}
+
 </style>
 </head>
 <body>
@@ -1548,7 +1560,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.11.1 -->
+    <!-- AUTH PAGE | Powerhouse website v2.11.2 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1584,7 +1596,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.11.1</span>
+                <span class="auth-release">POWERHOUSE v2.11.2</span>
             </section>
         </div>
     </div>
@@ -1620,7 +1632,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             <a class="c823-footer-link" href="https://home.c823.workers.dev" aria-label="Open C823 Hub" title="C823 Hub">
                 <img class="c823-footer-icon" src="https://raw.githubusercontent.com/C823/Powerhouse/main/icons/C823%20logo.png" alt="C823" loading="lazy">
             </a>
-            <div class="sidebar-release" aria-label="Powerhouse version">POWERHOUSE <span>v2.11.1</span></div>
+            <div class="sidebar-release" aria-label="Powerhouse version">POWERHOUSE <span>v2.11.2</span></div>
         </div>
     </aside>
 
@@ -1647,6 +1659,17 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             <span id="site-banner-msg"></span>
             <button id="site-banner-close" type="button" aria-label="Dismiss announcement" onclick="dismissSiteBanner()">×</button>
         </div>
+
+        <!-- NOT FOUND VIEW -->
+        <section id="not-found-view" class="view-section" aria-label="Page not found">
+            <div class="error-layout"><div class="error-content">
+                <div class="error-kicker">POWERHOUSE / ERROR</div>
+                <div class="error-code" aria-hidden="true">404</div>
+                <h1>Page not found.</h1>
+                <p>That page doesn’t exist, or the link might be incorrect.</p>
+                <a href="/home" class="error-home-link" onclick="event.preventDefault();navigateTo('home')">Back to Home <span aria-hidden="true">→</span></a>
+            </div></div>
+        </section>
 
         <!-- HOME VIEW -->
         <section id="home-view" class="view-section active">
@@ -2863,7 +2886,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
         }
 
 
-        // v2.11.1 - KV-backed direct messages (existing /social/* API)
+        // v2.11.2 - KV-backed direct messages (existing /social/* API)
         let messageConversations = [];
         let activeMessagePeer = '';
         let messagesLoadSequence = 0;
@@ -3028,7 +3051,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             const path = location.pathname.replace(/\/+$/, '') || '/';
             const match = path.match(/^\/users\/([1-9]\d*)\/profile$/);
             if (match && Number.isSafeInteger(Number(match[1]))) return {page:'profile',id:Number(match[1])};
-            if (/^\/(?:user|users)(?:\/|$)/i.test(path)) return {page:'not-found'};
+            if (/^\/(?:user|users)(?:\/|$)/i.test(path)) return {page:'invalid-profile'};
             const simple = path.slice(1).toLowerCase();
             if (simple === 'profile') return {page:'profile',username:user.username || null}; // Legacy URL
             if (simple === 'followers' || simple === 'following') return {page:'friends',legacy:true};
@@ -3216,7 +3239,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 return;
             }
             const social = SOCIAL_ROUTES.has(page);
-            const view = social ? 'friends' : page;
+            const view = social ? 'friends' : (page === 'not-found' ? 'not-found' : page);
             document.querySelectorAll('.view-section').forEach(section => {
                 const selected = section.id === view + '-view';
                 section.classList.toggle('active', selected);
@@ -3226,7 +3249,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
             document.querySelectorAll('#sidebar .nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('side-' + view)?.classList.add('active');
             document.getElementById('user-dropdown')?.classList.remove('show');
-            document.title = (page === 'profile' ? (profileNames.get(route.id) || 'Profile') : social ? 'Social' : page.charAt(0).toUpperCase()+page.slice(1)) + ' | Powerhouse';
+            document.title = (page === 'not-found' ? '404 — Page not found' : page === 'profile' ? (profileNames.get(route.id) || 'Profile') : social ? 'Social' : page.charAt(0).toUpperCase()+page.slice(1)) + ' | Powerhouse';
             if (page === 'profile') renderProfile(route.id ?? route.username);
             if (page === 'search') renderSearchPage();
             if (page === 'messages') openMessagesPage();
@@ -3245,14 +3268,15 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 else route.username = user.username;
                 if (route.page === 'profile' && route.username) { navigateProfile(route.username); return; }
             }
-            if (!user.token && !['sign-in','profile','not-found'].includes(route.page)) {
+            if (!user.token && !['sign-in','profile','not-found','invalid-profile'].includes(route.page)) {
                 try { sessionStorage.setItem('ph_return_to',location.pathname + location.search); } catch(e) {}
                 history.replaceState({},'', '/sign-in'); route = {page:'sign-in'};
             }
             if (route.page === 'sign-in' && user.token) {
                 history.replaceState({},'', '/home'); route = {page:'home'};
             }
-            if (route.page === 'not-found') { history.replaceState({},'',user.token?'/home':'/sign-in'); route = {page:user.token?'home':'sign-in'}; }
+            if (route.page === 'invalid-profile') { history.replaceState({},'',user.token?'/home':'/sign-in'); route = {page:user.token?'home':'sign-in'}; }
+            // Unknown URLs render the branded 404 view, even for signed-out visitors.
             if (route.page === 'sign-in') {
                 document.getElementById('landing-page').style.display = 'flex';
                 document.getElementById('sidebar').style.display = 'none';
