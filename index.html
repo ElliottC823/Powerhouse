@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Powerhouse</title>
-    <meta name="powerhouse-site-version" content="2.7.5">
+    <meta name="powerhouse-site-version" content="2.7.6">
     <link rel="icon" id="faviconEl" type="image/png" sizes="any" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="shortcut icon" type="image/png" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/C823/powerhouse@main/icons/POWERHOUSE-icon.png?v=20261009">
     <!-- The Worker may inject a GitHub <base>. Keep browser navigation on this Worker origin. -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Powerhouse palette v2.7.5 — sampled from supplied reference:
+        /* Powerhouse palette v2.7.6 — sampled from supplied reference:
            black #000000, charcoal #1c1c1c, white #ffffff. */
         :root {
             --accent: #444444;
@@ -43,7 +43,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background-color: var(--bg-main); color: var(--text); min-height: 100vh; overflow-x: hidden; display: flex; transition: background 0.3s ease; }
 
-        /* --- AUTH PAGE — website v2.7.5 --- */
+        /* --- AUTH PAGE — website v2.7.6 --- */
         #landing-page { position:fixed; inset:0; z-index:5000; display:none; align-items:center; justify-content:center; overflow:auto; padding:32px 22px; color:#eee; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.6)),url('https://files.enderman.ch/wallpapers/Moonlight.png') center center / cover no-repeat fixed #090b12; }
         #landing-page::before { content:''; position:fixed; inset:0; pointer-events:none; background:rgba(0,0,0,.10); }
         #landing-page::after { content:none; }
@@ -231,6 +231,11 @@
         /* --- GRID --- */
         #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
         .game-card { text-decoration: none; color: inherit; }
+
+        /* Verified games: original Powerhouse badge, aligned next to the title. */
+        .game-title-row { display:flex; align-items:center; gap:6px; min-width:0; }
+        .game-title-row > p { min-width:0; }
+        .game-verified-icon { display:inline-block; width:1em !important; height:1em !important; min-width:1em; flex:none; object-fit:contain; margin:0 !important; padding:0 !important; border:0 !important; outline:0 !important; background:transparent !important; box-shadow:none !important; vertical-align:middle; }
         .game-thumb { width: 100%; aspect-ratio: 1; border-radius: 18px; object-fit: cover; background: var(--surface); margin-bottom: 12px; border: 1px solid var(--border); }
 
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
@@ -1345,7 +1350,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
 
 
 
-    <!-- AUTH PAGE | Powerhouse website v2.7.5 -->
+    <!-- AUTH PAGE | Powerhouse website v2.7.6 -->
     <div id="landing-page">
         <div class="auth-shell">
             <section class="auth-promo" aria-label="Welcome to Powerhouse">
@@ -1381,7 +1386,7 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                     </form>
                     <p class="auth-bottom">Already have an account? <button type="button" class="auth-switch-link" onclick="switchAuthMode('login')">Sign in</button></p>
                 </div>
-                <span class="auth-release">POWERHOUSE v2.7.5</span>
+                <span class="auth-release">POWERHOUSE v2.7.6</span>
             </section>
         </div>
     </div>
@@ -2070,7 +2075,19 @@ function adminSetBanner(){return staffLegacySaveBanner();}
                 const title = document.createElement('p');
                 title.style.cssText = 'font-weight:700;margin:0;';
                 title.textContent = g.title || 'Untitled';
-                link.append(img,title);
+                const titleRow = document.createElement('div');
+                titleRow.className = 'game-title-row';
+                titleRow.appendChild(title);
+                if (isVerifiedGame(g)) {
+                    const verifiedIcon = document.createElement('img');
+                    verifiedIcon.className = 'game-verified-icon';
+                    verifiedIcon.src = 'https://raw.githubusercontent.com/C823/Powerhouse/main/icons/verified.svg';
+                    verifiedIcon.alt = 'Verified Unblocked';
+                    verifiedIcon.title = 'Verified Unblocked';
+                    verifiedIcon.loading = 'lazy';
+                    titleRow.appendChild(verifiedIcon);
+                }
+                link.append(img,titleRow);
                 grid.append(link);
             });
             if (!games.length) grid.innerHTML = '<p style="color:var(--text-muted)">No matching games found.</p>';
